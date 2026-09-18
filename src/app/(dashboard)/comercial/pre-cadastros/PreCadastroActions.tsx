@@ -18,7 +18,7 @@ const STATUS_OPTIONS = [
 
 const btnBase: React.CSSProperties = {
   display: 'inline-flex', alignItems: 'center', gap: '.35rem',
-  padding: '.4rem .8rem', borderRadius: 8,
+  padding: '.4rem .8rem', borderRadius: 2,
   fontSize: '.75rem', fontWeight: 600, cursor: 'pointer',
   fontFamily: 'var(--font-montserrat,sans-serif)',
   border: '1px solid transparent', transition: 'all .15s',
@@ -181,7 +181,7 @@ export default function PreCadastroActions({ registro }: Props) {
                 onChange={e => field('observacoes', e.target.value)}
                 rows={3}
                 style={{
-                  width: '100%', padding: '.55rem .75rem', borderRadius: 8,
+                  width: '100%', padding: '.55rem .75rem', borderRadius: 2,
                   border: '1px solid #cbd5e1', fontSize: '.85rem',
                   fontFamily: 'var(--font-inter,sans-serif)', resize: 'vertical',
                 }}
@@ -224,7 +224,7 @@ function Modal({ children, onClose, fullscreen = true }: { children: React.React
         onClick={e => e.stopPropagation()}
         className={fullscreen ? 'mp-modal-fs' : undefined}
         style={{
-          background: '#fff', borderRadius: 14, boxShadow: '0 20px 60px rgba(34,29,55,.35)',
+          background: '#fff', borderRadius: 3, boxShadow: '0 20px 60px rgba(34,29,55,.35)',
         }}
       >
         {children}
@@ -264,7 +264,7 @@ const lbl: React.CSSProperties = {
 }
 
 const inp: React.CSSProperties = {
-  width: '100%', padding: '.5rem .75rem', borderRadius: 8,
+  width: '100%', padding: '.5rem .75rem', borderRadius: 2,
   border: '1px solid #cbd5e1', fontSize: '.85rem', color: '#221d37',
   fontFamily: 'var(--font-inter,sans-serif)',
 }
@@ -293,7 +293,7 @@ function ErrorBox({ msg }: { msg: string }) {
   return (
     <div style={{
       background: '#fef2f2', border: '1px solid #fca5a5', color: '#991b1b',
-      padding: '.6rem .8rem', borderRadius: 8, fontSize: '.8rem', marginTop: '.75rem',
+      padding: '.6rem .8rem', borderRadius: 2, fontSize: '.8rem', marginTop: '.75rem',
     }}>
       {msg}
     </div>

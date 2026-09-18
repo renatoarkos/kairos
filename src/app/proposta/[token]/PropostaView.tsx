@@ -533,7 +533,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
               <img src="/proposta/logo-white.png" alt="Kairós" style={{ height: 36, objectFit: 'contain', flexShrink: 0 }} />
 
               <div className="pv-hero-countdown" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
-                <div style={{ background: 'rgba(255,204,0,0.1)', border: '1px solid rgba(255,204,0,0.3)', borderRadius: 12, padding: '8px 14px', textAlign: 'right' }}>
+                <div style={{ background: 'rgba(255,204,0,0.1)', border: '1px solid rgba(255,204,0,0.3)', borderRadius: 3, padding: '8px 14px', textAlign: 'right' }}>
                   <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.56rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,204,0,0.55)', marginBottom: 4 }}>
                     {countdown?.expired ? 'Proposta expirada' : 'Proposta válida por'}
                   </p>
@@ -726,7 +726,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                         { icon: I.book(),  label: 'Segmentos', val: segsCount,        suffix: '',       note: segsLabelText },
                         { icon: I.clock(), label: 'Duração',   val: p.duracao_meses,   suffix: ' meses', note: `${p.duracao_meses / 12} anos de contrato` },
                       ].map((s, i) => (
-                        <div key={s.label} style={{ borderRadius: 18, padding: '20px 22px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}>
+                        <div key={s.label} style={{ borderRadius: 4, padding: '20px 22px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}>
                           <div style={{ color: C.mint, marginBottom: 10 }}>{s.icon}</div>
                           <div style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: 'rgba(255,255,255,0.35)', marginBottom: 6 }}>{s.label}</div>
                           <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-4xl)', color: C.white, lineHeight: 1, marginBottom: 4 }}>
@@ -744,7 +744,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
             {/* incluído / não incluído — cards destacados */}
             <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               <Reveal delay={200}>
-                <div style={{ borderRadius: 18, padding: '18px 22px', background: 'rgba(118,243,205,0.06)', border: '1px solid rgba(118,243,205,0.22)', height: '100%' }}>
+                <div style={{ borderRadius: 4, padding: '18px 22px', background: 'rgba(118,243,205,0.06)', border: '1px solid rgba(118,243,205,0.22)', height: '100%' }}>
                   <div style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.6rem', color: C.mint, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
                     {I.check(C.mint)} Incluído
                   </div>
@@ -759,7 +759,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                 </div>
               </Reveal>
               <Reveal delay={300}>
-                <div style={{ borderRadius: 18, padding: '18px 22px', background: 'rgba(252,165,165,0.05)', border: '1px solid rgba(252,165,165,0.18)', height: '100%' }}>
+                <div style={{ borderRadius: 4, padding: '18px 22px', background: 'rgba(252,165,165,0.05)', border: '1px solid rgba(252,165,165,0.18)', height: '100%' }}>
                   <div style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.6rem', color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
                     {I.x('#fca5a5')} Não incluído
                   </div>
@@ -794,7 +794,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                         onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                         style={{
                           width: capas.length === 1 ? '62%' : `${Math.max(38, 58 - capas.length * 4)}%`,
-                          borderRadius: 10, objectFit: 'cover', aspectRatio: '3 / 4',
+                          borderRadius: 2, objectFit: 'cover', aspectRatio: '3 / 4',
                           boxShadow: '0 24px 48px rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.12)',
                           marginLeft: i === 0 ? 0 : `-${Math.max(6, 14 - capas.length)}%`,
                           transform: `rotate(${offset * 6}deg) translateY(${Math.abs(offset) * 10}px)`,
@@ -845,7 +845,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                 { icon: I.home(),   title: 'Memorial Descritivo',   desc: 'Projeto arquitetônico do espaço maker' },
               ].map((item, i) => (
                 <Reveal key={item.title} delay={i * 50}>
-                  <div className="surface-glass card-lift" style={{ borderRadius: 14, padding: '15px 16px' }}>
+                  <div className="surface-glass card-lift" style={{ borderRadius: 3, padding: '15px 16px' }}>
                     <div style={{ color: C.mint, marginBottom: 10 }}>{item.icon}</div>
                     <p style={{ fontFamily: 'Geist, sans-serif', fontWeight: 600, fontSize: 'var(--text-sm)', color: C.white, marginBottom: 4, lineHeight: 1.35 }}>{item.title}</p>
                     <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.5 }}>{item.desc}</p>
@@ -888,7 +888,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                 </Reveal>
 
                 <Reveal delay={100}>
-                  <div style={{ borderRadius: 16, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', padding: '14px 18px' }}>
+                  <div style={{ borderRadius: 4, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', padding: '14px 18px' }}>
                     <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: C.mint, marginBottom: 10 }}>O que a Kairós oferece</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       {[
@@ -924,7 +924,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                     <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: C.mint, marginBottom: 10 }}>
                       Simulação de custos — referência para aquisição
                     </p>
-                    <div className="pv-table-desktop" style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <div className="pv-table-desktop" style={{ borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
                       {/* cabeçalho — 5 colunas igual à calculadora */}
                       <div style={{ display: 'grid', gridTemplateColumns: '2fr 0.6fr 1fr 1fr 0.7fr', background: 'rgba(11,31,68,0.7)', padding: '9px 18px', gap: 8 }}>
                         {['Item', 'Qtd', 'Valor unit.', 'Total', '%'].map((h, i) => (
@@ -966,12 +966,12 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
 
                     {/* versão mobile — cards empilhados em vez de grid de 5 colunas */}
                     <div className="pv-table-mobile" style={{ flexDirection: 'column', gap: 8 }}>
-                      <div style={{ borderRadius: 14, padding: '12px 16px', background: 'rgba(118,243,205,0.08)', border: '1px solid rgba(118,243,205,0.18)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <div style={{ borderRadius: 3, padding: '12px 16px', background: 'rgba(118,243,205,0.08)', border: '1px solid rgba(118,243,205,0.18)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                         <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.78rem', color: C.white }}>TOTAL ESTIMADO</span>
                         <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '0.9rem', color: C.mint }}>{R$(sumDisplay)}</span>
                       </div>
                       {comItensDisplay.map((item, i) => (
-                        <div key={item.nome} style={{ borderRadius: 12, padding: '10px 14px', background: i % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div key={item.nome} style={{ borderRadius: 3, padding: '10px 14px', background: i % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4, gap: 8 }}>
                             <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', gap: 6 }}>
                               <span style={{ width: 3, height: 10, borderRadius: 2, background: C.mint, flexShrink: 0 }} />{item.nome}
@@ -1146,7 +1146,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
 
                 {/* Tabela de custos */}
                 <Reveal delay={100}>
-                  <div className="surface-glass-ivory" style={{ borderRadius: 16, overflow: 'hidden' }}>
+                  <div className="surface-glass-ivory" style={{ borderRadius: 4, overflow: 'hidden' }}>
                     {/* cabeçalho */}
                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: C.navy, padding: '12px 24px', gap: 12 }}>
                       <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)' }}>Relação de Custos</span>
@@ -1227,7 +1227,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
 
                 {/* Tabela de recursos cedidos */}
                 <Reveal delay={100}>
-                  <div style={{ borderRadius: 16, overflow: 'hidden', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', marginBottom: 16 }}>
+                  <div style={{ borderRadius: 4, overflow: 'hidden', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', marginBottom: 16 }}>
                     {/* cabeçalho */}
                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: 'rgba(11,31,68,0.5)', padding: '12px 24px', gap: 12 }}>
                       <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)' }}>Relação de Recursos</span>
@@ -1289,7 +1289,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                       <span style={{ width: 18, height: 1.5, background: 'rgba(255,255,255,0.3)', display: 'inline-block' }} />
                       Investimento — Currículo + Comodato
                     </p>
-                    <div style={{ borderRadius: 16, padding: '20px 28px', background: 'rgba(11,31,68,0.45)', border: '1px solid rgba(255,255,255,0.18)' }}>
+                    <div style={{ borderRadius: 4, padding: '20px 28px', background: 'rgba(11,31,68,0.45)', border: '1px solid rgba(255,255,255,0.18)' }}>
                     {/* só o valor do comodato aqui — o comparativo com "Somente Currículo" fica na seção de Investimento, mais abaixo */}
                     <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap', marginBottom: 16 }}>
                       <div>
@@ -1349,15 +1349,15 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
             {/* Destaques — custo inicial e vida útil, mesmo padrão de KV visual usado no Investimento */}
             <Reveal delay={40}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginBottom: 28 }}>
-                <div className="surface-glass-ivory" style={{ borderRadius: 14, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.royal}` }}>
+                <div className="surface-glass-ivory" style={{ borderRadius: 3, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.royal}` }}>
                   <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>Custo inicial de referência</p>
                   <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.navy, lineHeight: 1 }}>{R$(RECURSOS_CONSUMIVEIS_TOTAL)}</p>
                 </div>
-                <div className="surface-glass-ivory" style={{ borderRadius: 14, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.mintD}` }}>
+                <div className="surface-glass-ivory" style={{ borderRadius: 3, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.mintD}` }}>
                   <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>Vida útil dos recursos</p>
                   <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.navy, lineHeight: 1 }}>+ de 1 ano</p>
                 </div>
-                <div className="surface-glass-ivory" style={{ borderRadius: 14, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.amber}` }}>
+                <div className="surface-glass-ivory" style={{ borderRadius: 3, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.amber}` }}>
                   <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>Reposição anual</p>
                   <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.navy, lineHeight: 1 }}>Só o que faltar</p>
                 </div>
@@ -1369,7 +1369,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                 <span style={{ width: 18, height: 1.5, background: C.royal, display: 'inline-block' }} />
                 <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: C.royal }}>Relação de Custos</span>
               </div>
-              <div className="surface-glass-ivory" style={{ borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 28px rgba(11,31,68,0.08)' }}>
+              <div className="surface-glass-ivory" style={{ borderRadius: 4, overflow: 'hidden', boxShadow: '0 8px 28px rgba(11,31,68,0.08)' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: C.navy, padding: '12px 24px', gap: 12 }}>
                   <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)' }}>Item</span>
                   <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>Valor</span>
@@ -1430,7 +1430,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                 </Reveal>
                 <Reveal delay={100}>
                   <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 18 }}>
-                    <div className="surface-glass" style={{ borderRadius: 20, padding: '22px 24px', borderColor: 'rgba(76,138,222,0.25)' }}>
+                    <div className="surface-glass" style={{ borderRadius: 6, padding: '22px 24px', borderColor: 'rgba(76,138,222,0.25)' }}>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(76,138,222,0.15)', border: '1px solid rgba(76,138,222,0.35)', borderRadius: 99, padding: '3px 12px', marginBottom: 12 }}>
                         <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.royal }} />
                         <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: C.royal }}>Modelo 1</span>
@@ -1454,7 +1454,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                         </p>
                       </div>
                     </div>
-                    <div className="surface-glass" style={{ borderRadius: 20, padding: '22px 24px', borderColor: 'rgba(118,243,205,0.3)', boxShadow: '0 0 40px rgba(118,243,205,0.08)' }}>
+                    <div className="surface-glass" style={{ borderRadius: 6, padding: '22px 24px', borderColor: 'rgba(118,243,205,0.3)', boxShadow: '0 0 40px rgba(118,243,205,0.08)' }}>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(118,243,205,0.12)', border: '1px solid rgba(118,243,205,0.35)', borderRadius: 99, padding: '3px 12px', marginBottom: 12 }}>
                         <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.mint }} />
                         <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: C.mint }}>Modelo 2</span>
@@ -1571,7 +1571,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
               </Reveal>
 
               <Reveal delay={80}>
-                <div className="pv-comparativo-scroll" style={{ borderRadius: 16, overflow: 'auto', marginBottom: 18, border: '1px solid rgba(255,255,255,0.08)', maxHeight: 'calc(100dvh - 220px)' }}>
+                <div className="pv-comparativo-scroll" style={{ borderRadius: 4, overflow: 'auto', marginBottom: 18, border: '1px solid rgba(255,255,255,0.08)', maxHeight: 'calc(100dvh - 220px)' }}>
                   {(() => {
                     const rows = [
                       {
@@ -1630,7 +1630,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                         {/* mobile — card por critério, Modelo 1/2 rotulados e empilhados */}
                         <div className="pv-table-mobile" style={{ flexDirection: 'column', gap: 10, padding: 12 }}>
                           {rows.map(row => (
-                            <div key={row.criterio} style={{ borderRadius: 12, padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            <div key={row.criterio} style={{ borderRadius: 3, padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                               <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', fontWeight: 700, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{row.criterio}</p>
                               <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.66rem', fontWeight: 700, color: C.royal, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>Modelo 1</p>
                               <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.78rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5, marginBottom: 10 }}>{row.m1}</p>
@@ -1675,7 +1675,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                   { icon: I.phone(C.mint), label: 'WhatsApp',  val: '(83) 98230-1530' },
                   { icon: I.globe(C.mint), label: 'Site',      val: 'kairos.com.br' },
                 ].map(c => (
-                  <div key={c.label} className="surface-glass card-lift" style={{ borderRadius: 14, padding: '14px 16px', textAlign: 'left' }}>
+                  <div key={c.label} className="surface-glass card-lift" style={{ borderRadius: 3, padding: '14px 16px', textAlign: 'left' }}>
                     <div style={{ marginBottom: 8 }}>{c.icon}</div>
                     <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 2 }}>{c.label}</p>
                     <p style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: C.white, fontWeight: 500, lineHeight: 1.35 }}>{c.val}</p>
@@ -1688,7 +1688,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
               <a href="https://wa.me/5583982301530" target="_blank" rel="noopener noreferrer" className="btn-primary">
                 {I.phone('#0b1f44')} Falar com a equipe Kairós
               </a>
-              <div style={{ marginTop: 24, background: 'rgba(255,204,0,0.08)', border: '1px solid rgba(255,204,0,0.28)', borderRadius: 14, padding: '14px 20px' }}>
+              <div style={{ marginTop: 24, background: 'rgba(255,204,0,0.08)', border: '1px solid rgba(255,204,0,0.28)', borderRadius: 3, padding: '14px 20px' }}>
                 <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,204,0,0.5)', marginBottom: 8, textAlign: 'center' }}>
                   {countdown?.expired ? 'Proposta expirada' : 'Esta proposta expira em'}
                 </p>

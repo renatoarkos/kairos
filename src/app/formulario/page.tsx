@@ -16,7 +16,7 @@ function Section({ title, children, index }: { title: string; children: React.Re
   const [expanded, setExpanded] = useState(true) // All sections expanded by default
 
   return (
-    <div style={{ marginBottom: '1.5rem', border: '1.5px solid #94a3b8', borderRadius: 12, overflow: 'hidden' }} className="form-section">
+    <div style={{ marginBottom: '1.5rem', border: '1.5px solid #94a3b8', borderRadius: 3, overflow: 'hidden' }} className="form-section">
       <button
         onClick={() => setExpanded(!expanded)}
         style={{
@@ -74,15 +74,15 @@ function Field({ label, name, type = 'text', required, options, placeholder }: {
         {label}{required && ' *'}
       </label>
       {options ? (
-        <select name={name} required={required} autoComplete="off" style={{ width: '100%', padding: '.65rem .85rem', fontSize: '.875rem', border: '1.5px solid #94a3b8', borderRadius: 8, background: '#fff', outline: 'none', transition: 'border-color .15s, box-shadow .15s' }} onFocus={e => { e.target.style.borderColor = '#4a8fe7'; e.target.style.boxShadow = '0 0 0 3px rgba(74,143,231,.15)' }} onBlur={e => { e.target.style.borderColor = '#94a3b8'; e.target.style.boxShadow = 'none' }}>
+        <select name={name} required={required} autoComplete="off" style={{ width: '100%', padding: '.65rem .85rem', fontSize: '.875rem', border: '1.5px solid #94a3b8', borderRadius: 2, background: '#fff', outline: 'none', transition: 'border-color .15s, box-shadow .15s' }} onFocus={e => { e.target.style.borderColor = '#4a8fe7'; e.target.style.boxShadow = '0 0 0 3px rgba(74,143,231,.15)' }} onBlur={e => { e.target.style.borderColor = '#94a3b8'; e.target.style.boxShadow = 'none' }}>
           <option value="">Selecione...</option>
           {options.map(o => <option key={o} value={o}>{o}</option>)}
         </select>
       ) : type === 'textarea' ? (
-        <textarea name={name} rows={3} placeholder={placeholder} autoComplete="off" style={{ width: '100%', padding: '.65rem .85rem', fontSize: '.875rem', border: '1.5px solid #94a3b8', borderRadius: 8, resize: 'vertical', outline: 'none', transition: 'border-color .15s, box-shadow .15s' }} onFocus={e => { e.target.style.borderColor = '#4a8fe7'; e.target.style.boxShadow = '0 0 0 3px rgba(74,143,231,.15)' }} onBlur={e => { e.target.style.borderColor = '#94a3b8'; e.target.style.boxShadow = 'none' }} />
+        <textarea name={name} rows={3} placeholder={placeholder} autoComplete="off" style={{ width: '100%', padding: '.65rem .85rem', fontSize: '.875rem', border: '1.5px solid #94a3b8', borderRadius: 2, resize: 'vertical', outline: 'none', transition: 'border-color .15s, box-shadow .15s' }} onFocus={e => { e.target.style.borderColor = '#4a8fe7'; e.target.style.boxShadow = '0 0 0 3px rgba(74,143,231,.15)' }} onBlur={e => { e.target.style.borderColor = '#94a3b8'; e.target.style.boxShadow = 'none' }} />
       ) : (
         <input name={name} type={type} required={required} placeholder={placeholder} autoComplete="off"
-          style={{ width: '100%', padding: '.65rem .85rem', fontSize: '.875rem', border: '1.5px solid #94a3b8', borderRadius: 8, outline: 'none', transition: 'border-color .15s, box-shadow .15s' }}
+          style={{ width: '100%', padding: '.65rem .85rem', fontSize: '.875rem', border: '1.5px solid #94a3b8', borderRadius: 2, outline: 'none', transition: 'border-color .15s, box-shadow .15s' }}
           onFocus={e => { e.target.style.borderColor = '#4a8fe7'; e.target.style.boxShadow = '0 0 0 3px rgba(74,143,231,.15)' }}
           onBlur={e => { e.target.style.borderColor = '#94a3b8'; e.target.style.boxShadow = 'none' }} />
       )}
@@ -310,7 +310,7 @@ export default function FormularioPublico() {
             border: '1px solid #cbd5e1',
             color: '#221d37',
             padding: 'clamp(0.5rem, 2vw, 0.65rem) clamp(0.85rem, 3vw, 1.25rem)',
-            borderRadius: '9999px',
+            borderRadius: '3px',
             cursor: 'pointer',
             fontSize: 'clamp(0.8rem, 2vw, 0.85rem)',
             fontWeight: 600,
@@ -342,7 +342,7 @@ export default function FormularioPublico() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(74,143,231,.1)', border: '1px solid rgba(74,143,231,.3)',
-            borderRadius: 9999, padding: 'clamp(0.3rem, 1vw, 0.4rem) clamp(0.8rem, 2vw, 1rem)', marginBottom: '1rem',
+            borderRadius: 3, padding: 'clamp(0.3rem, 1vw, 0.4rem) clamp(0.8rem, 2vw, 1rem)', marginBottom: '1rem',
             fontSize: 'clamp(0.65rem, 1.5vw, 0.7rem)', fontWeight: 700, color: '#4a8fe7',
             textTransform: 'uppercase', letterSpacing: '.08em',
             fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -388,7 +388,7 @@ export default function FormularioPublico() {
               border: 'none',
               color: '#fff',
               padding: '1.25rem 1.75rem',
-              borderRadius: 12,
+              borderRadius: 3,
               fontWeight: 700,
               fontFamily: 'var(--font-inter, sans-serif)',
               fontSize: '1rem',
@@ -486,7 +486,7 @@ export default function FormularioPublico() {
               </div>
 
               {!entregaMesmoEndereco && (
-                <div style={{ marginBottom: '1.25rem', padding: '1.1rem 1.25rem', background: '#f8fafc', borderRadius: 10 }}>
+                <div style={{ marginBottom: '1.25rem', padding: '1.1rem 1.25rem', background: '#f8fafc', borderRadius: 2 }}>
                   <div style={{ fontSize: '.85rem', fontWeight: 600, color: '#334155', marginBottom: '.75rem' }}>Endereço de Entrega do Material Didático</div>
                   <Row>
                     <div style={{ gridColumn: 'span 2' }}><Field label="Rua" name="entrega_rua" required /></div>
@@ -537,7 +537,7 @@ export default function FormularioPublico() {
               </div>
 
               {(segInfantil || segFund1 || segFund2 || segMedio) && (
-                <div style={{ marginBottom: '1.5rem', padding: '1.25rem', background: '#f8fafc', borderRadius: 10 }}>
+                <div style={{ marginBottom: '1.5rem', padding: '1.25rem', background: '#f8fafc', borderRadius: 2 }}>
                   <div style={{ fontSize: '.85rem', fontWeight: 600, color: '#334155', marginBottom: '1rem' }}>Quantidade de alunos por série</div>
                   {segInfantil && <SerieGrid titulo="Educação Infantil" series={SERIES_INFANTIL} />}
                   {segFund1    && <SerieGrid titulo="Fundamental 1" series={SERIES_FUND1} />}
@@ -547,7 +547,7 @@ export default function FormularioPublico() {
               )}
 
               {/* Maior turma */}
-              <div style={{ marginBottom: '1.5rem', padding: '1.1rem 1.25rem', background: 'linear-gradient(135deg, #eff6ff, #f5f3ff)', border: '2px solid #bfdbfe', borderRadius: 12, display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+              <div style={{ marginBottom: '1.5rem', padding: '1.1rem 1.25rem', background: 'linear-gradient(135deg, #eff6ff, #f5f3ff)', border: '2px solid #bfdbfe', borderRadius: 3, display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
                 <div style={{ flex: '1 1 240px' }}>
                   <div style={{ fontSize: '.85rem', fontWeight: 700, color: '#2563eb', marginBottom: '.3rem' }}>
                     Quantidade de alunos na maior turma <span style={{ color: '#dc2626' }}>*</span>
@@ -559,7 +559,7 @@ export default function FormularioPublico() {
                 <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: '.75rem' }}>
                   <input
                     name="maior_sala" type="number" min="0" max="80" defaultValue={0}
-                    style={{ width: 90, padding: '.65rem .75rem', fontSize: '1.4rem', fontWeight: 700, textAlign: 'center', border: '2px solid #93c5fd', borderRadius: 8, outline: 'none', background: '#fff', color: '#221d37' }}
+                    style={{ width: 90, padding: '.65rem .75rem', fontSize: '1.4rem', fontWeight: 700, textAlign: 'center', border: '2px solid #93c5fd', borderRadius: 2, outline: 'none', background: '#fff', color: '#221d37' }}
                     onFocus={e => { e.target.style.borderColor = '#2563eb'; e.target.style.boxShadow = '0 0 0 3px rgba(37,99,235,.15)' }}
                     onBlur={e => { e.target.style.borderColor = '#93c5fd'; e.target.style.boxShadow = 'none' }}
                   />
@@ -635,7 +635,7 @@ export default function FormularioPublico() {
                   fontWeight: 600,
                   fontSize: '.9rem',
                   border: '1px solid #cbd5e1',
-                  borderRadius: 9999,
+                  borderRadius: 3,
                   cursor: 'pointer',
                   fontFamily: 'var(--font-montserrat, sans-serif)',
                   transition: 'all .2s',
@@ -658,7 +658,7 @@ export default function FormularioPublico() {
                 fontWeight: 700,
                 fontSize: 'clamp(0.9rem, 2vw, 0.95rem)',
                 border: 'none',
-                borderRadius: 9999,
+                borderRadius: 3,
                 cursor: loading ? 'not-allowed' : 'pointer',
                 fontFamily: 'var(--font-montserrat, sans-serif)',
                 letterSpacing: '.02em',
@@ -724,7 +724,7 @@ export default function FormularioPublico() {
           .form-section {
             margin-bottom: 1rem !important;
             padding: 0 !important;
-            border-radius: 14px !important;
+            border-radius: 3px !important;
           }
 
           .form-section > button {

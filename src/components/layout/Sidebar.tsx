@@ -251,7 +251,7 @@ export default function Sidebar({ profile }: SidebarProps) {
         aria-label="Fechar menu"
         style={{
           position: 'absolute', top: 12, right: 12,
-          width: 36, height: 36, borderRadius: 10,
+          width: 36, height: 36, borderRadius: 2,
           background: 'rgba(255,255,255,.06)',
           border: '1px solid rgba(255,255,255,.12)',
           color: '#fff', cursor: 'pointer',

@@ -202,7 +202,7 @@ function calcLeasing(
 // ══════════════════════════════════════════════════════════════════
 const INP: React.CSSProperties = {
   width: '100%', padding: '.65rem .9rem', fontSize: '.875rem',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#fffef0', color: '#221d37', outline: 'none',
   fontFamily: 'var(--font-inter,sans-serif)', boxSizing: 'border-box',
 }
@@ -240,7 +240,7 @@ function SecTitle({ n, title }: { n: number; title: string }) {
 }
 
 function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
-  return <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)', ...style }}>{children}</div>
+  return <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem 1.5rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)', ...style }}>{children}</div>
 }
 
 function KV({ label, value, sub, color = '#221d37', big }: { label: string; value: string; sub?: string; color?: string; big?: boolean }) {
@@ -591,7 +591,7 @@ function CalculadoraInner() {
   const govBorder = (s: string) => s === 'error' ? '#fca5a5' : s === 'warn' ? '#fde68a' : '#86efac'
 
   const tabStyle = (t: string): React.CSSProperties => ({
-    padding: '.55rem 1.25rem', borderRadius: 8, border: 'none', cursor: 'pointer',
+    padding: '.55rem 1.25rem', borderRadius: 2, border: 'none', cursor: 'pointer',
     fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.78rem', fontWeight: 700,
     background: tab === t ? '#221d37' : '#f1f5f9',
     color: tab === t ? '#fff' : '#64748b', transition: 'all .15s',
@@ -630,7 +630,7 @@ function CalculadoraInner() {
         </div>
 
         {/* Herdar dados de uma escola já cadastrada — evita digitar item a item */}
-        <div style={{ background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 3, padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <EscolaSelector
             escolas={escolasParaSelecao}
             escolaId={escolaHerdadaId}
@@ -656,7 +656,7 @@ function CalculadoraInner() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
             {/* Header banner */}
-            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 14, padding: '1.1rem 1.5rem' }}>
+            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 3, padding: '1.1rem 1.5rem' }}>
               <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#36b6e8', marginBottom: '.3rem' }}>
                 Lógica de precificação — Calculadora_v7 · Score ponderado + Faixas de volume + Leasing retorno garantido
               </div>
@@ -690,7 +690,7 @@ function CalculadoraInner() {
                 </div>
                 <div>
                   <label style={LBL}>Segmentos atendidos</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.35rem', padding: '.45rem', background: '#eff6ff', border: '2px solid #36b6e8', borderRadius: 8, boxShadow: '0 0 0 3px rgba(54,182,232,0.12)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.35rem', padding: '.45rem', background: '#eff6ff', border: '2px solid #36b6e8', borderRadius: 2, boxShadow: '0 0 0 3px rgba(54,182,232,0.12)' }}>
                     {[
                       { key: 'inf', label: 'Infantil',       checked: segInfantil },
                       { key: 'f1',  label: 'Fundamental 1',  checked: segFund1 },
@@ -714,7 +714,7 @@ function CalculadoraInner() {
                 </div>
                 <div>
                   <label style={LBL}>Alta complexidade?</label>
-                  <div style={{ display: 'flex', gap: '.5rem', padding: '.35rem', background: '#eff6ff', border: '2px solid #36b6e8', borderRadius: 8, boxShadow: '0 0 0 3px rgba(54,182,232,0.12)' }}>
+                  <div style={{ display: 'flex', gap: '.5rem', padding: '.35rem', background: '#eff6ff', border: '2px solid #36b6e8', borderRadius: 2, boxShadow: '0 0 0 3px rgba(54,182,232,0.12)' }}>
                     {['NÃO', 'SIM'].map(v => (
                       <button key={v} onClick={() => setAltaCompl(v === 'SIM')} style={{ flex: 1, padding: '.5rem', borderRadius: 6, border: `1.5px solid ${(altaCompl ? 'SIM' : 'NÃO') === v ? '#1d4ed8' : '#93c5fd'}`, background: (altaCompl ? 'SIM' : 'NÃO') === v ? '#1d4ed8' : '#fff', color: (altaCompl ? 'SIM' : 'NÃO') === v ? '#fff' : '#1d4ed8', fontWeight: 700, fontSize: '.82rem', cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>{v}</button>
                     ))}
@@ -752,7 +752,7 @@ function CalculadoraInner() {
             <Card>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showSisAdv ? '1rem' : 0 }}>
                 <SecTitle n={2} title="Parâmetros e pesos (editáveis)" />
-                <button onClick={() => setShowSisAdv(v => !v)} style={{ padding: '.4rem .9rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '.72rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#475569' }}>
+                <button onClick={() => setShowSisAdv(v => !v)} style={{ padding: '.4rem .9rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '.72rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#475569' }}>
                   {showSisAdv ? 'Fechar' : 'Editar'}
                 </button>
               </div>
@@ -777,7 +777,7 @@ function CalculadoraInner() {
                       ))}
                       <div>
                         <label style={LBL}>Livro/aluno/ano (calculado)</label>
-                        <div style={{ padding: '.65rem .9rem', background: '#f1f5f9', borderRadius: 8, fontFamily: 'var(--font-cormorant,serif)', fontSize: '1rem', fontWeight: 700, color: '#475569', border: '1.5px solid #e2e8f0' }}>
+                        <div style={{ padding: '.65rem .9rem', background: '#f1f5f9', borderRadius: 2, fontFamily: 'var(--font-cormorant,serif)', fontSize: '1rem', fontWeight: 700, color: '#475569', border: '1.5px solid #e2e8f0' }}>
                           {R$(sp.livroMes * 12)}
                         </div>
                         <div style={NOTA}>R${sp.livroMes}/mês × 12 meses</div>
@@ -878,7 +878,7 @@ function CalculadoraInner() {
                   </div>
 
                   <div style={{ display: 'flex', gap: '.75rem' }}>
-                    <button onClick={() => setSp(DEFAULT_SIS)} style={{ padding: '.45rem 1rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '.72rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#64748b' }}>Restaurar padrão</button>
+                    <button onClick={() => setSp(DEFAULT_SIS)} style={{ padding: '.45rem 1rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '.72rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#64748b' }}>Restaurar padrão</button>
                   </div>
                 </div>
               )}
@@ -890,7 +890,7 @@ function CalculadoraInner() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
 
                 {/* Score 1 — Escala (faixa-based) */}
-                <div style={{ background: '#f8fafc', borderRadius: 10, padding: '1rem', border: '1px solid #e2e8f0' }}>
+                <div style={{ background: '#f8fafc', borderRadius: 2, padding: '1rem', border: '1px solid #e2e8f0' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.5rem' }}>
                     <div>
                       <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Score 1 — Escala <span style={{ color: '#94a3b8' }}>({pct(sp.wEscala)})</span></div>
@@ -910,7 +910,7 @@ function CalculadoraInner() {
                 </div>
 
                 {/* Score 2 — Ticket */}
-                <div style={{ background: '#f8fafc', borderRadius: 10, padding: '1rem', border: '1px solid #e2e8f0' }}>
+                <div style={{ background: '#f8fafc', borderRadius: 2, padding: '1rem', border: '1px solid #e2e8f0' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.5rem' }}>
                     <div>
                       <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Score 2 — Ticket médio <span style={{ color: '#94a3b8' }}>({pct(sp.wTicket)})</span></div>
@@ -931,7 +931,7 @@ function CalculadoraInner() {
                 </div>
 
                 {/* Score 3 — Complexidade */}
-                <div style={{ background: '#f8fafc', borderRadius: 10, padding: '1rem', border: '1px solid #e2e8f0' }}>
+                <div style={{ background: '#f8fafc', borderRadius: 2, padding: '1rem', border: '1px solid #e2e8f0' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.5rem' }}>
                     <div>
                       <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Score 3 — Complexidade <span style={{ color: '#94a3b8' }}>({pct(sp.wCompl)})</span></div>
@@ -952,7 +952,7 @@ function CalculadoraInner() {
                 </div>
 
                 {/* Score 4 — Fidelidade */}
-                <div style={{ background: '#f8fafc', borderRadius: 10, padding: '1rem', border: '1px solid #e2e8f0' }}>
+                <div style={{ background: '#f8fafc', borderRadius: 2, padding: '1rem', border: '1px solid #e2e8f0' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.5rem' }}>
                     <div>
                       <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Score 4 — Fidelidade <span style={{ color: '#94a3b8' }}>({pct(sp.wFid)})</span></div>
@@ -972,7 +972,7 @@ function CalculadoraInner() {
                   </div>
                 </div>
               </div>
-              <div style={{ background: '#221d37', borderRadius: 10, padding: '1.1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div style={{ background: '#221d37', borderRadius: 2, padding: '1.1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
                 <div>
                   <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.25rem' }}>Score Final Ponderado</div>
                   <div style={{ fontFamily: 'var(--font-inter,sans-serif)', fontSize: '.72rem', color: 'rgba(255,255,255,.45)', marginBottom: '.15rem' }}>
@@ -997,7 +997,7 @@ function CalculadoraInner() {
             <Card>
               <SecTitle n={4} title="Equação central — memória de cálculo" />
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden' }}>
                   <KV label="(1) Piso único" value={R$(sp.piso)} sub={`Piso único: ${sis.faixaEscala.nome} ativa`} />
                   <KV label="(2) Amplitude × Score" value={R$(sis.valorBruto - sp.piso)} sub={`(${R$(sp.teto)} − ${R$(sp.piso)}) × ${dec(sis.scoreFinal)}`} />
                   <KV label="(3) Valor bruto" value={R$(sis.valorBruto)} sub="Piso + amplitude × score" color="#36b6e8" />
@@ -1006,7 +1006,7 @@ function CalculadoraInner() {
 
                 {desconto > 0 && (
                   <>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden' }}>
                       <KV label="(4) Desconto aplicado" value={`-${desconto}%`} sub={`-${R$(sis.valorBruto * desconto / 100)}`} color="#dc2626" />
                       <KV label="(5) Valor com desconto" value={R$(sis.valorDesc)} sub="Antes da proteção do piso" />
                     </div>
@@ -1014,7 +1014,7 @@ function CalculadoraInner() {
                   </>
                 )}
 
-                <div style={{ background: sis.valorFinal <= sp.piso ? '#fef3c7' : '#f0fdf4', border: `1.5px solid ${sis.valorFinal <= sp.piso ? '#fde68a' : '#86efac'}`, borderRadius: 10, padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ background: sis.valorFinal <= sp.piso ? '#fef3c7' : '#f0fdf4', border: `1.5px solid ${sis.valorFinal <= sp.piso ? '#fde68a' : '#86efac'}`, borderRadius: 2, padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '.3rem' }}>(6) Proteção piso — MAX(piso, valor_com_desconto)</div>
                     <div style={{ fontFamily: 'var(--font-inter,sans-serif)', fontSize: '.75rem', color: '#475569', marginBottom: '.2rem' }}>
@@ -1033,7 +1033,7 @@ function CalculadoraInner() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
               <Card>
                 <SecTitle n={5} title="Resultado — análise financeira" />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden', marginBottom: '.75rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden', marginBottom: '.75rem' }}>
                   <KV label="Valor/aluno/ano" value={R$(sis.valorFinal)} color="#36b6e8" big />
                   <KV label="Valor/aluno/mês" value={R$(sis.valorFinal / 12)} sub="÷ 12 meses" />
                   <KV label="Valor anual total" value={R$(sis.anual)} sub={`${alunos} alunos × ${R$(sis.valorFinal)}`} />
@@ -1046,7 +1046,7 @@ function CalculadoraInner() {
 
               <Card>
                 <SecTitle n={6} title="Governança do desconto" />
-                <div style={{ background: govBg(sis.gov.status), border: `1.5px solid ${govBorder(sis.gov.status)}`, borderRadius: 10, padding: '1rem 1.25rem', marginBottom: '.85rem' }}>
+                <div style={{ background: govBg(sis.gov.status), border: `1.5px solid ${govBorder(sis.gov.status)}`, borderRadius: 2, padding: '1rem 1.25rem', marginBottom: '.85rem' }}>
                   <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', color: govClr(sis.gov.status), marginBottom: '.3rem' }}>
                     {desconto === 0 ? 'Sem desconto' : `Desconto ${desconto}%`}
                   </div>
@@ -1071,7 +1071,7 @@ function CalculadoraInner() {
             <Card>
               <SecTitle n={7} title="Painel de parcelamento — 4x a 12x" />
               {incluiComodato ? (
-                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 8, padding: '.7rem 1rem', marginBottom: '.85rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 2, padding: '.7rem 1rem', marginBottom: '.85rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#2563eb', flexShrink: 0 }} />
                   <div style={{ fontSize: '.73rem', fontFamily: 'var(--font-inter,sans-serif)', color: '#1d4ed8', lineHeight: 1.4 }}>
                     <strong>Leasing ativo — currículo fixado em 12x (mensal).</strong> O parcelamento do currículo é sempre mensal quando há leasing, independente da seleção abaixo.
@@ -1130,7 +1130,7 @@ function CalculadoraInner() {
                       key={String(opt.v)}
                       onClick={() => setIncluiComodato(opt.v)}
                       style={{
-                        padding: '.55rem 1.1rem', borderRadius: 8, cursor: 'pointer',
+                        padding: '.55rem 1.1rem', borderRadius: 2, cursor: 'pointer',
                         fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.75rem', fontWeight: 700,
                         border: `1.5px solid ${incluiComodato === opt.v ? '#221d37' : '#e2e8f0'}`,
                         background: incluiComodato === opt.v ? '#221d37' : '#f8fafc',
@@ -1146,7 +1146,7 @@ function CalculadoraInner() {
               {/* Resumo somente currículo */}
               {!incluiComodato && (
                 <div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden', marginBottom: '.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden', marginBottom: '.75rem' }}>
                     <div style={{ padding: '1rem 1.1rem', background: '#f8fafc' }}>
                       <div style={{ fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#94a3b8', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.3rem' }}>Valor / aluno / ano</div>
                       <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.5rem', fontWeight: 800, color: '#36b6e8', lineHeight: 1 }}>{R$(sis.valorFinal)}</div>
@@ -1170,7 +1170,7 @@ function CalculadoraInner() {
               {/* Resumo currículo + leasing — valores combinados apenas */}
               {incluiComodato && (
                 <div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden', marginBottom: '.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden', marginBottom: '.75rem' }}>
                     <div style={{ padding: '1rem 1.1rem', background: '#f8fafc' }}>
                       <div style={{ fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#94a3b8', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.3rem' }}>Valor / aluno / ano</div>
                       <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.5rem', fontWeight: 800, color: '#36b6e8', lineHeight: 1 }}>{R$(totalAluMes * 12)}</div>
@@ -1201,7 +1201,7 @@ function CalculadoraInner() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
             {/* Header banner */}
-            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 14, padding: '1.1rem 1.5rem' }}>
+            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 3, padding: '1.1rem 1.5rem' }}>
               <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#87cde8', marginBottom: '.3rem' }}>
                 Leasing de equipamentos — retorno garantido + projeção IPCA
               </div>
@@ -1239,7 +1239,7 @@ function CalculadoraInner() {
                 </div>
                 <div style={{ gridColumn: 'span 2' }}>
                   <label style={LBL}>Taxa manut. + admin (por faixa de alunos)</label>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', padding: '.65rem .9rem', background: '#eff6ff', border: '2px solid #36b6e8', borderRadius: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', padding: '.65rem .9rem', background: '#eff6ff', border: '2px solid #36b6e8', borderRadius: 2 }}>
                     <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#36b6e8', flexShrink: 0 }} />
                     <div style={{ flex: 1 }}>
                       <span style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.72rem', fontWeight: 800, color: '#1d4ed8' }}>{com.faixaTax.nome}</span>
@@ -1256,7 +1256,7 @@ function CalculadoraInner() {
 
               {/* Tabela de faixas de taxa */}
               {showTaxFaixas && (
-                <div style={{ marginTop: '1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '1rem' }}>
+                <div style={{ marginTop: '1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: '1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.75rem' }}>
                     <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b' }}>
                       Faixas de taxa — manut. + admin. por nº de alunos
@@ -1321,7 +1321,7 @@ function CalculadoraInner() {
                   { label: 'Notebooks (sala÷2)', value: String(com.qtdNB), sub: `⌈${maiorSala} ÷ 2⌉ = ${com.qtdNB} unidades`, color: '#221d37' },
                   { label: 'Retorno s/ PV', value: pct(com.retornoRealPV), sub: `lucro ${R$(com.resultadoBruto)} = 2×PV`, color: '#7c3aed' },
                 ].map(k => (
-                  <div key={k.label} style={{ background: '#f8fafc', borderRadius: 8, padding: '.75rem 1rem', border: '1px solid #e2e8f0' }}>
+                  <div key={k.label} style={{ background: '#f8fafc', borderRadius: 2, padding: '.75rem 1rem', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#94a3b8', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.2rem' }}>{k.label}</div>
                     <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.2rem', fontWeight: 800, color: k.color }}>{k.value}</div>
                     <div style={{ fontSize: '.62rem', color: '#94a3b8', fontFamily: 'var(--font-inter,sans-serif)' }}>{k.sub}</div>
@@ -1334,7 +1334,7 @@ function CalculadoraInner() {
             <Card>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                 <SecTitle n={2} title="Tabela de equipamentos — edite diretamente" />
-                <button onClick={() => setEquip(DEFAULT_EQUIP)} style={{ padding: '.4rem .9rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '.72rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#475569' }}>
+                <button onClick={() => setEquip(DEFAULT_EQUIP)} style={{ padding: '.4rem .9rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '.72rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#475569' }}>
                   Restaurar padrão
                 </button>
               </div>
@@ -1402,7 +1402,7 @@ function CalculadoraInner() {
             {/* 3. Taxas de manutenção/admin */}
             <Card>
               <SecTitle n={3} title={`Taxas manut. + admin — faixa "${com.faixaTax.nome}" (${pct(com.txRate)} cada)`} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden', marginBottom: '.65rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden', marginBottom: '.65rem' }}>
                 <KV
                   label={`Manutenção: ${pct(com.txRate)} × total equipamentos`}
                   value={R$(com.C_man)}
@@ -1430,10 +1430,10 @@ function CalculadoraInner() {
                 <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#64748b', marginBottom: '.5rem' }}>
                   Fórmula: PV × (1 + {lp.retornoAlvo}%) ÷ N meses = parcela mensal → amortização + resultado
                 </div>
-                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '.75rem 1rem', fontSize: '.8rem', fontFamily: 'var(--font-inter,sans-serif)', color: '#2d284a', marginBottom: '.75rem', lineHeight: 1.7 }}>
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: '.75rem 1rem', fontSize: '.8rem', fontFamily: 'var(--font-inter,sans-serif)', color: '#2d284a', marginBottom: '.75rem', lineHeight: 1.7 }}>
                   {R$(com.PV)} × {(1 + lp.retornoAlvo / 100).toFixed(2)} ÷ {com.N} meses = <strong style={{ color: '#36b6e8' }}>{R$(com.parcelaPrice)}/mês</strong> &nbsp;·&nbsp; por aluno: <strong>{R$(com.valorPorAlunoMes)}/mês</strong> &nbsp;·&nbsp; total: <strong style={{ color: '#16a34a' }}>{R$(com.totalRecebido)}</strong>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden' }}>
                   <KV label="PV (base do cálculo)" value={R$(com.PV)} sub={`equip ${R$(com.sumEquip)} + manut + admin`} big />
                   <KV label="Parcela (FIXA)" value={R$(com.parcelaPrice)} sub={`${com.N} parcelas mensais fixas`} color="#36b6e8" big />
                   <KV label="Por aluno / mês" value={R$(com.valorPorAlunoMes)} sub={`${R$(com.parcelaPrice)} ÷ ${alunos} al.`} color="#7c3aed" big />
@@ -1445,7 +1445,7 @@ function CalculadoraInner() {
                 <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#64748b', marginBottom: '.5rem' }}>
                   Visão econômica ({lp.duracaoMeses} meses = {lp.duracaoMeses / 12} anos)
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 10, overflow: 'hidden' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: '#e2e8f0', borderRadius: 2, overflow: 'hidden' }}>
                   <KV
                     label="Total recebido (leasing)"
                     value={R$(com.totalRecebido)}
@@ -1528,7 +1528,7 @@ function CalculadoraInner() {
                 <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#87cde8', marginBottom: '.3rem' }}>Resumo combinado — sistema + leasing</div>
                 <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>O que a escola paga por aluno mensalmente</div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(255,255,255,.08)', borderRadius: 10, overflow: 'hidden' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(255,255,255,.08)', borderRadius: 2, overflow: 'hidden' }}>
                 {[
                   { label: 'Sistema Kairós', value: R$(alunoMesSis), sub: `${R$(sis.valorFinal)}/ano ÷ 12`, color: '#36b6e8' },
                   { label: 'Leasing Equip.', value: R$(com.valorPorAlunoMes), sub: `${R$(com.parcelaPrice)}/mês ÷ ${alunos} al.`, color: '#87cde8' },
@@ -1568,7 +1568,7 @@ function CalculadoraInner() {
           }}
         >
           <div style={{
-            background: '#fff', borderRadius: 16, width: '100%', maxWidth: 520,
+            background: '#fff', borderRadius: 4, width: '100%', maxWidth: 520,
             boxShadow: '0 24px 60px rgba(0,0,0,.35)',
             display: 'flex', flexDirection: 'column',
             maxHeight: '92vh', overflow: 'hidden',
@@ -1578,7 +1578,7 @@ function CalculadoraInner() {
               background: 'linear-gradient(135deg, #0b1f44, #1e3a6e)',
               padding: '1.2rem 1.5rem',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              borderRadius: '16px 16px 0 0',
+              borderRadius: '4px 4px 0 0',
             }}>
               <div>
                 <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#76f3cd', marginBottom: '.2rem' }}>
@@ -1590,7 +1590,7 @@ function CalculadoraInner() {
               </div>
               <button
                 onClick={closeModal}
-                style={{ background: 'rgba(255,255,255,.12)', border: 'none', borderRadius: 8, width: 34, height: 34, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', color: '#fff' }}
+                style={{ background: 'rgba(255,255,255,.12)', border: 'none', borderRadius: 2, width: 34, height: 34, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', color: '#fff' }}
               >
                 &#215;
               </button>
@@ -1613,7 +1613,7 @@ function CalculadoraInner() {
                   </div>
 
                   {/* Link */}
-                  <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 10, padding: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
+                  <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 2, padding: '1rem', marginBottom: '1rem', textAlign: 'left' }}>
                     <div style={{ ...LBL, marginBottom: '.4rem' }}>Link da proposta</div>
                     <a
                       href={propostaResult.link}
@@ -1635,7 +1635,7 @@ function CalculadoraInner() {
                   </div>
 
                   {/* PIN */}
-                  <div style={{ background: '#fffbeb', border: '1.5px solid #fde68a', borderRadius: 10, padding: '1rem', marginBottom: '1.5rem', textAlign: 'left' }}>
+                  <div style={{ background: '#fffbeb', border: '1.5px solid #fde68a', borderRadius: 2, padding: '1rem', marginBottom: '1.5rem', textAlign: 'left' }}>
                     <div style={{ ...LBL, marginBottom: '.4rem', color: '#b45309' }}>PIN da escola (compartilhe com o diretor)</div>
                     <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '2rem', fontWeight: 800, color: '#92400e', letterSpacing: '.25em' }}>
                       {propostaResult.pin}
@@ -1647,7 +1647,7 @@ function CalculadoraInner() {
 
                   {/* Mensagem pronta — mesmo texto sempre usado pra enviar a proposta,
                       só trocando a referência da escola específica */}
-                  <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 10, padding: '1rem', marginBottom: '1.5rem', textAlign: 'left' }}>
+                  <div style={{ background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 2, padding: '1rem', marginBottom: '1.5rem', textAlign: 'left' }}>
                     <div style={{ ...LBL, marginBottom: '.4rem' }}>Mensagem pronta para enviar</div>
                     <div style={{ fontFamily: 'var(--font-inter,sans-serif)', fontSize: '.78rem', color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-line', marginBottom: '.7rem' }}>
                       {`Foi um prazer conversar sobre a ${modalForm.escolaNome}. Acreditamos que formar estudantes que pensam, criam e vivem com intencionalidade cristã é um dos trabalhos mais importantes que uma escola confessional pode fazer, e é com esse propósito que a Kairós se coloca como parceira.
@@ -1677,13 +1677,13 @@ Essa foi a proposta oficial que enviamos para a escola.`}
                         setPrecoSegundoAno('')
                         setModalError(null)
                       }}
-                      style={{ padding: '.55rem 1.2rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#475569' }}
+                      style={{ padding: '.55rem 1.2rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#475569' }}
                     >
                       Nova proposta
                     </button>
                     <button
                       onClick={closeModal}
-                      style={{ padding: '.55rem 1.2rem', borderRadius: 8, border: 'none', background: '#0b1f44', cursor: 'pointer', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#fff' }}
+                      style={{ padding: '.55rem 1.2rem', borderRadius: 2, border: 'none', background: '#0b1f44', cursor: 'pointer', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', color: '#fff' }}
                     >
                       Fechar
                     </button>
@@ -1754,7 +1754,7 @@ Essa foi a proposta oficial que enviamos para a escola.`}
                     <div
                       onClick={() => logoInputRef.current?.click()}
                       style={{
-                        border: '2px dashed #cbd5e1', borderRadius: 10, padding: '1rem',
+                        border: '2px dashed #cbd5e1', borderRadius: 2, padding: '1rem',
                         cursor: 'pointer', textAlign: 'center', background: '#f8fafc',
                         display: 'flex', alignItems: 'center', gap: '1rem',
                       }}
@@ -1799,7 +1799,7 @@ Essa foi a proposta oficial que enviamos para a escola.`}
                             if (opt.val === 'curriculo_comodato') setNumParcelasCurriculo(5)
                           }}
                           style={{
-                            flex: 1, padding: '.6rem .5rem', borderRadius: 8, cursor: 'pointer',
+                            flex: 1, padding: '.6rem .5rem', borderRadius: 2, cursor: 'pointer',
                             fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.75rem', fontWeight: 700,
                             border: `1.5px solid ${modalForm.tipo === opt.val ? '#0b1f44' : '#e2e8f0'}`,
                             background: modalForm.tipo === opt.val ? '#0b1f44' : '#f8fafc',
@@ -1949,7 +1949,7 @@ Essa foi a proposta oficial que enviamos para a escola.`}
                         <label style={LBL}>Composição por aluno — Currículo + Comodato</label>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '.6rem' }}>
                           {blocos.map(b => (
-                            <div key={b.label} style={{ background: b.bg, border: `1px solid ${b.cor}30`, borderRadius: 8, padding: '.6rem .7rem' }}>
+                            <div key={b.label} style={{ background: b.bg, border: `1px solid ${b.cor}30`, borderRadius: 2, padding: '.6rem .7rem' }}>
                               <div style={{ fontSize: '.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: b.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.35rem' }}>{b.label}</div>
                               <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.1rem', fontWeight: 800, color: '#221d37', lineHeight: 1 }}>
                                 {R$(b.ano)}<span style={{ fontSize: '.58rem', color: '#94a3b8', fontWeight: 400, marginLeft: 2 }}>/ano</span>
@@ -1969,7 +1969,7 @@ Essa foi a proposta oficial que enviamos para a escola.`}
                         <label style={{ ...LBL, marginTop: '1rem' }}>Valor Contratual — {alunos} alunos</label>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '.6rem' }}>
                           {blocos.map(b => (
-                            <div key={b.label} style={{ background: b.bg, border: `1px solid ${b.cor}30`, borderRadius: 8, padding: '.6rem .7rem' }}>
+                            <div key={b.label} style={{ background: b.bg, border: `1px solid ${b.cor}30`, borderRadius: 2, padding: '.6rem .7rem' }}>
                               <div style={{ fontSize: '.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: b.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.35rem' }}>{b.label}</div>
                               <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.1rem', fontWeight: 800, color: '#221d37', lineHeight: 1 }}>
                                 {R$(b.ano * alunos)}<span style={{ fontSize: '.58rem', color: '#94a3b8', fontWeight: 400, marginLeft: 2 }}>/ano</span>
@@ -1997,7 +1997,7 @@ Essa foi a proposta oficial que enviamos para a escola.`}
                   </div>
 
                   {/* Resumo dos dados da calculadora */}
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '.85rem 1rem', fontSize: '.72rem', color: '#475569', fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.7 }}>
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: '.85rem 1rem', fontSize: '.72rem', color: '#475569', fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.7 }}>
                     <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#94a3b8', marginBottom: '.4rem' }}>
                       Dados da calculadora (incluídos automaticamente)
                     </div>
@@ -2009,7 +2009,7 @@ Essa foi a proposta oficial que enviamos para a escola.`}
 
                   {/* Error */}
                   {modalError && (
-                    <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 8, padding: '.75rem 1rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
+                    <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 2, padding: '.75rem 1rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
                       {modalError}
                     </div>
                   )}

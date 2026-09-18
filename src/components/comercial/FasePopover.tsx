@@ -120,7 +120,7 @@ export function FasePopover({ escolaId, faseLabel, faseCor, checklist: checklist
     <>
       <div ref={btnRef} onClick={abrir} title="Clique para atualizar o checklist do contrato" style={{
         display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '.25rem',
-        cursor: 'pointer', minWidth: 120, padding: '.15rem', margin: '-.15rem', borderRadius: 8,
+        cursor: 'pointer', minWidth: 120, padding: '.15rem', margin: '-.15rem', borderRadius: 2,
       }}
         onMouseEnter={e => { e.currentTarget.style.background = '#f8fafc' }}
         onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
@@ -145,7 +145,7 @@ export function FasePopover({ escolaId, faseLabel, faseCor, checklist: checklist
       {aberto && pos && (
         <div ref={painelRef} style={{
           position: 'fixed', top: pos.top, left: pos.left, zIndex: 2000,
-          width: 280, background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 12,
+          width: 280, background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 3,
           boxShadow: '0 12px 32px rgba(34,29,55,.18)', padding: '1rem',
         }}>
           <div style={{ fontSize: '.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.06em', color: '#221d37', marginBottom: '.75rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -186,13 +186,13 @@ export function FasePopover({ escolaId, faseLabel, faseCor, checklist: checklist
 
           <div style={{ display: 'flex', gap: '.5rem' }}>
             <button onClick={salvar} disabled={pending} style={{
-              flex: 1, padding: '.5rem', borderRadius: 8, border: 'none', cursor: pending ? 'wait' : 'pointer',
+              flex: 1, padding: '.5rem', borderRadius: 2, border: 'none', cursor: pending ? 'wait' : 'pointer',
               background: '#36b6e8', color: '#fff', fontSize: '.75rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)',
             }}>
               {pending ? 'Salvando...' : 'Salvar'}
             </button>
             <button onClick={() => setAberto(false)} style={{
-              padding: '.5rem .75rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer',
+              padding: '.5rem .75rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer',
               fontSize: '.75rem', fontWeight: 600, color: '#64748b', fontFamily: 'var(--font-montserrat,sans-serif)',
             }}>
               Cancelar

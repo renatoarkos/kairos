@@ -119,7 +119,7 @@ export function RegistroAnexoUpload({ registroId }: Props) {
     <div>
       {/* Seletor de tipo + botão upload */}
       <div style={{ display: 'flex', gap: '.65rem', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', border: '1.5px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', border: '1.5px solid #e2e8f0', borderRadius: 2, overflow: 'hidden' }}>
           {(['proposta', 'contraproposta'] as const).map(t => (
             <button key={t} type="button"
               onClick={() => setTipoUpload(t)}
@@ -140,7 +140,7 @@ export function RegistroAnexoUpload({ registroId }: Props) {
           disabled={uploading}
           style={{
             display: 'flex', alignItems: 'center', gap: '.4rem',
-            padding: '.45rem 1rem', borderRadius: 8,
+            padding: '.45rem 1rem', borderRadius: 2,
             border: '1.5px solid #36b6e8', background: uploading ? '#f8fafc' : '#eff6ff',
             color: '#2563eb', cursor: uploading ? 'not-allowed' : 'pointer',
             fontSize: '.75rem', fontWeight: 700,
@@ -157,12 +157,12 @@ export function RegistroAnexoUpload({ registroId }: Props) {
       </div>
 
       {erro && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.55rem .85rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#dc2626' }}>
+        <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.55rem .85rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#dc2626' }}>
           {erro}
         </div>
       )}
       {ok && (
-        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 8, padding: '.55rem .85rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#16a34a' }}>
+        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 2, padding: '.55rem .85rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#16a34a' }}>
           {ok}
         </div>
       )}
@@ -181,7 +181,7 @@ export function RegistroAnexoUpload({ registroId }: Props) {
               <div key={arq.name} style={{
                 display: 'flex', alignItems: 'center', gap: '.75rem',
                 padding: '.7rem 1rem', background: '#fff',
-                border: '1px solid #e2e8f0', borderRadius: 10,
+                border: '1px solid #e2e8f0', borderRadius: 2,
               }}>
                 <span style={{
                   padding: '.2rem .55rem', borderRadius: 99, fontSize: '.65rem', fontWeight: 800,

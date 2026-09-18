@@ -31,7 +31,7 @@ export default async function PipelinePage({ searchParams }: Props) {
         actions={
           <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
             <AdicionarNegociacaoBtn escolas={escolas ?? []} userId={user?.id ?? ''} />
-            <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: 8, padding: 3, gap: 2 }}>
+            <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: 2, padding: 3, gap: 2 }}>
               {[
                 { v: 'kanban',    label: 'Kanban' },
                 { v: 'consultor', label: 'Consultores' },

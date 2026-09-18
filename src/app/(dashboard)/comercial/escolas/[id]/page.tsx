@@ -305,7 +305,7 @@ export default async function EscolaDetalhe({ params }: Props) {
   const cardStyle: React.CSSProperties = {
     background: 'var(--surface, #fff)',
     border: '1px solid var(--border, #e2e8f0)',
-    borderRadius: 12,
+    borderRadius: 3,
     overflow: 'hidden',
   }
 
@@ -374,7 +374,7 @@ export default async function EscolaDetalhe({ params }: Props) {
     justifyContent: 'center',
     gap: '.5rem',
     padding: '.65rem 1rem',
-    borderRadius: 8,
+    borderRadius: 2,
     fontSize: '.83rem',
     fontWeight: 600,
     fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -511,7 +511,7 @@ export default async function EscolaDetalhe({ params }: Props) {
                   background: 'rgba(255,255,255,.08)',
                   color: 'rgba(255,255,255,.85)',
                   padding: '.6rem 1rem',
-                  borderRadius: 8,
+                  borderRadius: 2,
                   fontSize: '.82rem',
                   fontWeight: 600,
                   fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -646,7 +646,7 @@ export default async function EscolaDetalhe({ params }: Props) {
                 <div className="mp-escola-alunos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.25rem', marginBottom: '1.5rem' }}>
                   
                   {/* Infantil */}
-                  <div style={{ background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 14, padding: '1rem' }}>
+                  <div style={{ background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 3, padding: '1rem' }}>
                     <div style={{ ...labelStyle, color: '#ea580c', fontSize: '.65rem' }}>Ed. Infantil</div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.4rem', marginTop: '.4rem' }}>
                       {[
@@ -667,7 +667,7 @@ export default async function EscolaDetalhe({ params }: Props) {
                   </div>
 
                   {/* Fund I */}
-                  <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 14, padding: '1rem' }}>
+                  <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 3, padding: '1rem' }}>
                     <div style={{ ...labelStyle, color: '#2563eb', fontSize: '.65rem' }}>Fund. I (1º-5º)</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '.4rem', marginTop: '.4rem' }}>
                       {[
@@ -690,13 +690,13 @@ export default async function EscolaDetalhe({ params }: Props) {
 
                   {/* Fund II e Médio (Resumo) */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-                    <div style={{ background: '#f5f3ff', border: '1.5px solid #ddd6fe', borderRadius: 12, padding: '.85rem', flex: 1 }}>
+                    <div style={{ background: '#f5f3ff', border: '1.5px solid #ddd6fe', borderRadius: 3, padding: '.85rem', flex: 1 }}>
                       <div style={{ ...labelStyle, color: '#7c3aed', fontSize: '.6rem', marginBottom: '.25rem' }}>Fund. II (6º-9º)</div>
                       <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#7c3aed', fontFamily: 'var(--font-cormorant,serif)', textAlign: 'center' }}>
                         {alunosGranular.qtd_fund2}
                       </div>
                     </div>
-                    <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 12, padding: '.85rem', flex: 1 }}>
+                    <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 3, padding: '.85rem', flex: 1 }}>
                       <div style={{ ...labelStyle, color: '#dc2626', fontSize: '.6rem', marginBottom: '.25rem' }}>Ens. Médio (1-3)</div>
                       <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#dc2626', fontFamily: 'var(--font-cormorant,serif)', textAlign: 'center' }}>
                         {alunosGranular.qtd_medio}
@@ -705,7 +705,7 @@ export default async function EscolaDetalhe({ params }: Props) {
                   </div>
 
                   {/* Total Geral */}
-                  <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 14, padding: '1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                  <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 3, padding: '1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     <div style={{ ...labelStyle, color: 'rgba(255,255,255,.5)', fontSize: '.65rem' }}>Total de Alunos</div>
                     <div style={{ fontSize: '2.4rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-cormorant,serif)', lineHeight: 1 }}>
                       {totalAlunos}
@@ -720,7 +720,7 @@ export default async function EscolaDetalhe({ params }: Props) {
                 <div style={{
                   background: 'linear-gradient(135deg, #fffbeb, #fef3c7)',
                   border: '1px solid #fcd34d',
-                  borderRadius: 10,
+                  borderRadius: 2,
                   padding: '1rem 1.25rem',
                   display: 'flex',
                   alignItems: 'center',

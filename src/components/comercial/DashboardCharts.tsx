@@ -19,7 +19,7 @@ export function MiniBarChart({
   return (
     <div style={{
       background: 'white', border: '1.5px solid #E2E8F0',
-      borderRadius: 14, padding: '1.25rem 1.5rem',
+      borderRadius: 3, padding: '1.25rem 1.5rem',
       boxShadow: '0 1px 4px rgba(0,0,0,.04)',
     }}>
       <div style={{
@@ -91,7 +91,7 @@ export function KpiCard({
         <div style={{ fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: cor, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
           {label}
         </div>
-        <div style={{ width: 30, height: 30, borderRadius: 8, background: cor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div style={{ width: 30, height: 30, borderRadius: 2, background: cor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           {icon}
         </div>
       </div>
@@ -121,7 +121,7 @@ export function KpiCard({
   )
   const style: React.CSSProperties = {
     background: bg, border: `1.5px solid ${border}`,
-    borderRadius: 16, padding: '1.25rem 1.4rem',
+    borderRadius: 4, padding: '1.25rem 1.4rem',
     borderTop: `3px solid ${cor}`,
     display: 'flex', flexDirection: 'column', gap: '.65rem',
     textDecoration: 'none',

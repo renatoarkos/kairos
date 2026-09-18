@@ -30,7 +30,7 @@ export function ContadorRegressivo() {
     return (
       <div style={{
         background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.12)',
-        borderRadius: 12, padding: '1rem 1.25rem', textAlign: 'center',
+        borderRadius: 3, padding: '1rem 1.25rem', textAlign: 'center',
       }}>
         <div style={{ fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: '#16a34a', marginBottom: '.35rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
           Prazo Encerrado
@@ -45,7 +45,7 @@ export function ContadorRegressivo() {
   return (
     <div style={{
       background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.12)',
-      borderRadius: 12, padding: '1rem 1.1rem',
+      borderRadius: 3, padding: '1rem 1.1rem',
     }}>
       {/* Label */}
       <div style={{
@@ -67,7 +67,7 @@ export function ContadorRegressivo() {
           <div key={label} style={{ textAlign: 'center' }}>
             <div style={{
               background: 'rgba(54,182,232,.25)', border: '1px solid rgba(54,182,232,.35)',
-              borderRadius: 8, padding: '.4rem .2rem',
+              borderRadius: 2, padding: '.4rem .2rem',
               fontFamily: 'var(--font-cormorant,serif)',
               fontSize: label === 'dias' ? '1.5rem' : '1.25rem',
               fontWeight: 800, lineHeight: 1, color: '#fbbf24',

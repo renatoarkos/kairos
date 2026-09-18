@@ -29,7 +29,7 @@ export function MigrarLeadsBtn() {
       display: 'inline-flex', alignItems: 'center', gap: '.4rem',
       background: '#f5f3ff', color: '#7c3aed',
       border: '1.5px solid #ddd6fe',
-      padding: '.45rem 1rem', borderRadius: 9999,
+      padding: '.45rem 1rem', borderRadius: 3,
       fontSize: '.78rem', fontWeight: 700, cursor: 'pointer',
       fontFamily: 'var(--font-montserrat,sans-serif)',
     }}>
@@ -47,7 +47,7 @@ export function MigrarLeadsBtn() {
       <button onClick={handleMigrar} style={{
         display: 'inline-flex', alignItems: 'center', gap: '.35rem',
         background: '#7c3aed', color: '#fff',
-        padding: '.35rem .85rem', borderRadius: 9999,
+        padding: '.35rem .85rem', borderRadius: 3,
         fontSize: '.72rem', fontWeight: 700, cursor: 'pointer', border: 'none',
         fontFamily: 'var(--font-montserrat,sans-serif)',
         boxShadow: '0 4px 12px rgba(124,58,237,.35)',
@@ -55,7 +55,7 @@ export function MigrarLeadsBtn() {
         Confirmar importação
       </button>
       <button onClick={() => setEstado('idle')} style={{
-        padding: '.35rem .65rem', borderRadius: 9999,
+        padding: '.35rem .65rem', borderRadius: 3,
         border: '1px solid #e2e8f0', background: '#fff',
         color: '#64748b', fontSize: '.72rem', cursor: 'pointer',
         fontFamily: 'var(--font-montserrat,sans-serif)',

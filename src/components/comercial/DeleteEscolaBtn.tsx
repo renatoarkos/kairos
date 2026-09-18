@@ -66,7 +66,7 @@ export function DeleteEscolaBtn({ escolaId, escolaNome, variant = 'sidebar' }: P
           display: 'inline-flex', alignItems: 'center', gap: '.45rem',
           background: confirm ? 'rgba(220,38,38,.85)' : 'rgba(255,255,255,.06)',
           color: confirm ? '#fff' : 'rgba(255,255,255,.6)',
-          padding: '.6rem 1rem', borderRadius: 8,
+          padding: '.6rem 1rem', borderRadius: 2,
           fontSize: '.82rem', fontWeight: 600,
           fontFamily: 'var(--font-montserrat, sans-serif)',
           border: `1px solid ${confirm ? 'rgba(220,38,38,.5)' : 'rgba(255,255,255,.12)'}`,
@@ -89,7 +89,7 @@ export function DeleteEscolaBtn({ escolaId, escolaNome, variant = 'sidebar' }: P
     <>
       {confirm && (
         <div style={{
-          background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
+          background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2,
           padding: '.75rem 1rem', marginBottom: '.5rem',
           fontSize: '.72rem', color: '#dc2626', lineHeight: 1.5,
           fontFamily: 'var(--font-inter,sans-serif)',

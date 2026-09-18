@@ -136,9 +136,9 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
       <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
         <PageHeader title="Pesquisa de Mercado CIECC" subtitle="Dados dos congressos 2025 e 2026" />
         <div style={{ padding: '3rem 2.5rem', textAlign: 'center' }}>
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: '3rem 2.5rem', maxWidth: 560, margin: '0 auto', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '3rem 2.5rem', maxWidth: 560, margin: '0 auto', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-              <div style={{ width: 60, height: 60, borderRadius: 14, background: '#fffbeb', border: '2px solid #fde68a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 60, height: 60, borderRadius: 3, background: '#fffbeb', border: '2px solid #fde68a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#36b6e8" strokeWidth="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
               </div>
             </div>
@@ -148,10 +148,10 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
             </p>
             <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <a href="https://supabase.com/dashboard/project/lyisdsnocroocxfblvqf/sql/new" target="_blank" rel="noopener noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.6rem 1.5rem', borderRadius: 9999, textDecoration: 'none', fontWeight: 700, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.6rem 1.5rem', borderRadius: 3, textDecoration: 'none', fontWeight: 700, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 1. Criar tabelas (SQL)
               </a>
-              <Link href="/importacao" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', padding: '.6rem 1.5rem', borderRadius: 9999, textDecoration: 'none', fontWeight: 600, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+              <Link href="/importacao" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', padding: '.6rem 1.5rem', borderRadius: 3, textDecoration: 'none', fontWeight: 600, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 2. Importar Planilhas
               </Link>
             </div>
@@ -414,7 +414,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
                   icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
                 },
               ].map(k => (
-                <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 14, padding: '1rem 1.1rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+                <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 3, padding: '1rem 1.1rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.5rem' }}>
                     <div style={{ fontSize: '.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)' }}>{k.label}</div>
                     <div style={{ color: k.cor, opacity: .6 }}>{k.icon}</div>
@@ -434,7 +434,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
                 { label: 'Promotores NPS', val: kpiLeads.npsPromotor.toLocaleString('pt-BR'), sub: 'NPS 9–10 (alto interesse)', cor: '#16a34a', bg: '#f0fdf4', border: '#86efac' },
                 { label: 'Interesse Alto Kairós', val: kpiLeads.interesseAlto.toLocaleString('pt-BR'), sub: 'declaram muito interesse', cor: '#36b6e8', bg: '#fffbeb', border: '#fde68a' },
               ].map(k => (
-                <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 12, padding: '.85rem 1rem' }}>
+                <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 3, padding: '.85rem 1rem' }}>
                   <div style={{ fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.25rem' }}>{k.label}</div>
                   <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.5rem', fontWeight: 800, color: '#221d37', lineHeight: 1, marginBottom: '.2rem' }}>{k.val}</div>
                   <div style={{ fontSize: '.62rem', color: '#475569', fontFamily: 'var(--font-inter,sans-serif)' }}>{k.sub}</div>
@@ -446,7 +446,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.85rem' }}>
 
               {/* Top Estados */}
-              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.1rem 1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.1rem 1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
                 <div style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#475569', marginBottom: '1rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   Distribuição por Estado
                 </div>
@@ -469,7 +469,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
               </div>
 
               {/* Top Tipos de Inscrição */}
-              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.1rem 1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+              <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.1rem 1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
                 <div style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#475569', marginBottom: '1rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   Perfil dos Inscritos
                 </div>
@@ -502,7 +502,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
             </div>
           </div>
         ) : tabelaLeadsOk ? (
-          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 14, padding: '1.25rem 1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 3, padding: '1.25rem 1.5rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#36b6e8" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <div>
               <div style={{ fontWeight: 700, fontSize: '.85rem', color: '#92400e', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Banco de leads criado mas ainda vazio</div>
@@ -522,7 +522,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
             { label: 'Escolas 2026',    val: totalEscolas2026.toLocaleString('pt-BR'), cor: '#0d9488', bg: '#f0fdfa', border: '#99f6e4' },
             { label: 'Leads Decisores 2026', val: totalLeads2026.toLocaleString('pt-BR'),  cor: '#dc2626', bg: '#fef2f2', border: '#fca5a5' },
           ].map(k => (
-            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 14, padding: '.9rem 1rem' }}>
+            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 3, padding: '.9rem 1rem' }}>
               <div style={{ fontSize: '.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.25rem' }}>{k.label}</div>
               <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.6rem', fontWeight: 800, color: '#221d37', lineHeight: 1 }}>{k.val}</div>
             </div>
@@ -530,7 +530,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
         </div>
 
         {/* ── Filtros ──────────────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <span style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#64748b', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Filtrar:</span>
 
           {/* Ano */}
@@ -564,7 +564,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '1.5rem' }}>
 
           {/* NPS e CSI médio */}
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
             <div style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '1rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Indicadores de Satisfação</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               {[
@@ -573,7 +573,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
                 { label: 'Com Escola', val: comEscola.length.toString(), sub: `de ${todos.length} inscritos`, cor: '#36b6e8' },
                 { label: 'Filtrado', val: todos.length.toString(), sub: 'registros visíveis', cor: '#64748b' },
               ].map(k => (
-                <div key={k.label} style={{ background: '#f8fafc', borderRadius: 10, padding: '.85rem', textAlign: 'center' }}>
+                <div key={k.label} style={{ background: '#f8fafc', borderRadius: 2, padding: '.85rem', textAlign: 'center' }}>
                   <div style={{ fontSize: '.62rem', fontWeight: 700, textTransform: 'uppercase', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.25rem' }}>{k.label}</div>
                   <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.5rem', fontWeight: 800, color: '#221d37', lineHeight: 1 }}>{k.val}</div>
                   <div style={{ fontSize: '.62rem', color: '#475569', fontFamily: 'var(--font-inter,sans-serif)', marginTop: '.2rem' }}>{k.sub}</div>
@@ -583,7 +583,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
           </div>
 
           {/* Tipo de Inscrição */}
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
             <div style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '1rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Tipo de Inscrição</div>
             {porTipo.slice(0, 6).map(([tipo, n]) => (
               <div key={tipo} style={{ marginBottom: '.5rem' }}>
@@ -602,7 +602,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
         {/* ── Confessionalidade + Interesse Kairós ────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.25rem', marginBottom: '1.5rem' }}>
 
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
             <div style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '1rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Confessionalidade</div>
             {porConfessional.slice(0, 5).map(([v, n]) => (
               <div key={v} style={{ marginBottom: '.5rem' }}>
@@ -617,7 +617,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
             ))}
           </div>
 
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
             <div style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '1rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Interesse na Solução Kairós</div>
             {porInteresse.slice(0, 5).map(([v, n]) => (
               <div key={v} style={{ marginBottom: '.5rem' }}>
@@ -632,7 +632,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
             ))}
           </div>
 
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
             <div style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '1rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Prazo de Decisão</div>
             {porPrazo.slice(0, 5).map(([v, n]) => (
               <div key={v} style={{ marginBottom: '.5rem' }}>
@@ -650,7 +650,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
 
         {/* ── Tabela de escolas com dados de pesquisa ─── */}
         {comEscola.length > 0 && (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)', marginBottom: '1.5rem' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)', marginBottom: '1.5rem' }}>
             <div className="mp-card-header-flex" style={{ padding: '.85rem 1.25rem', background: '#221d37', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1rem', fontWeight: 700, color: '#fff' }}>
                 Escolas com Dados de Pesquisa ({comEscola.length})
@@ -700,7 +700,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
 
         {/* ── Leads Decisores 2026 — Prospects Ativos ─── */}
         {leads2026Decisores.length > 0 && (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
             <div className="mp-card-header-flex" style={{ padding: '1rem 1.25rem', background: 'linear-gradient(135deg, #dc2626, #b91c1c)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>
@@ -725,7 +725,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
 
         {/* ── Leads Decisores 2025 — Referência histórica ─ */}
         {leads2025Decisores.length > 0 && (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
             <div className="mp-card-header-flex" style={{ padding: '1rem 1.25rem', background: 'linear-gradient(135deg, #64748b, #475569)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>

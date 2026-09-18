@@ -35,7 +35,7 @@ export function WipPage({
         {/* ── Hero do módulo ──────────────────────────────────── */}
         <div style={{
           background: 'linear-gradient(135deg, #221d37 0%, #2d284a 100%)',
-          borderRadius: 20, padding: '2.5rem 3rem', marginBottom: '1.5rem',
+          borderRadius: 6, padding: '2.5rem 3rem', marginBottom: '1.5rem',
           position: 'relative', overflow: 'hidden',
         }}>
           {/* Decoração */}
@@ -44,7 +44,7 @@ export function WipPage({
 
           <div style={{ position: 'relative', zIndex: 1 }}>
             {/* Badge */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.15)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 9999, padding: '.3rem .9rem', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.15)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 3, padding: '.3rem .9rem', marginBottom: '1.25rem' }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#f59e0b', animation: 'pulse 2s infinite' }} />
               <span style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 {tag} — Em Desenvolvimento
@@ -63,7 +63,7 @@ export function WipPage({
                 <Link href={cta.href} style={{
                   display: 'inline-flex', alignItems: 'center', gap: '.4rem',
                   background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem',
-                  borderRadius: 9999, fontSize: '.82rem', fontWeight: 700,
+                  borderRadius: 3, fontSize: '.82rem', fontWeight: 700,
                   textDecoration: 'none', fontFamily: 'var(--font-montserrat,sans-serif)',
                   boxShadow: '0 4px 14px rgba(54,182,232,.35)',
                 }}>
@@ -75,7 +75,7 @@ export function WipPage({
         </div>
 
         {/* ── Funcionalidades planejadas ──────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
           <div style={{ background: '#fafafa', padding: '1rem 1.75rem', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: '.65rem' }}>
             <div style={{ width: 28, height: 28, borderRadius: 7, background: '#221d37', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#36b6e8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/></svg>
@@ -86,7 +86,7 @@ export function WipPage({
           </div>
           <div style={{ padding: '1.5rem 1.75rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px,1fr))', gap: '1rem' }}>
             {features.map((f, i) => (
-              <div key={i} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 12, padding: '1rem 1.1rem', display: 'flex', gap: '.85rem', alignItems: 'flex-start' }}>
+              <div key={i} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 3, padding: '1rem 1.1rem', display: 'flex', gap: '.85rem', alignItems: 'flex-start' }}>
                 <div style={{ width: 36, height: 36, borderRadius: 9, background: '#fff', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: '#64748b' }}>
                   {f.icon}
                 </div>
@@ -101,12 +101,12 @@ export function WipPage({
 
         {/* ── Integração ──────────────────────────────────────── */}
         {integration && (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.5rem 1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.5rem 1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
             <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.85rem' }}>
               Integração planejada
             </div>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '1.1rem', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 12 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 10, background: '#36b6e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: '#fff' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '1.1rem', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 3 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 2, background: '#36b6e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: '#fff' }}>
                 {integration.icon}
               </div>
               <div>
@@ -119,7 +119,7 @@ export function WipPage({
 
         {/* ── Nota informativa ────────────────────────────────── */}
         {note && (
-          <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 12, padding: '1rem 1.25rem', display: 'flex', alignItems: 'flex-start', gap: '.75rem' }}>
+          <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 3, padding: '1rem 1.25rem', display: 'flex', alignItems: 'flex-start', gap: '.75rem' }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '.1rem' }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             <div style={{ fontSize: '.8rem', color: '#1e40af', fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.6 }}>{note}</div>
           </div>

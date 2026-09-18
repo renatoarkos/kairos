@@ -7,7 +7,7 @@ import { PERFIL_OPTIONS, ORIGEM_OPTIONS, CARGO_CONTATO_OPTIONS } from '@/types/d
 
 /* ── Estilos reutilizáveis ──────────────────────────────────────── */
 const card: React.CSSProperties = {
-  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4,
   marginBottom: '1.5rem', overflow: 'hidden',
   boxShadow: '0 1px 4px rgba(34,29,55,.06)',
 }
@@ -34,7 +34,7 @@ const label: React.CSSProperties = {
 const input: React.CSSProperties = {
   width: '100%', padding: '.65rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none',
   boxSizing: 'border-box',
 }
@@ -86,7 +86,7 @@ export default async function EscolaNova({ searchParams }: Props) {
         subtitle="Preencha os dados da escola parceira"
         actions={
           <Link href="/comercial/escolas" style={{
-            padding: '.45rem 1rem', borderRadius: 8, border: '1.5px solid #e2e8f0',
+            padding: '.45rem 1rem', borderRadius: 2, border: '1.5px solid #e2e8f0',
             background: '#fff', color: '#475569', textDecoration: 'none',
             fontSize: '.82rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)',
           }}>
@@ -224,7 +224,7 @@ export default async function EscolaNova({ searchParams }: Props) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.5rem' }}>
 
                 {/* Infantil */}
-                <div style={{ background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 12, padding: '1.1rem 1rem' }}>
+                <div style={{ background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 3, padding: '1.1rem 1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '.8rem' }}>
                     <div style={{ width: 4, height: 16, background: '#f97316', borderRadius: 2 }} />
                     <label style={{ ...label, color: '#ea580c', marginBottom: 0, fontSize: '.68rem' }}>Ed. Infantil</label>
@@ -243,7 +243,7 @@ export default async function EscolaNova({ searchParams }: Props) {
                 </div>
 
                 {/* Fund I */}
-                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 12, padding: '1.1rem 1rem' }}>
+                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 3, padding: '1.1rem 1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '.8rem' }}>
                     <div style={{ width: 4, height: 16, background: '#2563eb', borderRadius: 2 }} />
                     <label style={{ ...label, color: '#2563eb', marginBottom: 0, fontSize: '.68rem' }}>Fund. I</label>
@@ -263,7 +263,7 @@ export default async function EscolaNova({ searchParams }: Props) {
                 </div>
 
                 {/* Fund II */}
-                <div style={{ background: '#f5f3ff', border: '1.5px solid #ddd6fe', borderRadius: 12, padding: '1.1rem 1rem' }}>
+                <div style={{ background: '#f5f3ff', border: '1.5px solid #ddd6fe', borderRadius: 3, padding: '1.1rem 1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '.8rem' }}>
                     <div style={{ width: 4, height: 16, background: '#7c3aed', borderRadius: 2 }} />
                     <label style={{ ...label, color: '#7c3aed', marginBottom: 0, fontSize: '.68rem' }}>Fund. II</label>
@@ -282,7 +282,7 @@ export default async function EscolaNova({ searchParams }: Props) {
                 </div>
 
                 {/* Médio */}
-                <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 12, padding: '1.1rem 1rem' }}>
+                <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 3, padding: '1.1rem 1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '.8rem' }}>
                     <div style={{ width: 4, height: 16, background: '#dc2626', borderRadius: 2 }} />
                     <label style={{ ...label, color: '#dc2626', marginBottom: 0, fontSize: '.68rem' }}>Ens. Médio</label>
@@ -302,7 +302,7 @@ export default async function EscolaNova({ searchParams }: Props) {
               </div>
 
               {/* Maior turma — determina nº de notebooks no comodato */}
-              <div style={{ marginTop: '1.5rem', padding: '1.1rem 1.25rem', background: 'linear-gradient(135deg, #eff6ff, #f5f3ff)', border: '2px solid #bfdbfe', borderRadius: 14, display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+              <div style={{ marginTop: '1.5rem', padding: '1.1rem 1.25rem', background: 'linear-gradient(135deg, #eff6ff, #f5f3ff)', border: '2px solid #bfdbfe', borderRadius: 3, display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
                 <div style={{ flex: '0 0 auto' }}>
                   <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#2563eb', marginBottom: '.3rem' }}>
                     Maior Turma <span style={{ color: '#dc2626' }}>*</span>
@@ -363,12 +363,12 @@ export default async function EscolaNova({ searchParams }: Props) {
             display: 'flex', alignItems: 'center', gap: '1rem',
             padding: '1.25rem 1.75rem',
             background: '#fff', border: '1px solid #e2e8f0',
-            borderRadius: 16,
+            borderRadius: 4,
           }}>
             <button type="submit" style={{
               background: 'linear-gradient(135deg, #36b6e8, #12789f)',
               color: '#fff', padding: '.7rem 2rem',
-              borderRadius: 9999, border: 'none', cursor: 'pointer',
+              borderRadius: 3, border: 'none', cursor: 'pointer',
               fontSize: '.875rem', fontWeight: 700,
               fontFamily: 'var(--font-montserrat,sans-serif)',
               boxShadow: '0 4px 14px rgba(54,182,232,.35)',
@@ -377,7 +377,7 @@ export default async function EscolaNova({ searchParams }: Props) {
               Cadastrar Escola
             </button>
             <Link href="/comercial/escolas" style={{
-              padding: '.7rem 1.5rem', borderRadius: 9999,
+              padding: '.7rem 1.5rem', borderRadius: 3,
               border: '1.5px solid #e2e8f0', background: '#fff',
               color: '#64748b', textDecoration: 'none',
               fontSize: '.875rem', fontWeight: 600,

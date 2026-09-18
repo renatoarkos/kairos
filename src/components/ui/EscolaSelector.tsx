@@ -136,7 +136,7 @@ export function EscolaSelector({ escolas, escolaId, basePath, placeholder, extra
             marginTop: '.4rem',
             background: '#fff',
             border: `1.5px solid ${busca.trim() ? '#0ea5e9' : '#e2e8f0'}`,
-            borderRadius: 10,
+            borderRadius: 2,
             boxShadow: busca.trim() ? '0 8px 24px rgba(14,165,233,.15)' : '0 8px 24px rgba(0,0,0,.12)',
             zIndex: 1000,
             maxHeight: 320,

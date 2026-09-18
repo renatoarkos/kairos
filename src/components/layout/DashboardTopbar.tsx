@@ -64,7 +64,7 @@ export default function DashboardTopbar() {
         .dashboard-topbar-burger {
           width: 44px;
           height: 44px;
-          border-radius: 10px;
+          border-radius: 2px;
           border: 1px solid rgba(255,255,255,.1);
           background: rgba(255,255,255,.06);
           color: #fff;

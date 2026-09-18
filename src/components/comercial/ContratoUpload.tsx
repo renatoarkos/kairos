@@ -125,7 +125,7 @@ export function ContratoUpload({ escolaId, escolaNome, arquivosExistentes }: Pro
       <div
         onClick={() => inputRef.current?.click()}
         style={{
-          border: '2px dashed #e2e8f0', borderRadius: 12,
+          border: '2px dashed #e2e8f0', borderRadius: 3,
           padding: '1.75rem 1.5rem', textAlign: 'center',
           cursor: uploading ? 'not-allowed' : 'pointer',
           background: uploading ? '#f8fafc' : '#fafafa',
@@ -165,12 +165,12 @@ export function ContratoUpload({ escolaId, escolaNome, arquivosExistentes }: Pro
 
       {/* Mensagens */}
       {erro && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.6rem .9rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
+        <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.6rem .9rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
           {erro}
         </div>
       )}
       {ok && (
-        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 8, padding: '.6rem .9rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#16a34a', fontFamily: 'var(--font-inter,sans-serif)' }}>
+        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 2, padding: '.6rem .9rem', marginBottom: '.75rem', fontSize: '.78rem', color: '#16a34a', fontFamily: 'var(--font-inter,sans-serif)' }}>
           {ok}
         </div>
       )}
@@ -182,7 +182,7 @@ export function ContratoUpload({ escolaId, escolaNome, arquivosExistentes }: Pro
             <div key={arq.id} style={{
               display: 'flex', alignItems: 'center', gap: '.75rem',
               padding: '.75rem 1rem', background: '#fff',
-              border: '1px solid #e2e8f0', borderRadius: 10,
+              border: '1px solid #e2e8f0', borderRadius: 2,
               transition: 'all .15s',
             }}>
               <div style={{ flexShrink: 0 }}>{iconeArquivo(arq.nome)}</div>

@@ -46,7 +46,7 @@ export function MatrizFitEngajamento({
           const escolas = porQuadrante.get(q) ?? []
           return (
             <div key={q} style={{
-              background: cor.bg, border: `1.5px solid ${cor.border}`, borderRadius: 12,
+              background: cor.bg, border: `1.5px solid ${cor.border}`, borderRadius: 3,
               padding: '.9rem 1rem', minHeight: 128,
             }}>
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '.3rem' }}>

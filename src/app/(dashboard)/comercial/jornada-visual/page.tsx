@@ -220,7 +220,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
         {/* ── Barra de seleção de escola ──────────────────────────────────── */}
         <div style={{
           background: '#2d284a',
-          borderRadius: 12,
+          borderRadius: 3,
           padding: '.75rem 1.25rem',
           marginBottom: '1.5rem',
           display: 'flex',
@@ -251,7 +251,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
             {/* ── Hero da escola ─────────────────────────────────────────── */}
             <div style={{
               background: 'linear-gradient(135deg, #221d37 0%, #2d284a 60%, #221d37 100%)',
-              borderRadius: 16,
+              borderRadius: 4,
               padding: '2rem 2.25rem',
               marginBottom: '2rem',
               color: '#fff',
@@ -312,7 +312,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                     <div key={label} style={{
                       background: 'rgba(255,255,255,.06)',
                       border: '1px solid rgba(255,255,255,.1)',
-                      borderRadius: 10,
+                      borderRadius: 2,
                       padding: '.7rem 1.1rem',
                       textAlign: 'center',
                       minWidth: 80,
@@ -338,7 +338,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                     <div style={{
                       background: 'rgba(255,255,255,.06)',
                       border: '1px solid rgba(255,255,255,.1)',
-                      borderRadius: 10,
+                      borderRadius: 2,
                       padding: '.7rem 1.1rem',
                       textAlign: 'center',
                       minWidth: 80,
@@ -366,7 +366,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
             <div style={{
               background: '#fff',
               border: '1px solid #e2e8f0',
-              borderRadius: 16,
+              borderRadius: 4,
               marginBottom: '2rem',
               overflow: 'hidden',
               boxShadow: '0 2px 12px rgba(34,29,55,.06)',
@@ -742,7 +742,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                             background: '#fff',
                             border: '1px solid #e2e8f0',
                             borderLeft: `4px solid ${corInteresse}`,
-                            borderRadius: 12,
+                            borderRadius: 3,
                             padding: '1rem 1.25rem',
                             boxShadow: '0 2px 10px rgba(34,29,55,.05)',
                           }}>
@@ -824,7 +824,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                               fontSize: '.84rem', color: '#334155', lineHeight: 1.7,
                               marginBottom: '.85rem',
                               fontFamily: 'var(--font-inter,sans-serif)',
-                              background: '#f8fafc', borderRadius: 8,
+                              background: '#f8fafc', borderRadius: 2,
                               padding: '.75rem .9rem',
                               borderLeft: `3px solid ${corInteresse}40`,
                               margin: '0 0 .85rem 0',
@@ -932,7 +932,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                         background: etapaAtual === 'arquivado' ? '#f0fdf4' : '#fffbeb',
                         border: `1px solid ${etapaAtual === 'arquivado' ? '#86efac' : '#fcd34d'}`,
                         borderLeft: `4px solid ${etapaAtual === 'arquivado' ? '#16a34a' : '#36b6e8'}`,
-                        borderRadius: 12,
+                        borderRadius: 3,
                         padding: '1rem 1.25rem',
                       }}>
                         <div style={{
@@ -959,7 +959,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                 ) : (
                   <div style={{
                     textAlign: 'center', padding: '4rem 2rem',
-                    background: '#f8fafc', borderRadius: 16,
+                    background: '#f8fafc', borderRadius: 4,
                     border: '2px dashed #e2e8f0',
                   }}>
                     <svg viewBox="0 0 24 24" width={48} height={48} fill="none" stroke="#cbd5e1" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block', margin: '0 auto .75rem' }}>
@@ -1065,7 +1065,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                             background: neg.ativa ? '#fff' : '#f8fafc',
                             border: `1px solid ${neg.ativa ? '#e2e8f0' : '#cbd5e1'}`,
                             borderLeft: `4px solid ${stageInfo?.cor}`,
-                            borderRadius: 12,
+                            borderRadius: 3,
                             padding: '1rem 1.25rem',
                             boxShadow: '0 2px 10px rgba(34,29,55,.05)',
                             opacity: neg.ativa ? 1 : 0.7,
@@ -1169,7 +1169,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                 <div style={{
                   background: '#fff',
                   border: '1px solid #e2e8f0',
-                  borderRadius: 14,
+                  borderRadius: 3,
                   overflow: 'hidden',
                   boxShadow: '0 2px 10px rgba(34,29,55,.05)',
                 }}>
@@ -1250,7 +1250,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                         marginTop: '1.1rem',
                         background: 'linear-gradient(135deg, #fffbeb, #fef3c7)',
                         border: '1px solid #fcd34d',
-                        borderRadius: 10,
+                        borderRadius: 2,
                         padding: '.85rem 1rem',
                         textAlign: 'center',
                       }}>
@@ -1287,7 +1287,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                 <div style={{
                   background: '#fff',
                   border: '1px solid #e2e8f0',
-                  borderRadius: 14,
+                  borderRadius: 3,
                   overflow: 'hidden',
                   boxShadow: '0 2px 10px rgba(34,29,55,.05)',
                 }}>
@@ -1320,7 +1320,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                         <div key={label} style={{
                           background: '#f8fafc',
                           border: '1px solid #e2e8f0',
-                          borderRadius: 8, padding: '.55rem .75rem',
+                          borderRadius: 2, padding: '.55rem .75rem',
                         }}>
                           <div style={{
                             fontSize: '.6rem', color: '#94a3b8',
@@ -1343,7 +1343,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
 
                     {/* Total de alunos em destaque */}
                     <div style={{
-                      background: '#221d37', borderRadius: 10,
+                      background: '#221d37', borderRadius: 2,
                       padding: '.65rem 1rem',
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       marginBottom: '.75rem',
@@ -1367,7 +1367,7 @@ export default async function JornadaVisualPage({ searchParams }: Props) {
                     <div style={{
                       background: 'linear-gradient(135deg, #fffbeb, #fef3c7)',
                       border: '1px solid #fcd34d',
-                      borderRadius: 10, padding: '.65rem 1rem',
+                      borderRadius: 2, padding: '.65rem 1rem',
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       marginBottom: '1rem',
                     }}>

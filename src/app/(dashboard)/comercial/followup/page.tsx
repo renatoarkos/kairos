@@ -6,7 +6,7 @@ import { formatCurrency } from '@/lib/utils'
 export const dynamic = 'force-dynamic'
 
 const card: React.CSSProperties = {
-  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14,
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3,
   borderTop: '3px solid', padding: '1rem 1.25rem',
   boxShadow: '0 1px 4px rgba(34,29,55,.04)',
 }

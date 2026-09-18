@@ -13,7 +13,7 @@ interface Props {
 const S = {
   page:    { padding: '2rem 2.5rem' } as React.CSSProperties,
   label:   { display: 'block', fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.7rem', fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '.06em', color: '#64748b', marginBottom: '.4rem' },
-  card:    { background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, marginBottom: '1.25rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' } as React.CSSProperties,
+  card:    { background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, marginBottom: '1.25rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' } as React.CSSProperties,
 }
 
 const CLASSIF_COR = {
@@ -67,7 +67,7 @@ export default async function LeadsPage({ searchParams }: Props) {
           <Link href="/comercial/escolas/nova" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: '#36b6e8', color: '#fff', padding: '.45rem 1rem',
-            borderRadius: 9999, fontSize: '.82rem', fontWeight: 700,
+            borderRadius: 3, fontSize: '.82rem', fontWeight: 700,
             textDecoration: 'none', boxShadow: '0 4px 12px rgba(54,182,232,.3)',
             fontFamily: 'var(--font-montserrat,sans-serif)',
           }}>
@@ -95,7 +95,7 @@ export default async function LeadsPage({ searchParams }: Props) {
                   background: active ? cor.bg : '#fff',
                   border: `1.5px solid ${active ? cor.border : '#e2e8f0'}`,
                   borderTop: `3px solid ${cor.dot}`,
-                  borderRadius: 14, padding: '1.25rem 1.5rem',
+                  borderRadius: 3, padding: '1.25rem 1.5rem',
                   boxShadow: active ? `0 4px 16px ${cor.dot}20` : '0 1px 4px rgba(0,0,0,.04)',
                   transition: 'all .2s',
                 }}>
@@ -108,7 +108,7 @@ export default async function LeadsPage({ searchParams }: Props) {
                       {k.value}
                     </div>
                   </div>
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 2, background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
                       <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
@@ -121,18 +121,18 @@ export default async function LeadsPage({ searchParams }: Props) {
         </div>
 
         {/* Filtros */}
-        <form style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1rem 1.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
+        <form style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1rem 1.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: 220, maxWidth: 360 }}>
             <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#475569', pointerEvents: 'none' }} />
             <input name="q" defaultValue={q} placeholder="Buscar escola, cidade..."
-              style={{ width: '100%', paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, fontSize: '.82rem', border: '1.5px solid #e2e8f0', borderRadius: 8, outline: 'none', color: '#221d37', background: '#f8fafc', fontFamily: 'var(--font-inter,sans-serif)', boxSizing: 'border-box' }} />
+              style={{ width: '100%', paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, fontSize: '.82rem', border: '1.5px solid #e2e8f0', borderRadius: 2, outline: 'none', color: '#221d37', background: '#f8fafc', fontFamily: 'var(--font-inter,sans-serif)', boxSizing: 'border-box' }} />
           </div>
-          <select name="estado" defaultValue={estado} style={{ padding: '9px 12px', fontSize: '.82rem', border: '1.5px solid #e2e8f0', borderRadius: 8, background: '#f8fafc', color: '#221d37', outline: 'none', fontFamily: 'var(--font-inter,sans-serif)' }}>
+          <select name="estado" defaultValue={estado} style={{ padding: '9px 12px', fontSize: '.82rem', border: '1.5px solid #e2e8f0', borderRadius: 2, background: '#f8fafc', color: '#221d37', outline: 'none', fontFamily: 'var(--font-inter,sans-serif)' }}>
             <option value="">Todos os estados</option>
             {estados.map(uf => <option key={uf} value={uf}>{uf}</option>)}
           </select>
           {classif && <input type="hidden" name="classif" value={classif} />}
-          <button type="submit" style={{ background: '#221d37', color: '#fff', padding: '9px 18px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: '.82rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+          <button type="submit" style={{ background: '#221d37', color: '#fff', padding: '9px 18px', borderRadius: 2, border: 'none', cursor: 'pointer', fontSize: '.82rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             Filtrar
           </button>
           {(q || estado || classif) && (
@@ -148,7 +148,7 @@ export default async function LeadsPage({ searchParams }: Props) {
               const diasSemContato = diasDesdeData(e.ultimo_contato)
               const atrasado = diasSemContato != null && diasSemContato > 14
               return (
-                <div key={e.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: `3px solid ${cor.dot}`, borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)', transition: 'box-shadow .2s' }}>
+                <div key={e.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderTop: `3px solid ${cor.dot}`, borderRadius: 3, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)', transition: 'box-shadow .2s' }}>
                   <div style={{ padding: '1.25rem 1.5rem' }}>
 
                     {/* Header */}
@@ -175,11 +175,11 @@ export default async function LeadsPage({ searchParams }: Props) {
 
                     {/* Métricas */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.75rem', marginBottom: '1rem' }}>
-                      <div style={{ background: '#f8fafc', borderRadius: 8, padding: '.65rem .85rem' }}>
+                      <div style={{ background: '#f8fafc', borderRadius: 2, padding: '.65rem .85rem' }}>
                         <div style={{ fontSize: '.6rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '.05em', fontFamily: 'var(--font-montserrat,sans-serif)', fontWeight: 700, marginBottom: '.2rem' }}>Alunos</div>
                         <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.2rem', fontWeight: 800, color: '#221d37' }}>{e.total_alunos ?? 0}</div>
                       </div>
-                      <div style={{ background: '#fffbeb', borderRadius: 8, padding: '.65rem .85rem', border: '1px solid #fef3c7' }}>
+                      <div style={{ background: '#fffbeb', borderRadius: 2, padding: '.65rem .85rem', border: '1px solid #fef3c7' }}>
                         <div style={{ fontSize: '.6rem', color: '#92400e', textTransform: 'uppercase', letterSpacing: '.05em', fontFamily: 'var(--font-montserrat,sans-serif)', fontWeight: 700, marginBottom: '.2rem' }}>Potencial</div>
                         <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1rem', fontWeight: 800, color: '#36b6e8' }}>{formatCurrency(e.potencial_financeiro ?? 0)}</div>
                       </div>
@@ -217,7 +217,7 @@ export default async function LeadsPage({ searchParams }: Props) {
             })}
           </div>
         ) : (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '4rem 2rem', textAlign: 'center', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '4rem 2rem', textAlign: 'center', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
             <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block', margin: '0 auto .75rem' }}>
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
@@ -230,7 +230,7 @@ export default async function LeadsPage({ searchParams }: Props) {
             <p style={{ fontSize: '.85rem', color: '#475569', marginBottom: '1.25rem', fontFamily: 'var(--font-inter,sans-serif)' }}>
               Cadastre escolas para começar a gerenciar seus leads.
             </p>
-            <Link href="/comercial/escolas/nova" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem', borderRadius: 9999, textDecoration: 'none', fontSize: '.85rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+            <Link href="/comercial/escolas/nova" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem', borderRadius: 3, textDecoration: 'none', fontSize: '.85rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
               <Plus size={14} /> Cadastrar Lead
             </Link>
           </div>

@@ -19,7 +19,7 @@ interface Props {
 
 // ── Estilos reutilizáveis ─────────────────────────────────────────────────────
 const card: React.CSSProperties = {
-  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4,
   overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)',
 }
 const cardHead: React.CSSProperties = {
@@ -81,7 +81,7 @@ export default async function ComercialDashboard({ searchParams }: Props) {
         title="Dashboard Comercial"
         subtitle={`Ao vivo · atualizado a cada acesso · ${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' })}`}
         actions={
-          <Link href="/comercial/registros/novo" style={{ display: 'inline-flex', alignItems: 'center', gap: '.35rem', padding: '.45rem 1rem', borderRadius: 9999, background: '#36b6e8', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 12px rgba(54,182,232,.3)' }}>
+          <Link href="/comercial/registros/novo" style={{ display: 'inline-flex', alignItems: 'center', gap: '.35rem', padding: '.45rem 1rem', borderRadius: 3, background: '#36b6e8', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 12px rgba(54,182,232,.3)' }}>
             <Plus size={13} /> Novo Registro
           </Link>
         }
@@ -279,7 +279,7 @@ export default async function ComercialDashboard({ searchParams }: Props) {
             {registrosRecentes && registrosRecentes.length > 0 ? (
               <div style={{ padding: '.75rem' }}>
                 {registrosRecentes.map((r: any, idx: number) => (
-                  <Link key={r.id} href={`/comercial/escolas/${r.escola_id}`} style={{ display: 'flex', alignItems: 'center', gap: '.85rem', padding: '.6rem .85rem', borderRadius: 10, textDecoration: 'none', marginBottom: idx < registrosRecentes.length - 1 ? '.25rem' : 0, background: idx % 2 === 0 ? '#fafafa' : '#fff' }}>
+                  <Link key={r.id} href={`/comercial/escolas/${r.escola_id}`} style={{ display: 'flex', alignItems: 'center', gap: '.85rem', padding: '.6rem .85rem', borderRadius: 2, textDecoration: 'none', marginBottom: idx < registrosRecentes.length - 1 ? '.25rem' : 0, background: idx % 2 === 0 ? '#fafafa' : '#fff' }}>
                     <div style={{ width: 8, height: 8, borderRadius: '50%', background: CLASSIF_DOT[r.classificacao] ?? '#94a3b8', flexShrink: 0 }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: '.8rem', color: '#221d37', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-montserrat,sans-serif)' }}>{r.escola?.nome ?? '—'}</div>
@@ -299,8 +299,8 @@ export default async function ComercialDashboard({ searchParams }: Props) {
             {escolasSemNegociacao.length > 0 ? (
               <div style={{ padding: '.75rem' }}>
                 {escolasSemNegociacao.map((e: any, idx: number) => (
-                  <Link key={e.id} href={`/comercial/registros/novo?escola=${e.id}`} style={{ display: 'flex', alignItems: 'center', gap: '.85rem', padding: '.6rem .85rem', borderRadius: 10, textDecoration: 'none', marginBottom: idx < escolasSemNegociacao.length - 1 ? '.25rem' : 0, background: idx % 2 === 0 ? '#faf5ff' : '#fff' }}>
-                    <div style={{ width: 28, height: 28, borderRadius: 8, background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '.7rem', fontWeight: 700, flexShrink: 0 }}>{e.nome[0].toUpperCase()}</div>
+                  <Link key={e.id} href={`/comercial/registros/novo?escola=${e.id}`} style={{ display: 'flex', alignItems: 'center', gap: '.85rem', padding: '.6rem .85rem', borderRadius: 2, textDecoration: 'none', marginBottom: idx < escolasSemNegociacao.length - 1 ? '.25rem' : 0, background: idx % 2 === 0 ? '#faf5ff' : '#fff' }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 2, background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '.7rem', fontWeight: 700, flexShrink: 0 }}>{e.nome[0].toUpperCase()}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: '.8rem', color: '#221d37', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-montserrat,sans-serif)' }}>{e.nome}</div>
                       <div style={{ fontSize: '.66rem', color: '#7c3aed', fontFamily: 'var(--font-inter,sans-serif)' }}>{e.cidade}{e.estado ? `, ${e.estado}` : ''}</div>
@@ -320,7 +320,7 @@ export default async function ComercialDashboard({ searchParams }: Props) {
             { label: 'Ver Pipeline', href: '/comercial/pipeline', cor: '#7c3aed', desc: 'Kanban de negociações' },
             { label: 'Metas do Sprint', href: '/comercial/metas', cor: '#b45309', desc: 'Acompanhamento até 31/08' },
           ].map(item => (
-            <Link key={item.label} href={item.href} style={{ display: 'block', background: '#fff', border: '1px solid #e2e8f0', borderLeft: `4px solid ${item.cor}`, borderRadius: 12, padding: '.85rem 1.1rem', textDecoration: 'none', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+            <Link key={item.label} href={item.href} style={{ display: 'block', background: '#fff', border: '1px solid #e2e8f0', borderLeft: `4px solid ${item.cor}`, borderRadius: 3, padding: '.85rem 1.1rem', textDecoration: 'none', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
               <div style={{ fontWeight: 700, fontSize: '.82rem', color: '#221d37', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.15rem' }}>{item.label}</div>
               <div style={{ fontSize: '.72rem', color: '#94a3b8', fontFamily: 'var(--font-inter,sans-serif)' }}>{item.desc}</div>
             </Link>
@@ -380,7 +380,7 @@ function RankingLista({ itens }: { itens: { nome: string; valor: string; sub: st
 
 function MiniStat({ label, valor, cor, sub }: { label: string; valor: number; cor: string; sub?: string }) {
   return (
-    <div style={{ padding: '.75rem .9rem', background: '#f8fafc', border: `1px solid ${cor}20`, borderTop: `3px solid ${cor}`, borderRadius: 10 }}>
+    <div style={{ padding: '.75rem .9rem', background: '#f8fafc', border: `1px solid ${cor}20`, borderTop: `3px solid ${cor}`, borderRadius: 2 }}>
       <div style={{ fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.3rem' }}>{label}</div>
       <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.6rem', fontWeight: 800, color: '#221d37', lineHeight: 1 }}>{valor.toLocaleString('pt-BR')}</div>
       {sub && <div style={{ fontSize: '.64rem', color: '#94a3b8', marginTop: '.2rem' }}>{sub}</div>}

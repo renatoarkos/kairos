@@ -67,7 +67,7 @@ export function StatCard({ label, value, sub, icon, trend, trendLabel, variant =
   const card = (
     <div style={{
       background: '#fff', border: '1px solid #e2e8f0',
-      borderRadius: 12, padding: '1.25rem', position: 'relative',
+      borderRadius: 3, padding: '1.25rem', position: 'relative',
       overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,.06)',
       transition: 'box-shadow .2s, transform .2s',
       cursor: href ? 'pointer' : 'default',
@@ -76,7 +76,7 @@ export function StatCard({ label, value, sub, icon, trend, trendLabel, variant =
       onMouseLeave={e => { if (href) { e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,.06)'; e.currentTarget.style.transform = 'translateY(0)' }}}
     >
       {/* Barra de accent no topo */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: v.barColor, borderRadius: '12px 12px 0 0' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: v.barColor, borderRadius: '3px 3px 0 0' }} />
 
       {loading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
@@ -96,7 +96,7 @@ export function StatCard({ label, value, sub, icon, trend, trendLabel, variant =
             </div>
             {IconComp && (
               <div style={{
-                width: 34, height: 34, borderRadius: 8, flexShrink: 0,
+                width: 34, height: 34, borderRadius: 2, flexShrink: 0,
                 background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <IconComp size={17} className="text-slate-500" />

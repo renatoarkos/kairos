@@ -15,7 +15,7 @@ interface Props { searchParams: Promise<{ escola?: string }> }
 
 /* ── Estilos locais ── */
 const card: React.CSSProperties = {
-  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4,
   marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)',
 }
 const secHeader = (color = '#36b6e8'): React.CSSProperties => ({
@@ -39,7 +39,7 @@ const lbl: React.CSSProperties = {
 const inp: React.CSSProperties = {
   width: '100%', padding: '.7rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none',
   boxSizing: 'border-box',
 }
@@ -70,7 +70,7 @@ export default async function RegistroNovo({ searchParams }: Props) {
         subtitle="Documente o contato com a escola parceira"
         actions={
           <Link href={escolaId ? `/comercial/escolas/${escolaId}` : '/comercial/registros'}
-            style={{ padding: '.45rem 1rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+            style={{ padding: '.45rem 1rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             ← Voltar
           </Link>
         }
@@ -229,7 +229,7 @@ export default async function RegistroNovo({ searchParams }: Props) {
                     <label key={o.value} style={{
                       display: 'flex', alignItems: 'center', gap: '.65rem',
                       padding: '.75rem 1rem', background: '#f8fafc',
-                      border: '1.5px solid #e2e8f0', borderRadius: 10, cursor: 'pointer',
+                      border: '1.5px solid #e2e8f0', borderRadius: 2, cursor: 'pointer',
                       fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)',
                       transition: 'border-color .15s',
                     }}>
@@ -259,7 +259,7 @@ export default async function RegistroNovo({ searchParams }: Props) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.25rem' }}>
                 
                 {/* Infantil */}
-                <div style={{ background: '#fff7ed', padding: '1rem', borderRadius: 12, border: '1px solid #fed7aa' }}>
+                <div style={{ background: '#fff7ed', padding: '1rem', borderRadius: 3, border: '1px solid #fed7aa' }}>
                   <label style={{ ...lbl, color: '#9a3412', marginBottom: '.75rem' }}>Educação Infantil</label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '.5rem' }}>
                     {[
@@ -277,7 +277,7 @@ export default async function RegistroNovo({ searchParams }: Props) {
                 </div>
 
                 {/* Fund I */}
-                <div style={{ background: '#eff6ff', padding: '1rem', borderRadius: 12, border: '1px solid #bfdbfe' }}>
+                <div style={{ background: '#eff6ff', padding: '1rem', borderRadius: 3, border: '1px solid #bfdbfe' }}>
                   <label style={{ ...lbl, color: '#1e40af', marginBottom: '.75rem' }}>Fundamental I</label>
                   <div className="mp-registronovo-fundi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '.5rem' }}>
                     {[
@@ -311,7 +311,7 @@ export default async function RegistroNovo({ searchParams }: Props) {
               </div>
 
               {/* Cálculo automático exibido */}
-              <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: 10, padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+              <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: 2, padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                 <div>
                   <div style={{ fontSize: '.65rem', color: '#92400e', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.2rem' }}>Cálculo Automático</div>
                   <div style={{ fontSize: '.78rem', color: '#78350f', fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.5 }}>
@@ -343,10 +343,10 @@ export default async function RegistroNovo({ searchParams }: Props) {
           </div>
 
           {/* ── AÇÕES ──────────────────────────────────────────── */}
-          <div className="mp-form-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16 }}>
+          <div className="mp-form-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4 }}>
             <button type="submit" style={{
               background: 'linear-gradient(135deg, #36b6e8, #12789f)',
-              color: '#fff', padding: '.7rem 2rem', borderRadius: 9999,
+              color: '#fff', padding: '.7rem 2rem', borderRadius: 3,
               border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700,
               fontFamily: 'var(--font-montserrat,sans-serif)',
               boxShadow: '0 4px 14px rgba(54,182,232,.35)', letterSpacing: '.01em',
@@ -354,7 +354,7 @@ export default async function RegistroNovo({ searchParams }: Props) {
               Salvar Registro
             </button>
             <Link href={escolaId ? `/comercial/escolas/${escolaId}` : '/comercial/registros'}
-              style={{ padding: '.7rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', textDecoration: 'none', fontSize: '.875rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+              style={{ padding: '.7rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', textDecoration: 'none', fontSize: '.875rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
               Cancelar
             </Link>
             <span style={{ fontSize: '.72rem', color: '#94a3b8', fontFamily: 'var(--font-inter,sans-serif)', marginLeft: 'auto' }}>

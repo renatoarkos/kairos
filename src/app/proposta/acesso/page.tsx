@@ -102,7 +102,7 @@ export default function AcessoPropostaPage() {
         background: 'rgba(255,255,255,0.04)',
         backdropFilter: 'blur(24px)',
         border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: 24,
+        borderRadius: 6,
         padding: 'clamp(28px, 5vw, 48px)',
         boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
       }}>
@@ -159,7 +159,7 @@ export default function AcessoPropostaPage() {
                   fontFamily: "'Fraunces', serif",
                   background: d ? 'rgba(76,138,222,0.12)' : 'rgba(255,255,255,0.05)',
                   border: `2px solid ${d ? 'rgba(76,138,222,0.5)' : 'rgba(255,255,255,0.12)'}`,
-                  borderRadius: 12,
+                  borderRadius: 3,
                   color: C.white,
                   outline: 'none',
                   transition: 'all 0.15s',
@@ -176,14 +176,14 @@ export default function AcessoPropostaPage() {
 
           {/* Erro */}
           {error && (
-            <div style={{ marginBottom: 16, padding: '10px 14px', borderRadius: 10, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5', fontSize: '0.78rem', textAlign: 'center' }}>
+            <div style={{ marginBottom: 16, padding: '10px 14px', borderRadius: 2, background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5', fontSize: '0.78rem', textAlign: 'center' }}>
               {error}
             </div>
           )}
 
           {/* Sucesso */}
           {success && (
-            <div style={{ marginBottom: 16, padding: '10px 14px', borderRadius: 10, background: 'rgba(118,243,205,0.1)', border: '1px solid rgba(118,243,205,0.3)', color: C.mint, fontSize: '0.78rem', textAlign: 'center' }}>
+            <div style={{ marginBottom: 16, padding: '10px 14px', borderRadius: 2, background: 'rgba(118,243,205,0.1)', border: '1px solid rgba(118,243,205,0.3)', color: C.mint, fontSize: '0.78rem', textAlign: 'center' }}>
               {success}
             </div>
           )}

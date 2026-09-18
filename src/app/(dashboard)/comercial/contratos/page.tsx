@@ -15,7 +15,7 @@ interface Props { searchParams: Promise<{ escola?: string }> }
 
 /* ── estilos locais ─────────────────────────────────────────────── */
 const card: React.CSSProperties = {
-  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4,
   marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)',
 }
 const secHdr = (color = '#36b6e8'): React.CSSProperties => ({
@@ -39,7 +39,7 @@ const lbl: React.CSSProperties = {
 const inp: React.CSSProperties = {
   width: '100%', padding: '.7rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none', boxSizing: 'border-box',
 }
 const g2: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem 1.5rem' }
@@ -53,7 +53,7 @@ function StatusCheck({ name, label, checked }: { name: string; label: string; ch
       padding: '.85rem 1.1rem',
       background: checked ? '#f0fdf4' : '#fafafa',
       border: `1.5px solid ${checked ? '#86efac' : '#e2e8f0'}`,
-      borderRadius: 10, transition: 'all .15s',
+      borderRadius: 2, transition: 'all .15s',
     }}>
       <span style={{ fontSize: '.82rem', fontWeight: 600, color: checked ? '#15803d' : '#475569', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
         {label}
@@ -130,7 +130,7 @@ export default async function ContratosPage({ searchParams }: Props) {
             { label: 'Meta de Alunos', value: `${pct_alunos}%`, sub: `${total_alunos} / ${META_ALUNOS}`, color: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
             { label: 'Meta de Receita', value: `${pct_receita}%`, sub: formatCurrency(total_receita), color: '#7c3aed', bg: '#f5f3ff', border: '#c4b5fd' },
           ].map(k => (
-            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderRadius: 14, padding: '1.1rem 1.25rem', borderTop: `3px solid ${k.color}` }}>
+            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderRadius: 3, padding: '1.1rem 1.25rem', borderTop: `3px solid ${k.color}` }}>
               <div style={{ fontSize: '.68rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: k.color, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.35rem' }}>{k.label}</div>
               <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '2rem', fontWeight: 800, lineHeight: 1, color: '#221d37' }}>{k.value}</div>
               <div style={{ fontSize: '.72rem', color: '#64748b', marginTop: '.2rem', fontFamily: 'var(--font-inter,sans-serif)' }}>{k.sub}</div>
@@ -168,7 +168,7 @@ export default async function ContratosPage({ searchParams }: Props) {
             busca do EscolaSelector é position:absolute e ficava cortado pelo
             overflow:hidden do card. */}
         <div style={{ ...card, overflow: 'visible' }}>
-          <div style={{ ...secHdr(), borderRadius: '16px 16px 0 0' }}>
+          <div style={{ ...secHdr(), borderRadius: '4px 4px 0 0' }}>
             <div style={{ ...dot(), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
             </div>
@@ -181,7 +181,7 @@ export default async function ContratosPage({ searchParams }: Props) {
               basePath="/comercial/contratos"
               placeholder="— Escolha uma escola para gerenciar seu contrato —"
               extraButton={escola ? (
-                <Link href={`/comercial/escolas/${escolaId}`} style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
+                <Link href={`/comercial/escolas/${escolaId}`} style={{ padding: '8px 14px', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
                   Ver Ficha
                 </Link>
               ) : undefined}
@@ -195,7 +195,7 @@ export default async function ContratosPage({ searchParams }: Props) {
             <input type="hidden" name="escola_id" value={escolaId} />
 
             {/* Escola selecionada — header informativo */}
-            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 14, padding: '1.25rem 1.75rem', marginBottom: '1.5rem', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 3, padding: '1.25rem 1.75rem', marginBottom: '1.5rem', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <div style={{ fontSize: '.65rem', color: '#36b6e8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.3rem' }}>
                   ✦ Editando Contrato
@@ -204,7 +204,7 @@ export default async function ContratosPage({ searchParams }: Props) {
                 <div style={{ fontSize: '.78rem', color: 'rgba(255,255,255,.55)' }}>{escola.cidade}{escola.estado ? `, ${escola.estado}` : ''}</div>
               </div>
               {c?.contrato_assinado && (
-                <div style={{ background: '#16a34a', color: '#fff', padding: '.4rem 1rem', borderRadius: 9999, fontSize: '.75rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                <div style={{ background: '#16a34a', color: '#fff', padding: '.4rem 1rem', borderRadius: 3, fontSize: '.75rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   Contrato Assinado ✓
                 </div>
               )}
@@ -338,7 +338,7 @@ export default async function ContratosPage({ searchParams }: Props) {
                       style={{ ...inp, padding: '.6rem .85rem', textAlign: 'center', fontFamily: 'var(--font-cormorant,serif)', fontSize: '1rem', fontWeight: 700 }} />
                   </div>
                   {calcValorTotalContrato(c) > 0 && (
-                    <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: 10, padding: '.85rem 1rem', textAlign: 'center' }}>
+                    <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: 2, padding: '.85rem 1rem', textAlign: 'center' }}>
                       <div style={{ fontSize: '.65rem', color: '#92400e', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.2rem' }}>Valor Total Estimado</div>
                       <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.3rem', fontWeight: 800, color: '#36b6e8' }}>
                         {formatCurrency(calcValorTotalContrato(c))}
@@ -350,11 +350,11 @@ export default async function ContratosPage({ searchParams }: Props) {
             </div>
 
             {/* Ações */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, marginBottom: '2rem' }}>
-              <button type="submit" style={{ background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff', padding: '.7rem 2rem', borderRadius: 9999, border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 14px rgba(54,182,232,.35)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, marginBottom: '2rem' }}>
+              <button type="submit" style={{ background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff', padding: '.7rem 2rem', borderRadius: 3, border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 14px rgba(54,182,232,.35)' }}>
                 Salvar Contrato
               </button>
-              <Link href={`/comercial/escolas/${escolaId}`} style={{ padding: '.7rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', textDecoration: 'none', fontSize: '.875rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+              <Link href={`/comercial/escolas/${escolaId}`} style={{ padding: '.7rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', textDecoration: 'none', fontSize: '.875rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 Cancelar
               </Link>
             </div>

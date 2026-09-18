@@ -64,7 +64,7 @@ export default async function ExportsPage() {
         actions={
           <Link href="/formulario" target="_blank" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            padding: '.45rem 1rem', borderRadius: 9999, background: '#36b6e8',
+            padding: '.45rem 1rem', borderRadius: 3, background: '#36b6e8',
             color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700,
             fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 12px rgba(54,182,232,.3)',
           }}>
@@ -82,8 +82,8 @@ export default async function ExportsPage() {
             { label: 'Alunos Mapeados (Fund I)', value: totalAlunos, cor: '#0ea5e9', bg: '#f0f9ff', border: '#bae6fd', icon: <FileText size={18} style={{ color: '#64748b' }} /> },
             { label: 'Documentos Oficiais', value: 2, cor: '#16a34a', bg: '#f0fdf4', border: '#86efac', icon: <FileCheck size={18} style={{ color: '#64748b' }} /> },
           ].map(k => (
-            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 14, padding: '1.1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fff', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 3, padding: '1.1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 2, background: '#fff', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {k.icon}
               </div>
               <div>
@@ -95,7 +95,7 @@ export default async function ExportsPage() {
         </div>
 
         {/* ── Documentos Oficiais ───────────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.5rem' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.5rem' }}>
           <div className="mp-card-header-flex" style={{ background: '#221d37', padding: '1rem 1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.2rem' }}>
@@ -106,7 +106,7 @@ export default async function ExportsPage() {
               </div>
             </div>
             {isGerente && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.15)', borderRadius: 8, padding: '.4rem .75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.15)', borderRadius: 2, padding: '.4rem .75rem' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 <span style={{ fontSize: '.65rem', color: 'rgba(255,255,255,.6)', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Clique em "Atualizar" para substituir um documento</span>
               </div>
@@ -115,9 +115,9 @@ export default async function ExportsPage() {
 
           <div style={{ padding: '1.5rem 1.75rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
             {/* Ficha Cadastral */}
-            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '.85rem' }}>
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '.85rem' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                <div style={{ width: 44, height: 44, borderRadius: 10, background: '#e4f5fb', border: '1px solid #93c5fd', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 2, background: '#e4f5fb', border: '1px solid #93c5fd', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
                 <div style={{ flex: 1 }}>
@@ -135,7 +135,7 @@ export default async function ExportsPage() {
               <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
                 <a href={fichaUrl} download style={{
                   display: 'inline-flex', alignItems: 'center', gap: '.35rem',
-                  padding: '6px 14px', borderRadius: 8, background: '#2563eb',
+                  padding: '6px 14px', borderRadius: 2, background: '#2563eb',
                   color: '#fff', textDecoration: 'none', fontSize: '.72rem', fontWeight: 700,
                   fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 2px 8px rgba(37,99,235,.25)',
                 }}>
@@ -146,9 +146,9 @@ export default async function ExportsPage() {
             </div>
 
             {/* Minuta do Contrato */}
-            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '.85rem' }}>
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '.85rem' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                <div style={{ width: 44, height: 44, borderRadius: 10, background: '#fef2f2', border: '1px solid #fca5a5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 2, background: '#fef2f2', border: '1px solid #fca5a5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 </div>
                 <div style={{ flex: 1 }}>
@@ -166,7 +166,7 @@ export default async function ExportsPage() {
               <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
                 <a href={minutaUrl} download style={{
                   display: 'inline-flex', alignItems: 'center', gap: '.35rem',
-                  padding: '6px 14px', borderRadius: 8, background: '#dc2626',
+                  padding: '6px 14px', borderRadius: 2, background: '#dc2626',
                   color: '#fff', textDecoration: 'none', fontSize: '.72rem', fontWeight: 700,
                   fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 2px 8px rgba(220,38,38,.25)',
                 }}>
@@ -178,7 +178,7 @@ export default async function ExportsPage() {
           </div>
 
           {isGerente && (
-            <div style={{ margin: '0 1.75rem 1.5rem', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 10, padding: '.85rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+            <div style={{ margin: '0 1.75rem 1.5rem', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 2, padding: '.85rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
               <div style={{ fontSize: '.75rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
                 <strong>Atenção:</strong> Ao fazer upload de um novo documento, ele substitui automaticamente o anterior. Aceito: PDF, DOC, DOCX.
@@ -189,9 +189,9 @@ export default async function ExportsPage() {
         </div>
 
         {/* ── Formulário público — link ──────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderLeft: '4px solid #36b6e8', borderRadius: 16, padding: '1.25rem 1.75rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderLeft: '4px solid #36b6e8', borderRadius: 4, padding: '1.25rem 1.75rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 44, height: 44, borderRadius: 10, background: '#36b6e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 2, background: '#36b6e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <ClipboardList size={20} color="#fff" />
             </div>
             <div>
@@ -202,14 +202,14 @@ export default async function ExportsPage() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '.5rem' }}>
-            <Link href="/formulario" target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: '.35rem', padding: '.5rem 1.1rem', borderRadius: 9999, background: '#36b6e8', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 12px rgba(54,182,232,.3)' }}>
+            <Link href="/formulario" target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: '.35rem', padding: '.5rem 1.1rem', borderRadius: 3, background: '#36b6e8', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 12px rgba(54,182,232,.3)' }}>
               <ExternalLink size={13} /> Abrir Formulário
             </Link>
           </div>
         </div>
 
         {/* ── Formulários preenchidos ───────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
           <div className="mp-card-header-flex" style={{ background: '#221d37', padding: '1rem 1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.2rem' }}>Formulários Recebidos</div>

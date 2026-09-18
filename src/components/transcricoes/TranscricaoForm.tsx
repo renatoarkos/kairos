@@ -163,7 +163,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
   const inp: React.CSSProperties = {
     width: '100%', padding: '.7rem .9rem', fontSize: '.875rem',
     fontFamily: 'var(--font-inter,sans-serif)',
-    border: '1.5px solid #e2e8f0', borderRadius: 8,
+    border: '1.5px solid #e2e8f0', borderRadius: 2,
     background: '#f8fafc', color: '#221d37', outline: 'none',
     boxSizing: 'border-box' as const,
   }
@@ -182,7 +182,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
         </div>
         <button onClick={() => { setMostrarForm(true); setErro(''); setOk('') }} style={{
           display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-          padding: '.55rem 1.25rem', borderRadius: 9999, border: 'none',
+          padding: '.55rem 1.25rem', borderRadius: 3, border: 'none',
           background: 'linear-gradient(135deg, #36b6e8, #12789f)',
           color: '#fff', fontWeight: 700, fontSize: '.82rem', cursor: 'pointer',
           fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -194,7 +194,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
       </div>
 
       {ok && (
-        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 10, padding: '.75rem 1rem', marginBottom: '1rem', fontSize: '.82rem', color: '#16a34a', fontFamily: 'var(--font-inter,sans-serif)' }}>
+        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 2, padding: '.75rem 1rem', marginBottom: '1rem', fontSize: '.82rem', color: '#16a34a', fontFamily: 'var(--font-inter,sans-serif)' }}>
           {ok}
         </div>
       )}
@@ -209,12 +209,12 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
           onClick={e => { if (e.target === e.currentTarget) setMostrarForm(false) }}
         >
           <div style={{
-            background: '#fff', borderRadius: 18, width: '100%', maxWidth: 640,
+            background: '#fff', borderRadius: 4, width: '100%', maxWidth: 640,
             maxHeight: '92vh', overflowY: 'auto',
             boxShadow: '0 24px 64px rgba(0,0,0,.18)',
           }}>
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', padding: '1.25rem 1.5rem', borderRadius: '18px 18px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', padding: '1.25rem 1.5rem', borderRadius: '4px 4px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontSize: '.6rem', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#36b6e8', marginBottom: '.2rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   ✦ Nova Transcrição
@@ -223,7 +223,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
                   Registrar Reunião
                 </div>
               </div>
-              <button onClick={() => setMostrarForm(false)} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid rgba(255,255,255,.15)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+              <button onClick={() => setMostrarForm(false)} style={{ width: 32, height: 32, borderRadius: 2, border: '1px solid rgba(255,255,255,.15)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
             </div>
 
             <form onSubmit={handleSubmit} style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
@@ -280,7 +280,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
               </div>
 
               {/* Upload arquivos */}
-              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1.1rem' }}>
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1.1rem' }}>
                 <div style={{ fontSize: '.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#475569', marginBottom: '.85rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   Arquivos (opcional)
                 </div>
@@ -296,7 +296,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
                       onClick={() => refTranscricao.current?.click()}
                       style={{
                         border: `2px dashed ${arqTranscricao ? '#0d9488' : '#e2e8f0'}`,
-                        borderRadius: 8, padding: '.85rem',
+                        borderRadius: 2, padding: '.85rem',
                         textAlign: 'center', cursor: 'pointer',
                         background: arqTranscricao ? '#f0fdfa' : '#fff',
                         transition: 'all .15s',
@@ -328,7 +328,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
                       onClick={() => refMidia.current?.click()}
                       style={{
                         border: `2px dashed ${arqMidia ? '#7c3aed' : '#e2e8f0'}`,
-                        borderRadius: 8, padding: '.85rem',
+                        borderRadius: 2, padding: '.85rem',
                         textAlign: 'center', cursor: 'pointer',
                         background: arqMidia ? '#f5f3ff' : '#fff',
                         transition: 'all .15s',
@@ -353,14 +353,14 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
               </div>
 
               {erro && (
-                <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.6rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
+                <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.6rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
                   {erro}
                 </div>
               )}
 
               <div style={{ display: 'flex', gap: '.75rem', paddingTop: '.25rem' }}>
                 <button type="submit" disabled={saving || uploadando} style={{
-                  flex: 1, padding: '.75rem', borderRadius: 9999, border: 'none',
+                  flex: 1, padding: '.75rem', borderRadius: 3, border: 'none',
                   background: (saving || uploadando) ? '#e2e8f0' : 'linear-gradient(135deg, #36b6e8, #12789f)',
                   color: (saving || uploadando) ? '#94a3b8' : '#fff',
                   fontWeight: 700, fontSize: '.875rem', cursor: (saving || uploadando) ? 'not-allowed' : 'pointer',
@@ -370,7 +370,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
                   {uploadando ? 'Enviando arquivos...' : saving ? 'Salvando...' : 'Salvar Transcrição'}
                 </button>
                 <button type="button" onClick={() => setMostrarForm(false)} style={{
-                  padding: '.75rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0',
+                  padding: '.75rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0',
                   background: '#fff', color: '#64748b', fontWeight: 600, fontSize: '.875rem',
                   cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)',
                 }}>
@@ -384,9 +384,9 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
 
       {/* ── Lista de transcrições ───────────────────────── */}
       {transcricoes.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '5rem 2rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16 }}>
+        <div style={{ textAlign: 'center', padding: '5rem 2rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4 }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-            <div style={{ width: 64, height: 64, borderRadius: 16, background: '#f8fafc', border: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 64, height: 64, borderRadius: 4, background: '#f8fafc', border: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
           </div>
@@ -396,7 +396,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
           </div>
           <button onClick={() => setMostrarForm(true)} style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            padding: '.55rem 1.25rem', borderRadius: 9999, border: 'none',
+            padding: '.55rem 1.25rem', borderRadius: 3, border: 'none',
             background: '#36b6e8', color: '#fff', fontWeight: 700, fontSize: '.82rem',
             cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)',
           }}>
@@ -410,7 +410,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
             const aberto  = expandido === t.id
 
             return (
-              <div key={t.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+              <div key={t.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
                 {/* Card header */}
                 <div
                   onClick={() => setExpandido(aberto ? null : t.id)}
@@ -481,7 +481,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
                     {t.transcricao && (
                       <div style={{ marginBottom: '1rem' }}>
                         <div style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#64748b', marginBottom: '.35rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Transcrição</div>
-                        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: '1rem', maxHeight: 280, overflowY: 'auto', fontSize: '.82rem', color: '#334155', lineHeight: 1.7, fontFamily: 'var(--font-inter,sans-serif)', whiteSpace: 'pre-wrap' }}>
+                        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 2, padding: '1rem', maxHeight: 280, overflowY: 'auto', fontSize: '.82rem', color: '#334155', lineHeight: 1.7, fontFamily: 'var(--font-inter,sans-serif)', whiteSpace: 'pre-wrap' }}>
                           {t.transcricao}
                         </div>
                       </div>
@@ -493,7 +493,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
                         {t.arquivo_transcricao_path && (
                           <a href={`${supabaseUrl}/storage/v1/object/public/documentos-oficiais/${t.arquivo_transcricao_path}`}
                             target="_blank" rel="noopener noreferrer"
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.45rem .9rem', borderRadius: 8, background: '#f0fdfa', border: '1px solid #99f6e4', color: '#0d9488', textDecoration: 'none', fontSize: '.75rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.45rem .9rem', borderRadius: 2, background: '#f0fdfa', border: '1px solid #99f6e4', color: '#0d9488', textDecoration: 'none', fontSize: '.75rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             {t.arquivo_transcricao_nome ?? 'Transcrição'} {t.arquivo_transcricao_size ? `(${fmtSize(t.arquivo_transcricao_size)})` : ''}
                           </a>
@@ -501,7 +501,7 @@ export function TranscricaoForm({ escolas, transcricoes: inicial, userId }: Prop
                         {t.arquivo_midia_path && (
                           <a href={`${supabaseUrl}/storage/v1/object/public/documentos-oficiais/${t.arquivo_midia_path}`}
                             target="_blank" rel="noopener noreferrer"
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.45rem .9rem', borderRadius: 8, background: '#f5f3ff', border: '1px solid #ddd6fe', color: '#7c3aed', textDecoration: 'none', fontSize: '.75rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.45rem .9rem', borderRadius: 2, background: '#f5f3ff', border: '1px solid #ddd6fe', color: '#7c3aed', textDecoration: 'none', fontSize: '.75rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             {t.arquivo_midia_nome ?? 'Mídia'} {t.arquivo_midia_size ? `(${fmtSize(t.arquivo_midia_size)})` : ''}
                           </a>

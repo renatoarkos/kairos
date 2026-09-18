@@ -235,7 +235,7 @@ export function PipelineKanban({ negociacoes, stages, userId, onUpdate }: Props)
             {/* Header da coluna */}
             <div style={{
               padding: '.6rem .9rem',
-              borderRadius: '10px 10px 0 0',
+              borderRadius: '2px 2px 0 0',
               background: '#221d37',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               borderBottom: `3px solid ${cor}`,
@@ -271,7 +271,7 @@ export function PipelineKanban({ negociacoes, stages, userId, onUpdate }: Props)
               boxShadow: isOver ? `inset 0 0 0 2px ${cor}30` : 'none',
             }}>
               {isOver && draggingId && (
-                <div style={{ border: `2px dashed ${cor}`, borderRadius: 8, padding: '.6rem', textAlign: 'center', fontSize: '.68rem', color: cor, fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', background: `${cor}08` }}>
+                <div style={{ border: `2px dashed ${cor}`, borderRadius: 2, padding: '.6rem', textAlign: 'center', fontSize: '.68rem', color: cor, fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', background: `${cor}08` }}>
                   Soltar aqui
                 </div>
               )}

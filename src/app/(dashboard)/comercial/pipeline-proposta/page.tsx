@@ -54,7 +54,7 @@ export default async function PipelinePropostaPage() {
           <Link
             href="/comercial/pre-cadastros"
             style={{
-              padding: '.45rem 1rem', borderRadius: 8,
+              padding: '.45rem 1rem', borderRadius: 2,
               border: '1.5px solid #e2e8f0', background: '#fff',
               color: '#475569', textDecoration: 'none',
               fontSize: '.82rem', fontWeight: 600,
@@ -70,7 +70,7 @@ export default async function PipelinePropostaPage() {
           <div style={{
             textAlign: 'center', padding: '4rem 2rem',
             background: '#f8fafc', border: '1.5px dashed #e2e8f0',
-            borderRadius: 16, color: '#94a3b8',
+            borderRadius: 4, color: '#94a3b8',
           }}>
             <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📋</div>
             <div style={{ fontSize: '.9rem', fontWeight: 700, color: '#475569', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.5rem' }}>
@@ -85,7 +85,7 @@ export default async function PipelinePropostaPage() {
             <div style={{
               marginBottom: '1rem', padding: '.6rem 1rem',
               background: '#eff6ff', border: '1px solid #bfdbfe',
-              borderRadius: 8, fontSize: '.78rem', color: '#1e40af',
+              borderRadius: 2, fontSize: '.78rem', color: '#1e40af',
               fontFamily: 'var(--font-inter,sans-serif)',
             }}>
               <strong>{cards.length}</strong> escola{cards.length !== 1 ? 's' : ''} no pipeline.

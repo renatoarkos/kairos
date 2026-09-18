@@ -88,14 +88,14 @@ function ModalEditar({ lead, onClose, onSaved }: { lead: Lead; onClose: () => vo
   }
 
   const lbl: React.CSSProperties = { display: 'block', fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#64748b', marginBottom: '.3rem', fontFamily: 'var(--font-montserrat,sans-serif)' }
-  const inp: React.CSSProperties = { width: '100%', padding: '.6rem .85rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37', boxSizing: 'border-box' as const }
+  const inp: React.CSSProperties = { width: '100%', padding: '.6rem .85rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37', boxSizing: 'border-box' as const }
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(34,29,55,.55)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
       onClick={e => { if (e.target === e.currentTarget) onClose() }}>
-      <div style={{ background: '#fff', borderRadius: 18, width: '100%', maxWidth: 580, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,.18)' }}>
+      <div style={{ background: '#fff', borderRadius: 4, width: '100%', maxWidth: 580, maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,.18)' }}>
         {/* Header */}
-        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', padding: '1.1rem 1.5rem', borderRadius: '18px 18px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', padding: '1.1rem 1.5rem', borderRadius: '4px 4px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: '.58rem', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.2rem' }}>Editar Lead</div>
             <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.2rem', fontWeight: 700, color: '#fff' }}>{lead.nome ?? 'Sem nome'}</div>
@@ -194,7 +194,7 @@ function ModalEditar({ lead, onClose, onSaved }: { lead: Lead; onClose: () => vo
                 { campo: 'qtd_fund2',    label: 'Fund. II',     cor: '#7c3aed', bg: '#f5f3ff' },
                 { campo: 'qtd_medio',    label: 'Ens. Médio',   cor: '#dc2626', bg: '#fef2f2' },
               ].map(seg => (
-                <div key={seg.campo} style={{ background: seg.bg, border: `1px solid ${seg.cor}30`, borderRadius: 10, padding: '.65rem .75rem', textAlign: 'center' }}>
+                <div key={seg.campo} style={{ background: seg.bg, border: `1px solid ${seg.cor}30`, borderRadius: 2, padding: '.65rem .75rem', textAlign: 'center' }}>
                   <label style={{ ...lbl, color: seg.cor, textAlign: 'center', display: 'block', marginBottom: '.35rem' }}>{seg.label}</label>
                   <input
                     type="number" min="0"
@@ -207,13 +207,13 @@ function ModalEditar({ lead, onClose, onSaved }: { lead: Lead; onClose: () => vo
             </div>
           </div>
 
-          {erro && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.6rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>{erro}</div>}
+          {erro && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.6rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>{erro}</div>}
 
           <div style={{ display: 'flex', gap: '.75rem', paddingTop: '.25rem' }}>
-            <button onClick={handleSave} disabled={saving} style={{ flex: 1, padding: '.7rem', borderRadius: 9999, border: 'none', background: saving ? '#e2e8f0' : 'linear-gradient(135deg, #36b6e8, #12789f)', color: saving ? '#94a3b8' : '#fff', fontWeight: 700, fontSize: '.875rem', cursor: saving ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: saving ? 'none' : '0 4px 14px rgba(54,182,232,.35)' }}>
+            <button onClick={handleSave} disabled={saving} style={{ flex: 1, padding: '.7rem', borderRadius: 3, border: 'none', background: saving ? '#e2e8f0' : 'linear-gradient(135deg, #36b6e8, #12789f)', color: saving ? '#94a3b8' : '#fff', fontWeight: 700, fontSize: '.875rem', cursor: saving ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: saving ? 'none' : '0 4px 14px rgba(54,182,232,.35)' }}>
               {saving ? 'Salvando...' : 'Salvar alterações'}
             </button>
-            <button onClick={onClose} style={{ padding: '.7rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+            <button onClick={onClose} style={{ padding: '.7rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
               Cancelar
             </button>
           </div>
@@ -249,15 +249,15 @@ function ModalEmail({ destinatarios, onClose }: {
     setResultado(data); setEnviando(false)
   }
 
-  const inp: React.CSSProperties = { width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37', boxSizing: 'border-box' as const }
+  const inp: React.CSSProperties = { width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37', boxSizing: 'border-box' as const }
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(34,29,55,.55)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
       onClick={e => { if (e.target === e.currentTarget) onClose() }}>
-      <div style={{ background: '#fff', borderRadius: 18, width: '100%', maxWidth: 700, maxHeight: '92vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,.18)' }}>
+      <div style={{ background: '#fff', borderRadius: 4, width: '100%', maxWidth: 700, maxHeight: '92vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,.18)' }}>
 
         {/* Header */}
-        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', padding: '1.1rem 1.5rem', borderRadius: '18px 18px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', padding: '1.1rem 1.5rem', borderRadius: '4px 4px 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <div style={{ fontSize: '.58rem', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.2rem' }}>
               Enviar E-mail
@@ -280,17 +280,17 @@ function ModalEmail({ destinatarios, onClose }: {
                 {resultado.enviados} e-mail{resultado.enviados !== 1 ? 's' : ''} enviado{resultado.enviados !== 1 ? 's' : ''}
               </div>
               {resultado.erros?.length > 0 && (
-                <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.75rem', fontSize: '.75rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)', textAlign: 'left', marginTop: '.5rem' }}>
+                <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.75rem', fontSize: '.75rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)', textAlign: 'left', marginTop: '.5rem' }}>
                   <strong>Erros:</strong><br />
                   {resultado.erros.slice(0, 5).join('\n')}
                 </div>
               )}
-              <button onClick={onClose} style={{ marginTop: '1rem', padding: '.65rem 2rem', borderRadius: 9999, border: 'none', background: '#221d37', color: '#fff', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Fechar</button>
+              <button onClick={onClose} style={{ marginTop: '1rem', padding: '.65rem 2rem', borderRadius: 3, border: 'none', background: '#221d37', color: '#fff', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Fechar</button>
             </div>
           ) : (
             <>
               {/* Destinatários */}
-              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '.75rem 1rem', maxHeight: 100, overflowY: 'auto' }}>
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: '.75rem 1rem', maxHeight: 100, overflowY: 'auto' }}>
                 <div style={{ fontSize: '.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '.4rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Para:</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.25rem' }}>
                   {destinatarios.map(d => (
@@ -359,10 +359,10 @@ function ModalEmail({ destinatarios, onClose }: {
                 </div>
               </div>
 
-              {erro && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.65rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>{erro}</div>}
+              {erro && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.65rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>{erro}</div>}
 
               <div style={{ display: 'flex', gap: '.75rem', paddingTop: '.25rem' }}>
-                <button onClick={handleEnviar} disabled={enviando} style={{ flex: 1, padding: '.75rem', borderRadius: 9999, border: 'none', background: enviando ? '#e2e8f0' : 'linear-gradient(135deg, #2563eb, #1d4ed8)', color: enviando ? '#94a3b8' : '#fff', fontWeight: 700, fontSize: '.875rem', cursor: enviando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: enviando ? 'none' : '0 4px 14px rgba(37,99,235,.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem' }}>
+                <button onClick={handleEnviar} disabled={enviando} style={{ flex: 1, padding: '.75rem', borderRadius: 3, border: 'none', background: enviando ? '#e2e8f0' : 'linear-gradient(135deg, #2563eb, #1d4ed8)', color: enviando ? '#94a3b8' : '#fff', fontWeight: 700, fontSize: '.875rem', cursor: enviando ? 'not-allowed' : 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: enviando ? 'none' : '0 4px 14px rgba(37,99,235,.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem' }}>
                   {enviando ? (
                     <><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin .8s linear infinite' }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>Enviando...</>
                   ) : (
@@ -370,7 +370,7 @@ function ModalEmail({ destinatarios, onClose }: {
                     Enviar para {destinatarios.length} destinatário{destinatarios.length !== 1 ? 's' : ''}</>
                   )}
                 </button>
-                <button onClick={onClose} style={{ padding: '.75rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Cancelar</button>
+                <button onClick={onClose} style={{ padding: '.75rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Cancelar</button>
               </div>
               <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
             </>
@@ -435,7 +435,7 @@ export function LeadsTable({ leads: initialLeads, total, pagina, totalPaginas, q
     <div>
       {/* ── Barra de seleção em massa ─── */}
       {selecionados.size > 0 && (
-        <div style={{ background: '#221d37', borderRadius: 12, padding: '.75rem 1.25rem', marginBottom: '.75rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ background: '#221d37', borderRadius: 3, padding: '.75rem 1.25rem', marginBottom: '.75rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <span style={{ fontSize: '.78rem', fontWeight: 700, color: '#fff', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             {selecionados.size} selecionado{selecionados.size !== 1 ? 's' : ''}
           </span>
@@ -450,7 +450,7 @@ export function LeadsTable({ leads: initialLeads, total, pagina, totalPaginas, q
       )}
 
       {/* ── Tabela ──────────────────────────────────────────── */}
-      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
         {/* Header da tabela */}
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>

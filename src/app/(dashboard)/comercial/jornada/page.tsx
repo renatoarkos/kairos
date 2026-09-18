@@ -182,7 +182,7 @@ function CurvaEngajamento({ registros }: { registros: any[] }) {
     return (
       <div style={{
         height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'rgba(255,255,255,0.03)', borderRadius: 12,
+        background: 'rgba(255,255,255,0.03)', borderRadius: 3,
         border: '1px dashed rgba(255,255,255,0.12)',
       }}>
         <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '.8rem', fontFamily: 'var(--font-inter,sans-serif)' }}>
@@ -473,7 +473,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                   <div style={{
                     background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(8px)',
                     border: '1px solid rgba(255,255,255,0.10)',
-                    borderRadius: 12, padding: '1rem 1.15rem',
+                    borderRadius: 3, padding: '1rem 1.15rem',
                     display: 'flex', flexDirection: 'column', gap: '.4rem',
                     minWidth: 120,
                   }}>
@@ -492,7 +492,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                   <div style={{
                     background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(8px)',
                     border: '1px solid rgba(255,255,255,0.10)',
-                    borderRadius: 12, padding: '1rem 1.15rem',
+                    borderRadius: 3, padding: '1rem 1.15rem',
                     display: 'flex', flexDirection: 'column', gap: '.4rem',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
@@ -510,7 +510,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                   <div style={{
                     background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(8px)',
                     border: '1px solid rgba(255,255,255,0.10)',
-                    borderRadius: 12, padding: '1rem 1.15rem',
+                    borderRadius: 3, padding: '1rem 1.15rem',
                     display: 'flex', flexDirection: 'column', gap: '.4rem',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
@@ -529,7 +529,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                     background: `linear-gradient(135deg, ${bgClassificacao(escola.classificacao_atual)}, rgba(255,255,255,0.04))`,
                     backdropFilter: 'blur(8px)',
                     border: `1px solid ${corClassificacao(escola.classificacao_atual)}40`,
-                    borderRadius: 12, padding: '1rem 1.15rem',
+                    borderRadius: 3, padding: '1rem 1.15rem',
                     display: 'flex', flexDirection: 'column', gap: '.4rem',
                   }}>
                     <span style={{ fontSize: '.7rem', color: '#475569', fontFamily: 'var(--font-montserrat,sans-serif)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.06em' }}>
@@ -539,7 +539,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                       display: 'inline-flex', alignItems: 'center',
                       background: `${corClassificacao(escola.classificacao_atual)}20`,
                       border: `1px solid ${corClassificacao(escola.classificacao_atual)}50`,
-                      borderRadius: 20, padding: '.3rem .85rem',
+                      borderRadius: 6, padding: '.3rem .85rem',
                       fontSize: '.85rem', fontWeight: 700,
                       color: corClassificacao(escola.classificacao_atual),
                       fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -568,7 +568,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                     {totalRegistros} {totalRegistros === 1 ? 'ponto' : 'pontos'}
                   </span>
                 </div>
-                <div style={{ borderRadius: 12, overflow: 'hidden', background: 'rgba(0,0,0,0.2)', padding: '1rem 0 .5rem' }}>
+                <div style={{ borderRadius: 3, overflow: 'hidden', background: 'rgba(0,0,0,0.2)', padding: '1rem 0 .5rem' }}>
                   <CurvaEngajamento registros={registros}/>
                 </div>
               </div>
@@ -593,7 +593,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                 <div style={{
                   display: 'flex', flexDirection: 'column', alignItems: 'center',
                   padding: '3.5rem 1rem', textAlign: 'center',
-                  background: '#ffffff', borderRadius: 16,
+                  background: '#ffffff', borderRadius: 4,
                   border: '2px dashed #e2e8f0',
                   animation: 'fadeIn .4s ease',
                 }}>
@@ -648,7 +648,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                         background: '#ffffff',
                         border: `1px solid ${corAcual}30`,
                         borderTop: `3px solid ${corAcual}`,
-                        borderRadius: 12,
+                        borderRadius: 3,
                         padding: '1.25rem',
                         boxShadow: '0 2px 12px rgba(34,29,55,0.06)',
                         width: 'calc(50% - 48px)',
@@ -727,7 +727,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                                   display: 'flex', flexDirection: 'column', alignItems: 'center',
                                   background: bgAtual,
                                   border: `1px solid ${corAcual}25`,
-                                  borderRadius: 8, padding: '.35rem .6rem',
+                                  borderRadius: 2, padding: '.35rem .6rem',
                                   minWidth: 48,
                                 }}>
                                   <span style={{ fontSize: '1.3rem', fontWeight: 800, color: corAcual, fontFamily: 'var(--font-cormorant,serif)', lineHeight: 1 }}>
@@ -755,7 +755,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                               <div style={{
                                 background: bgAtual,
                                 border: `1px solid ${corAcual}40`,
-                                borderRadius: 20, padding: '.2rem .65rem',
+                                borderRadius: 6, padding: '.2rem .65rem',
                                 fontSize: '.7rem', fontWeight: 700,
                                 color: corAcual,
                                 fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -781,7 +781,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                                 fontFamily: 'var(--font-inter,sans-serif)',
                                 lineHeight: 1.55,
                                 background: bgAtual,
-                                borderRadius: 8, padding: '.65rem .75rem',
+                                borderRadius: 2, padding: '.65rem .75rem',
                                 marginBottom: '.75rem',
                                 border: `1px solid ${corAcual}15`,
                               }}>
@@ -792,7 +792,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                             {/* Métricas inline */}
                             <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap', marginBottom: '.55rem' }}>
                               <div style={{
-                                background: `${corAcual}15`, borderRadius: 20,
+                                background: `${corAcual}15`, borderRadius: 6,
                                 padding: '.2rem .65rem',
                                 fontSize: '.72rem', fontWeight: 700,
                                 color: corAcual, fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -800,7 +800,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                                 {r.probabilidade}%
                               </div>
                               <div style={{
-                                background: '#f1f5f9', borderRadius: 20,
+                                background: '#f1f5f9', borderRadius: 6,
                                 padding: '.2rem .65rem',
                                 fontSize: '.72rem', color: '#475569',
                                 fontFamily: 'var(--font-inter,sans-serif)',
@@ -808,7 +808,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                                 Interesse: {LABEL.interesse?.[r.interesse] ?? r.interesse}
                               </div>
                               <div style={{
-                                background: '#f1f5f9', borderRadius: 20,
+                                background: '#f1f5f9', borderRadius: 6,
                                 padding: '.2rem .65rem',
                                 fontSize: '.72rem', color: '#475569',
                                 fontFamily: 'var(--font-inter,sans-serif)',
@@ -838,7 +838,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                                 {r.encaminhamentos.map((enc: string, ei: number) => (
                                   <span key={ei} style={{
                                     background: '#fef3c7', border: '1px solid #fcd34d',
-                                    borderRadius: 20, padding: '.15rem .55rem',
+                                    borderRadius: 6, padding: '.15rem .55rem',
                                     fontSize: '.67rem', color: '#92400e',
                                     fontFamily: 'var(--font-inter,sans-serif)',
                                   }}>
@@ -855,7 +855,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                                 fontSize: '.75rem', color: '#2563eb',
                                 fontFamily: 'var(--font-inter,sans-serif)',
                                 fontWeight: 600,
-                                background: '#eff6ff', borderRadius: 8,
+                                background: '#eff6ff', borderRadius: 2,
                                 padding: '.4rem .65rem',
                                 border: '1px solid #bfdbfe',
                               }}>
@@ -878,7 +878,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                     <div style={{
                       background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)',
                       border: '2px solid #16a34a',
-                      borderRadius: 16, padding: '1.5rem',
+                      borderRadius: 4, padding: '1.5rem',
                       display: 'flex', alignItems: 'center', gap: '1rem',
                     }}>
                       <div style={{
@@ -902,7 +902,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                     <div style={{
                       background: 'linear-gradient(135deg, #eff6ff, #e4f5fb)',
                       border: '2px solid #2563eb',
-                      borderRadius: 16, padding: '1.5rem',
+                      borderRadius: 4, padding: '1.5rem',
                       display: 'flex', alignItems: 'center', gap: '1rem',
                     }}>
                       <div style={{
@@ -930,7 +930,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                     <div style={{
                       background: 'linear-gradient(135deg, #fffbeb, #fef3c7)',
                       border: '2px solid #36b6e8',
-                      borderRadius: 16, padding: '1.5rem',
+                      borderRadius: 4, padding: '1.5rem',
                       display: 'flex', alignItems: 'center', gap: '1rem',
                     }}>
                       <div style={{
@@ -965,7 +965,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                 <div style={{
                   marginTop: '1.5rem',
                   background: '#f8fafc', border: '1px solid #e2e8f0',
-                  borderRadius: 16, padding: '1.25rem',
+                  borderRadius: 4, padding: '1.25rem',
                   display: 'flex', alignItems: 'center', gap: '1rem',
                   animation: 'fadeIn .4s ease',
                 }}>
@@ -994,7 +994,7 @@ export default async function JornadaPage({ searchParams }: Props) {
               {/* Próximos passos / Tarefas */}
               <div style={{
                 background: '#ffffff', border: '1px solid #e2e8f0',
-                borderRadius: 12, overflow: 'hidden',
+                borderRadius: 3, overflow: 'hidden',
                 boxShadow: '0 1px 4px rgba(34,29,55,0.06)',
               }}>
                 <div style={{
@@ -1014,7 +1014,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                       background: tarefasVencidas.length > 0 ? '#fef2f2' : '#f0fdf4',
                       color: tarefasVencidas.length > 0 ? '#ef4444' : '#16a34a',
                       border: `1px solid ${tarefasVencidas.length > 0 ? '#fecaca' : '#bbf7d0'}`,
-                      borderRadius: 20, padding: '.1rem .5rem',
+                      borderRadius: 6, padding: '.1rem .5rem',
                       fontSize: '.65rem', fontWeight: 700,
                       fontFamily: 'var(--font-montserrat,sans-serif)',
                     }}>
@@ -1038,7 +1038,7 @@ export default async function JornadaPage({ searchParams }: Props) {
                             background: vencida ? '#fff1f2' : '#f8fafc',
                             border: `1px solid ${vencida ? '#fecaca' : '#e2e8f0'}`,
                             borderLeft: `3px solid ${vencida ? '#ef4444' : corPrio}`,
-                            borderRadius: 8,
+                            borderRadius: 2,
                           }}>
                             <div style={{ fontSize: '.78rem', fontWeight: 600, color: '#221d37', fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.3, marginBottom: '.2rem' }}>
                               {t.titulo}
@@ -1077,7 +1077,7 @@ export default async function JornadaPage({ searchParams }: Props) {
               {negociacoes.length > 0 && (
                 <div style={{
                   background: '#ffffff', border: '1px solid #e2e8f0',
-                  borderRadius: 12, overflow: 'hidden',
+                  borderRadius: 3, overflow: 'hidden',
                   boxShadow: '0 1px 4px rgba(34,29,55,0.06)',
                 }}>
                   <div style={{
@@ -1096,12 +1096,12 @@ export default async function JornadaPage({ searchParams }: Props) {
                     {negociacoes.map((n: any) => (
                       <div key={n.id} style={{
                         background: '#f8fafc', border: '1px solid #e2e8f0',
-                        borderRadius: 8, padding: '.65rem .75rem',
+                        borderRadius: 2, padding: '.65rem .75rem',
                       }}>
                         <div style={{
                           display: 'inline-flex',
                           background: '#2d284a', color: '#475569',
-                          borderRadius: 20, padding: '.15rem .55rem',
+                          borderRadius: 6, padding: '.15rem .55rem',
                           fontSize: '.65rem', fontWeight: 700,
                           fontFamily: 'var(--font-montserrat,sans-serif)',
                           textTransform: 'uppercase', letterSpacing: '.04em',
@@ -1141,7 +1141,7 @@ export default async function JornadaPage({ searchParams }: Props) {
               {/* Ações rápidas */}
               <div style={{
                 background: '#ffffff', border: '1px solid #e2e8f0',
-                borderRadius: 12, overflow: 'hidden',
+                borderRadius: 3, overflow: 'hidden',
                 boxShadow: '0 1px 4px rgba(34,29,55,0.06)',
               }}>
                 <div style={{

@@ -53,7 +53,7 @@ export function ExportContatosModal({ ufsDisponiveis }: Props) {
   const SEL: React.CSSProperties = {
     width: '100%',
     padding: '.55rem .75rem',
-    borderRadius: 8,
+    borderRadius: 2,
     border: '1.5px solid #e2e8f0',
     background: '#f8fafc',
     fontSize: '.82rem',
@@ -80,7 +80,7 @@ export function ExportContatosModal({ ufsDisponiveis }: Props) {
         title="Exportar contatos com filtros por evento e estado"
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-          padding: '.45rem 1rem', borderRadius: 9999,
+          padding: '.45rem 1rem', borderRadius: 3,
           background: '#0b1f44', color: '#fff', border: 'none',
           fontSize: '.78rem', fontWeight: 700, cursor: 'pointer',
           fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -103,7 +103,7 @@ export function ExportContatosModal({ ufsDisponiveis }: Props) {
           }}
         >
           <div style={{
-            background: '#fff', borderRadius: 18, width: '100%', maxWidth: 440,
+            background: '#fff', borderRadius: 4, width: '100%', maxWidth: 440,
             boxShadow: '0 24px 64px rgba(0,0,0,.22)',
             overflow: 'hidden',
           }}>
@@ -149,7 +149,7 @@ export function ExportContatosModal({ ufsDisponiveis }: Props) {
               {/* Filtros de qualidade */}
               <div>
                 <label style={LBL}>Filtros de qualidade</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem', background: '#f8fafc', borderRadius: 10, padding: '.85rem 1rem', border: '1.5px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem', background: '#f8fafc', borderRadius: 2, padding: '.85rem 1rem', border: '1.5px solid #e2e8f0' }}>
                   {[
                     { checked: apenasComNome,  set: setApenasComNome,  label: 'Apenas leads com nome' },
                     { checked: apenasComTel,   set: setApenasComTel,   label: 'Apenas leads com telefone' },
@@ -169,7 +169,7 @@ export function ExportContatosModal({ ufsDisponiveis }: Props) {
               </div>
 
               {/* Colunas exportadas */}
-              <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 8, padding: '.7rem 1rem', fontSize: '.72rem', color: '#0369a1', fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.7 }}>
+              <div style={{ background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 2, padding: '.7rem 1rem', fontSize: '.72rem', color: '#0369a1', fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.7 }}>
                 <strong>Colunas exportadas:</strong> Nome · Cargo · Escola · Telefone · E-mail · Evento · Estado
               </div>
 
@@ -179,13 +179,13 @@ export function ExportContatosModal({ ufsDisponiveis }: Props) {
             <div style={{ padding: '1rem 1.4rem', borderTop: '1px solid #f1f5f9', display: 'flex', gap: '.75rem', justifyContent: 'flex-end' }}>
               <button
                 onClick={() => setOpen(false)}
-                style={{ padding: '.55rem 1.2rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-inter,sans-serif)', cursor: 'pointer' }}
+                style={{ padding: '.55rem 1.2rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-inter,sans-serif)', cursor: 'pointer' }}
               >
                 Cancelar
               </button>
               <button
                 onClick={handleDownload}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '.45rem', padding: '.55rem 1.4rem', borderRadius: 8, border: 'none', background: '#0b1f44', color: '#fff', fontSize: '.82rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', cursor: 'pointer', boxShadow: '0 2px 8px rgba(11,31,68,.3)' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '.45rem', padding: '.55rem 1.4rem', borderRadius: 2, border: 'none', background: '#0b1f44', color: '#fff', fontSize: '.82rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', cursor: 'pointer', boxShadow: '0 2px 8px rgba(11,31,68,.3)' }}
               >
                 {svgDown}
                 Baixar Excel

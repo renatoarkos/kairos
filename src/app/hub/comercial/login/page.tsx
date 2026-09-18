@@ -63,7 +63,7 @@ export default function ComercialLoginPage() {
         <a href="/" style={{
           display: 'inline-flex', alignItems: 'center', gap: '.4rem',
           background: '#36b6e8', color: '#fff',
-          padding: '.45rem 1.1rem', borderRadius: 9999,
+          padding: '.45rem 1.1rem', borderRadius: 3,
           fontSize: '.78rem', fontWeight: 700, textDecoration: 'none',
           letterSpacing: '.03em', boxShadow: '0 4px 14px rgba(54,182,232,.4)',
           transition: 'all .2s',
@@ -142,7 +142,7 @@ export default function ComercialLoginPage() {
               background: 'rgba(34,29,55,.7)',
               border: '1px solid rgba(54,182,232,.4)',
               backdropFilter: 'blur(8px)',
-              borderRadius: 9999, padding: '.3rem .9rem',
+              borderRadius: 3, padding: '.3rem .9rem',
               marginBottom: '1.5rem',
               fontSize: '.68rem', fontWeight: 700, letterSpacing: '.1em',
               textTransform: 'uppercase', color: '#fbbf24',
@@ -176,14 +176,14 @@ export default function ComercialLoginPage() {
               background: 'linear-gradient(135deg, rgba(54,182,232,.18) 0%, rgba(54,182,232,.08) 100%)',
               border: '1px solid rgba(54,182,232,.35)',
               borderLeft: '4px solid #36b6e8',
-              borderRadius: 14, padding: '1.35rem 1.5rem',
+              borderRadius: 3, padding: '1.35rem 1.5rem',
               backdropFilter: 'blur(8px)',
               maxWidth: 500,
               boxShadow: '0 8px 32px rgba(54,182,232,.12)',
             }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                 <div style={{
-                  width: 46, height: 46, borderRadius: 12, flexShrink: 0,
+                  width: 46, height: 46, borderRadius: 3, flexShrink: 0,
                   background: 'linear-gradient(135deg, #36b6e8, #12789f)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   boxShadow: '0 4px 12px rgba(54,182,232,.4)',
@@ -220,7 +220,7 @@ export default function ComercialLoginPage() {
                   <a href="/" style={{
                     display: 'inline-flex', alignItems: 'center', gap: '.45rem',
                     background: '#36b6e8', color: '#fff',
-                    padding: '.55rem 1.25rem', borderRadius: 9999,
+                    padding: '.55rem 1.25rem', borderRadius: 3,
                     fontSize: '.8rem', fontWeight: 700, textDecoration: 'none',
                     boxShadow: '0 4px 16px rgba(54,182,232,.45)',
                     fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -237,7 +237,7 @@ export default function ComercialLoginPage() {
             background: 'rgba(34,29,55,.85)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,255,255,.08)',
-            borderRadius: 20,
+            borderRadius: 6,
             padding: '2.5rem',
             boxShadow: '0 24px 64px rgba(0,0,0,.5)',
           }}>
@@ -264,7 +264,7 @@ export default function ComercialLoginPage() {
             {error && (
               <div style={{
                 background: 'rgba(220,38,38,.15)', border: '1px solid rgba(220,38,38,.3)',
-                borderRadius: 8, padding: '.7rem 1rem', marginBottom: '1.25rem',
+                borderRadius: 2, padding: '.7rem 1rem', marginBottom: '1.25rem',
                 color: '#fca5a5', fontSize: '.82rem',
                 fontFamily: 'var(--font-inter, sans-serif)',
               }}>
@@ -287,7 +287,7 @@ export default function ComercialLoginPage() {
                     width: '100%', padding: '.75rem 1rem',
                     background: 'rgba(255,255,255,.06)',
                     border: '1.5px solid rgba(255,255,255,.1)',
-                    borderRadius: 10, outline: 'none',
+                    borderRadius: 2, outline: 'none',
                     color: '#fff', fontSize: '.875rem',
                     transition: 'border-color .15s, box-shadow .15s',
                     fontFamily: 'var(--font-inter, sans-serif)',
@@ -313,7 +313,7 @@ export default function ComercialLoginPage() {
                       width: '100%', padding: '.75rem 2.75rem .75rem 1rem',
                       background: 'rgba(255,255,255,.06)',
                       border: '1.5px solid rgba(255,255,255,.1)',
-                      borderRadius: 10, outline: 'none',
+                      borderRadius: 2, outline: 'none',
                       color: '#fff', fontSize: '.875rem',
                       transition: 'border-color .15s, box-shadow .15s',
                       fontFamily: 'var(--font-inter, sans-serif)',
@@ -337,7 +337,7 @@ export default function ComercialLoginPage() {
                 background: loading ? 'rgba(54,182,232,.4)' : '#36b6e8',
                 color: '#fff', fontWeight: 700, fontSize: '.9rem',
                 border: '1px solid rgba(54,182,232,.5)',
-                borderRadius: 9999, cursor: loading ? 'not-allowed' : 'pointer',
+                borderRadius: 3, cursor: loading ? 'not-allowed' : 'pointer',
                 transition: 'all .2s',
                 boxShadow: loading ? 'none' : '0 4px 16px rgba(54,182,232,.4)',
                 fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -362,7 +362,7 @@ export default function ComercialLoginPage() {
 
             <a href="/" style={{
               display: 'flex', alignItems: 'center', gap: '.5rem',
-              padding: '.7rem 1rem', borderRadius: 10,
+              padding: '.7rem 1rem', borderRadius: 2,
               border: '1px solid rgba(54,182,232,.25)',
               background: 'rgba(54,182,232,.08)',
               color: '#fcd34d', textDecoration: 'none',

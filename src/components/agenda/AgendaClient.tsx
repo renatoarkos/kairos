@@ -193,7 +193,7 @@ function ModalEvento({
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
       <div style={{
-        background: '#fff', borderRadius: 18, width: '100%', maxWidth: 600,
+        background: '#fff', borderRadius: 4, width: '100%', maxWidth: 600,
         maxHeight: '92vh', overflow: 'auto',
         boxShadow: '0 24px 64px rgba(0,0,0,.18)',
         display: 'flex', flexDirection: 'column',
@@ -203,7 +203,7 @@ function ModalEvento({
           padding: '1.25rem 1.5rem', borderBottom: '1px solid #f1f5f9',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           background: 'linear-gradient(135deg, #221d37, #2d284a)',
-          borderRadius: '18px 18px 0 0',
+          borderRadius: '4px 4px 0 0',
         }}>
           <div>
             <div style={{ fontSize: '.6rem', fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: '#36b6e8', marginBottom: '.25rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -214,7 +214,7 @@ function ModalEvento({
             </div>
           </div>
           <button onClick={() => onClose()} style={{
-            width: 32, height: 32, borderRadius: 8, border: '1px solid rgba(255,255,255,.15)',
+            width: 32, height: 32, borderRadius: 2, border: '1px solid rgba(255,255,255,.15)',
             background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem',
           }}>✕</button>
@@ -229,7 +229,7 @@ function ModalEvento({
             </label>
             <input value={titulo} onChange={e => setTitulo(e.target.value)} required
               placeholder="Ex: Reunião Escola Jardim das Flores"
-              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box', color: '#221d37' }} />
+              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box', color: '#221d37' }} />
           </div>
 
           {/* Tipo + Cor */}
@@ -239,7 +239,7 @@ function ModalEvento({
                 Tipo
               </label>
               <select value={tipo} onChange={e => { setTipo(e.target.value); setCor(TIPOS.find(t => t.value === e.target.value)?.cor ?? cor) }}
-                style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#fff', color: '#221d37' }}>
+                style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#fff', color: '#221d37' }}>
                 {TIPOS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </div>
@@ -267,20 +267,20 @@ function ModalEvento({
               <div>
                 <div style={{ fontSize: '.65rem', color: '#475569', marginBottom: '.2rem', fontFamily: 'var(--font-inter,sans-serif)' }}>Início</div>
                 <input type="date" value={dataInicio} onChange={e => { setDataInicio(e.target.value); if (e.target.value > dataFim) setDataFim(e.target.value) }}
-                  style={{ width: '100%', padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box' }} />
               </div>
               {!diaInteiro && (
                 <input type="time" value={horaInicio} onChange={e => setHoraInicio(e.target.value)}
-                  style={{ padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', marginTop: '1.1rem' }} />
+                  style={{ padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', marginTop: '1.1rem' }} />
               )}
               <div>
                 <div style={{ fontSize: '.65rem', color: '#475569', marginBottom: '.2rem', fontFamily: 'var(--font-inter,sans-serif)' }}>Fim</div>
                 <input type="date" value={dataFim} min={dataInicio} onChange={e => setDataFim(e.target.value)}
-                  style={{ width: '100%', padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box' }} />
               </div>
               {!diaInteiro && (
                 <input type="time" value={horaFim} onChange={e => setHoraFim(e.target.value)}
-                  style={{ padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', marginTop: '1.1rem' }} />
+                  style={{ padding: '.6rem .8rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', marginTop: '1.1rem' }} />
               )}
             </div>
           </div>
@@ -293,7 +293,7 @@ function ModalEvento({
             <div style={{ position: 'relative' }}>
               <input value={local} onChange={e => setLocal(e.target.value)}
                 placeholder="Endereço físico ou link do Google Meet / Zoom"
-                style={{ width: '100%', padding: '.7rem .9rem .7rem 2.5rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box', color: '#221d37' }} />
+                style={{ width: '100%', padding: '.7rem .9rem .7rem 2.5rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box', color: '#221d37' }} />
               <div style={{ position: 'absolute', left: '.8rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
                 {local.startsWith('http') ? (
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -317,7 +317,7 @@ function ModalEvento({
               Escola Relacionada (opcional)
             </label>
             <select value={escolaId} onChange={e => setEscolaId(e.target.value)}
-              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#fff', color: '#221d37' }}>
+              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#fff', color: '#221d37' }}>
               <option value="">— Nenhuma escola —</option>
               {escolas.map(e => <option key={e.id} value={e.id}>{e.nome}</option>)}
             </select>
@@ -330,7 +330,7 @@ function ModalEvento({
             </label>
 
             {/* Você (organizador) */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.45rem .65rem', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 8, marginBottom: '.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.45rem .65rem', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 2, marginBottom: '.5rem' }}>
               <div style={{ width: 26, height: 26, borderRadius: '50%', background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '.7rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', flexShrink: 0 }}>
                 {userEmail[0].toUpperCase()}
               </div>
@@ -343,9 +343,9 @@ function ModalEvento({
               <input value={emailInput} onChange={e => handleEmailInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); adicionarConvidado(emailInput) } }}
                 placeholder="Buscar por nome ou e-mail..."
-                style={{ width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box' }} />
+                style={{ width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', boxSizing: 'border-box' }} />
               {sugestoes.length > 0 && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,.1)', zIndex: 10, overflow: 'hidden', marginTop: 2 }}>
+                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 2, boxShadow: '0 8px 24px rgba(0,0,0,.1)', zIndex: 10, overflow: 'hidden', marginTop: 2 }}>
                   {sugestoes.map(p => (
                     <div key={p.id} onClick={() => adicionarConvidado(p.email)}
                       style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.55rem .8rem', cursor: 'pointer', transition: 'background .1s' }}
@@ -371,7 +371,7 @@ function ModalEvento({
                 {convidados.map(email => {
                   const p = profiles.find(pr => pr.email === email)
                   return (
-                    <div key={email} style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.4rem .65rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+                    <div key={email} style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.4rem .65rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2 }}>
                       <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', fontSize: '.65rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', flexShrink: 0 }}>
                         {email[0].toUpperCase()}
                       </div>
@@ -397,7 +397,7 @@ function ModalEvento({
             </label>
             <textarea value={descricao} onChange={e => setDescricao(e.target.value)} rows={3}
               placeholder="Pauta da reunião, objetivos, materiais necessários..."
-              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', resize: 'vertical', minHeight: 80, boxSizing: 'border-box', color: '#221d37' }} />
+              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', resize: 'vertical', minHeight: 80, boxSizing: 'border-box', color: '#221d37' }} />
           </div>
 
           {/* Recorrência */}
@@ -406,7 +406,7 @@ function ModalEvento({
               Recorrência
             </label>
             <select value={recorrencia} onChange={e => setRecorrencia(e.target.value)}
-              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#fff', color: '#221d37' }}>
+              style={{ width: '100%', padding: '.7rem .9rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.875rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#fff', color: '#221d37' }}>
               <option value="">Não se repete</option>
               <option value="diario">Diariamente</option>
               <option value="semanal">Semanalmente</option>
@@ -415,7 +415,7 @@ function ModalEvento({
           </div>
 
           {erro && (
-            <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.6rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
+            <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.6rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
               {erro}
             </div>
           )}
@@ -423,7 +423,7 @@ function ModalEvento({
           {/* Ações */}
           <div style={{ display: 'flex', gap: '.75rem', paddingTop: '.25rem' }}>
             <button type="submit" disabled={saving} style={{
-              flex: 1, padding: '.75rem', borderRadius: 9999, border: 'none',
+              flex: 1, padding: '.75rem', borderRadius: 3, border: 'none',
               background: saving ? '#e2e8f0' : `linear-gradient(135deg, ${cor}, ${cor}dd)`,
               color: saving ? '#94a3b8' : '#fff', fontWeight: 700, fontSize: '.875rem',
               cursor: saving ? 'not-allowed' : 'pointer',
@@ -433,7 +433,7 @@ function ModalEvento({
               {saving ? 'Salvando...' : (isEdicao ? 'Salvar Alterações' : 'Criar Evento')}
             </button>
             <button type="button" onClick={() => onClose()} style={{
-              padding: '.75rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0',
+              padding: '.75rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0',
               background: '#fff', color: '#64748b', fontWeight: 600, fontSize: '.875rem',
               cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)',
             }}>
@@ -471,7 +471,7 @@ function ModalDetalhes({
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
       <div style={{
-        background: '#fff', borderRadius: 18, width: '100%', maxWidth: 480,
+        background: '#fff', borderRadius: 4, width: '100%', maxWidth: 480,
         boxShadow: '0 24px 64px rgba(0,0,0,.18)', overflow: 'hidden',
       }}>
         {/* Header colorido */}
@@ -540,7 +540,7 @@ function ModalDetalhes({
 
           {/* Descrição */}
           {evento.descricao && (
-            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '.75rem 1rem', fontSize: '.82rem', color: '#334155', lineHeight: 1.6, fontFamily: 'var(--font-inter,sans-serif)' }}>
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: '.75rem 1rem', fontSize: '.82rem', color: '#334155', lineHeight: 1.6, fontFamily: 'var(--font-inter,sans-serif)' }}>
               {evento.descricao}
             </div>
           )}
@@ -555,7 +555,7 @@ function ModalDetalhes({
                 {evento.participantes.map(p => {
                   const s = getStatusColor(p.status)
                   return (
-                    <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.4rem .65rem', background: s.bg, border: `1px solid ${s.border}`, borderRadius: 8 }}>
+                    <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.4rem .65rem', background: s.bg, border: `1px solid ${s.border}`, borderRadius: 2 }}>
                       <div style={{ width: 26, height: 26, borderRadius: '50%', background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '.65rem', fontWeight: 700, flexShrink: 0, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                         {p.email[0].toUpperCase()}
                       </div>
@@ -577,14 +577,14 @@ function ModalDetalhes({
           {isCriador && (
             <div style={{ display: 'flex', gap: '.5rem', paddingTop: '.25rem', borderTop: '1px solid #f1f5f9' }}>
               <button onClick={onEditar} style={{
-                flex: 1, padding: '.6rem', borderRadius: 9999, border: '1.5px solid #e2e8f0',
+                flex: 1, padding: '.6rem', borderRadius: 3, border: '1.5px solid #e2e8f0',
                 background: '#fff', color: '#475569', fontWeight: 600, fontSize: '.82rem',
                 cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)',
               }}>
                 Editar Evento
               </button>
               <button onClick={onDeletar} style={{
-                padding: '.6rem 1.25rem', borderRadius: 9999, border: '1.5px solid #fca5a5',
+                padding: '.6rem 1.25rem', borderRadius: 3, border: '1.5px solid #fca5a5',
                 background: '#fef2f2', color: '#dc2626', fontWeight: 600, fontSize: '.82rem',
                 cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)',
               }}>
@@ -688,7 +688,7 @@ export function AgendaClient({ eventos: eventosIniciais, profiles, userId, userE
 
         {/* View switcher + novo evento */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
-          <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: 8, padding: 2 }}>
+          <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: 2, padding: 2 }}>
             {(['mes','semana','lista'] as const).map(v => (
               <button key={v} onClick={() => setView(v)} style={{
                 padding: '.35rem .8rem', borderRadius: 6, border: 'none', cursor: 'pointer',
@@ -703,7 +703,7 @@ export function AgendaClient({ eventos: eventosIniciais, profiles, userId, userE
           </div>
           <button onClick={() => setModalCriar(true)} style={{
             display: 'flex', alignItems: 'center', gap: '.4rem',
-            padding: '.5rem 1.1rem', borderRadius: 9999, border: 'none',
+            padding: '.5rem 1.1rem', borderRadius: 3, border: 'none',
             background: 'linear-gradient(135deg, #36b6e8, #12789f)',
             color: '#fff', fontWeight: 700, fontSize: '.78rem', cursor: 'pointer',
             fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -719,7 +719,7 @@ export function AgendaClient({ eventos: eventosIniciais, profiles, userId, userE
 
         {/* ── Vista Mês ───────────────────────────────────── */}
         {view === 'mes' && (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
             {/* Header dos dias */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', borderBottom: '1px solid #e2e8f0' }}>
               {DIAS_SEMANA_ABREV.map((d, i) => (
@@ -832,7 +832,7 @@ export function AgendaClient({ eventos: eventosIniciais, profiles, userId, userE
         {view === 'lista' && (
           <div>
             {gruposLista.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '4rem', color: '#475569', background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
+              <div style={{ textAlign: 'center', padding: '4rem', color: '#475569', background: '#fff', borderRadius: 4, border: '1px solid #e2e8f0' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 </div>
@@ -965,7 +965,7 @@ export function AgendaClient({ eventos: eventosIniciais, profiles, userId, userE
             return d
           })
           return (
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
               {/* Header dias semana */}
               <div style={{ display: 'grid', gridTemplateColumns: '60px repeat(7,1fr)', borderBottom: '2px solid #e2e8f0' }}>
                 <div style={{ background: '#fafafa' }} />

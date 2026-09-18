@@ -36,7 +36,7 @@ export default function PageHeader({ title, subtitle, actions, breadcrumbs, badg
         style={{
           display: 'none', // shown via CSS
           alignItems: 'center', justifyContent: 'center',
-          width: 40, height: 40, borderRadius: 8,
+          width: 40, height: 40, borderRadius: 2,
           border: '1px solid #e2e8f0', background: '#f8fafc',
           cursor: 'pointer', flexShrink: 0, marginRight: '.5rem',
         }}

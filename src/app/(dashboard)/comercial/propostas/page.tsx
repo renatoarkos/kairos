@@ -20,7 +20,7 @@ const STATUS_COR: Record<string, { bg: string; text: string; border: string }> =
 
 const inputStyle: React.CSSProperties = {
   padding: '.55rem .85rem', fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8, background: '#f8fafc', color: '#221d37', outline: 'none',
+  border: '1.5px solid #e2e8f0', borderRadius: 2, background: '#f8fafc', color: '#221d37', outline: 'none',
 }
 
 export default async function PropostasPage({ searchParams }: Props) {
@@ -57,7 +57,7 @@ export default async function PropostasPage({ searchParams }: Props) {
           <Link href="/calculadora" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: '#36b6e8', color: '#fff', padding: '.45rem 1rem',
-            borderRadius: 9999, fontSize: '.82rem', fontWeight: 700,
+            borderRadius: 3, fontSize: '.82rem', fontWeight: 700,
             textDecoration: 'none', boxShadow: '0 4px 12px rgba(54,182,232,.3)',
             fontFamily: 'var(--font-montserrat,sans-serif)',
           }}>
@@ -80,7 +80,7 @@ export default async function PropostasPage({ searchParams }: Props) {
           <Link
             href={arquivadas ? '/comercial/propostas' : `/comercial/propostas?arquivadas=1${q ? `&q=${q}` : ''}`}
             style={{
-              padding: '.55rem .9rem', borderRadius: 8, textDecoration: 'none',
+              padding: '.55rem .9rem', borderRadius: 2, textDecoration: 'none',
               border: `1.5px solid ${arquivadas ? '#36b6e8' : '#e2e8f0'}`,
               background: arquivadas ? '#eff6ff' : '#fff',
               color: arquivadas ? '#2563eb' : '#475569',
@@ -94,7 +94,7 @@ export default async function PropostasPage({ searchParams }: Props) {
 
         {/* ── Tabela ──────────────────────────────────────────────── */}
         {propostas && propostas.length > 0 ? (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
             <div className="mp-escolas-table-wrap" style={{ overflowX: 'auto' }}>
               <table className="mp-escolas-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
@@ -187,7 +187,7 @@ export default async function PropostasPage({ searchParams }: Props) {
             </div>
           </div>
         ) : (
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '4rem 2rem', textAlign: 'center', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '4rem 2rem', textAlign: 'center', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
             <h3 style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.3rem', color: '#221d37', marginBottom: '.4rem' }}>
               {q ? `Nenhum resultado para "${q}"` : arquivadas ? 'Nenhuma proposta arquivada' : 'Nenhuma proposta gerada ainda'}
             </h3>

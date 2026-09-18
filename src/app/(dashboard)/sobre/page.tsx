@@ -9,14 +9,14 @@ export default function SobrePage() {
         {/* ── HERO ──────────────────────────────────────────────── */}
         <div style={{
           background: 'linear-gradient(135deg, #221d37 0%, #2d284a 100%)',
-          borderRadius: 20, padding: '2.5rem 3rem', marginBottom: '2rem',
+          borderRadius: 6, padding: '2.5rem 3rem', marginBottom: '2rem',
           position: 'relative', overflow: 'hidden',
         }}>
           <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'rgba(54,182,232,.08)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', bottom: -60, right: 80, width: 140, height: 140, borderRadius: '50%', background: 'rgba(54,182,232,.05)', pointerEvents: 'none' }} />
 
           <div style={{ position: 'relative', zIndex: 1, maxWidth: 640 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.15)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 9999, padding: '.3rem .85rem', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.15)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 3, padding: '.3rem .85rem', marginBottom: '1.25rem' }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#36b6e8' }} />
               <span style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 Plataforma Interna · Equipe Comercial
@@ -48,8 +48,8 @@ export default function SobrePage() {
 
         {/* ── PROPÓSITO + JUSTIFICATIVA ────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '1.25rem' }}>
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', borderTop: '3px solid #36b6e8' }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fffbeb', border: '1px solid #fcd34d', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', borderTop: '3px solid #36b6e8' }}>
+            <div style={{ width: 40, height: 40, borderRadius: 2, background: '#fffbeb', border: '1px solid #fcd34d', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
             </div>
             <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.5rem' }}>
@@ -63,8 +63,8 @@ export default function SobrePage() {
             </p>
           </div>
 
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', borderTop: '3px solid #221d37' }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', borderTop: '3px solid #221d37' }}>
+            <div style={{ width: 40, height: 40, borderRadius: 2, background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             </div>
             <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#221d37', marginBottom: '.5rem' }}>
@@ -80,9 +80,9 @@ export default function SobrePage() {
         </div>
 
         {/* ── FUNCIONALIDADES ─────────────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', marginBottom: '1.5rem' }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fffbeb', border: '1px solid #fcd34d', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 2, background: '#fffbeb', border: '1px solid #fcd34d', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
             </div>
             <div>
@@ -102,7 +102,7 @@ export default function SobrePage() {
               { title: 'Downloads', desc: 'Ficha cadastral, minuta do contrato e exportação dos formulários.' },
               { title: 'Formulário para Escolas', desc: 'Página pública para escolas iniciarem o pré-cadastro sem precisar de login.' },
             ].map(f => (
-              <div key={f.title} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 12, padding: '1rem 1.1rem' }}>
+              <div key={f.title} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 3, padding: '1rem 1.1rem' }}>
                 <div style={{ marginBottom: '.5rem' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
@@ -116,12 +116,12 @@ export default function SobrePage() {
         </div>
 
         {/* ── MISSÃO, VISÃO E VALORES ─────────────────────────── */}
-        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 16, padding: '1.75rem 2rem', marginBottom: '1.25rem' }}>
+        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 4, padding: '1.75rem 2rem', marginBottom: '1.25rem' }}>
           <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '1.25rem' }}>
             Identidade da Kairós
           </div>
           {/* Quem somos — frase institucional */}
-          <div style={{ background: 'rgba(135,205,232,.06)', borderRadius: 12, padding: '1.25rem 1.5rem', borderLeft: '3px solid #87cde8', marginBottom: '1.5rem' }}>
+          <div style={{ background: 'rgba(135,205,232,.06)', borderRadius: 3, padding: '1.25rem 1.5rem', borderLeft: '3px solid #87cde8', marginBottom: '1.5rem' }}>
             <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#87cde8', marginBottom: '.5rem' }}>Quem somos</div>
             <p style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.05rem', fontStyle: 'italic', color: '#fff', lineHeight: 1.55 }}>
               Kairós — <em>“nós fazemos”</em> — é uma empresa criada com o objetivo de pensar, estudar, produzir e ensinar tecnologia a partir da Cosmovisão Cristã, com comprometimento com uma educação escolar distintamente cristã, que prima pela Verdade, Beleza e Bondade.
@@ -129,13 +129,13 @@ export default function SobrePage() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.75rem' }}>
-            <div style={{ background: 'rgba(255,255,255,.05)', borderRadius: 12, padding: '1.25rem', borderLeft: '3px solid #36b6e8' }}>
+            <div style={{ background: 'rgba(255,255,255,.05)', borderRadius: 3, padding: '1.25rem', borderLeft: '3px solid #36b6e8' }}>
               <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.5rem' }}>Missão</div>
               <p style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.05rem', fontStyle: 'italic', color: '#fff', lineHeight: 1.55 }}>
                 Promover uma Educação Tecnológica de excelência, pensando, estudando, produzindo e ensinando tecnologia com liberdade e responsabilidade em resposta a Deus.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,.05)', borderRadius: 12, padding: '1.25rem', borderLeft: '3px solid rgba(255,255,255,.2)' }}>
+            <div style={{ background: 'rgba(255,255,255,.05)', borderRadius: 3, padding: '1.25rem', borderLeft: '3px solid rgba(255,255,255,.2)' }}>
               <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: 'rgba(255,255,255,.5)', marginBottom: '.5rem' }}>Visão</div>
               <p style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.05rem', fontStyle: 'italic', color: 'rgba(255,255,255,.8)', lineHeight: 1.55 }}>
                 Ser uma empresa de referência em Educação Tecnológica fundamentada na Cosmovisão Cristã.
@@ -153,7 +153,7 @@ export default function SobrePage() {
               { eixo: 'Inovação Criacional',  cor: '#34d399', desc: 'Inovar com criatividade e propósito, refletindo o caráter criador de Deus.' },
               { eixo: 'Transformação Integral', cor: '#c084fc', desc: 'Formação completa que alcança a pessoa em todas as suas dimensões.' },
             ].map(e => (
-              <div key={e.eixo} style={{ background: 'rgba(255,255,255,.04)', borderRadius: 10, padding: '1rem', borderTop: `2px solid ${e.cor}` }}>
+              <div key={e.eixo} style={{ background: 'rgba(255,255,255,.04)', borderRadius: 2, padding: '1rem', borderTop: `2px solid ${e.cor}` }}>
                 <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: e.cor, marginBottom: '.5rem' }}>{e.eixo}</div>
                 <div style={{ fontSize: '.78rem', color: 'rgba(255,255,255,.7)', lineHeight: 1.55, fontFamily: 'var(--font-inter,sans-serif)' }}>{e.desc}</div>
               </div>
@@ -161,7 +161,7 @@ export default function SobrePage() {
           </div>
 
           {/* Mandato Cultural — citação de fechamento */}
-          <div style={{ marginTop: '1.5rem', padding: '1rem 1.25rem', background: 'rgba(255,255,255,.03)', borderRadius: 10, borderLeft: '2px solid rgba(255,255,255,.2)' }}>
+          <div style={{ marginTop: '1.5rem', padding: '1rem 1.25rem', background: 'rgba(255,255,255,.03)', borderRadius: 2, borderLeft: '2px solid rgba(255,255,255,.2)' }}>
             <p style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '.95rem', fontStyle: 'italic', color: 'rgba(255,255,255,.6)', lineHeight: 1.6, margin: 0 }}>
               Compreendemos a tecnologia não como um fim em si mesma, mas como parte do Mandato Cultural.
             </p>
@@ -169,9 +169,9 @@ export default function SobrePage() {
         </div>
 
         {/* ── IMPACTO ESPERADO ─────────────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.75rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)', marginBottom: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', marginBottom: '1.25rem' }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#f0fdf4', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 2, background: '#f0fdf4', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </div>
             <div>
@@ -185,7 +185,7 @@ export default function SobrePage() {
               { num: '02', title: 'Decisões embasadas', desc: 'Analytics e KPIs em tempo real para orientar a estratégia com dados reais da operação.' },
               { num: '03', title: 'Parcerias fortalecidas', desc: 'Histórico completo de cada escola para um atendimento mais consultivo e próximo.' },
             ].map(i => (
-              <div key={i.num} style={{ padding: '1.1rem', background: '#f8fafc', borderRadius: 12, border: '1px solid #f1f5f9' }}>
+              <div key={i.num} style={{ padding: '1.1rem', background: '#f8fafc', borderRadius: 3, border: '1px solid #f1f5f9' }}>
                 <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '2rem', fontWeight: 800, color: '#36b6e8', lineHeight: 1, marginBottom: '.5rem' }}>{i.num}</div>
                 <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.82rem', fontWeight: 700, color: '#221d37', marginBottom: '.3rem' }}>{i.title}</div>
                 <div style={{ fontSize: '.75rem', color: '#64748b', lineHeight: 1.6, fontFamily: 'var(--font-inter,sans-serif)' }}>{i.desc}</div>
@@ -201,7 +201,7 @@ export default function SobrePage() {
         {/* Divisor */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '2.5rem 0 2rem' }}>
           <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, transparent, #e2e8f0)' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.4rem 1rem', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 9999 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.4rem 1rem', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 3 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#36b6e8' }} />
             <span style={{ fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
               Parceria Educacional
@@ -213,7 +213,7 @@ export default function SobrePage() {
         {/* ── Hero PAIDEIA ── */}
         <div style={{
           background: 'linear-gradient(135deg, #faf7f0 0%, #fff8e8 50%, #faf7f0 100%)',
-          border: '1px solid #fde68a', borderRadius: 20,
+          border: '1px solid #fde68a', borderRadius: 6,
           padding: '2.5rem', marginBottom: '1.5rem',
           overflow: 'hidden', position: 'relative',
         }}>
@@ -224,7 +224,7 @@ export default function SobrePage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.5rem', alignItems: 'center', position: 'relative', zIndex: 1 }}>
             {/* Texto */}
             <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.12)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 9999, padding: '.3rem .85rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.12)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 3, padding: '.3rem .85rem', marginBottom: '1rem' }}>
                 <span style={{ fontSize: '.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#12789f', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   ✦ Sistema de Ensino Kairós
                 </span>
@@ -245,7 +245,7 @@ export default function SobrePage() {
             <div style={{ position: 'relative' }}>
               <div style={{
                 width: '100%', aspectRatio: '4/3',
-                borderRadius: 20, overflow: 'hidden',
+                borderRadius: 6, overflow: 'hidden',
                 background: 'linear-gradient(145deg, #0f2744 0%, #1a3a6b 45%, #221d37 100%)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 boxShadow: '0 16px 48px rgba(34,29,55,.25)',
@@ -354,7 +354,7 @@ export default function SobrePage() {
         </div>
 
         {/* ── O que está na plataforma digital ── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20, overflow: 'hidden', marginBottom: '1.5rem', boxShadow: '0 2px 12px rgba(34,29,55,.06)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 6, overflow: 'hidden', marginBottom: '1.5rem', boxShadow: '0 2px 12px rgba(34,29,55,.06)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center' }}>
 
             {/* Lado esquerdo — Ilustração */}
@@ -430,7 +430,7 @@ export default function SobrePage() {
         {/* ── Card de acesso à demonstração ── */}
         <div style={{
           background: 'linear-gradient(135deg, #221d37 0%, #2d284a 60%, #1e3a5f 100%)',
-          borderRadius: 20, padding: '2rem 2.5rem', marginBottom: '1.5rem',
+          borderRadius: 6, padding: '2rem 2.5rem', marginBottom: '1.5rem',
           border: '1px solid rgba(54,182,232,.2)',
           boxShadow: '0 8px 32px rgba(34,29,55,.2)',
           position: 'relative', overflow: 'hidden',
@@ -444,7 +444,7 @@ export default function SobrePage() {
 
               {/* Texto esquerdo */}
               <div style={{ flex: 1, minWidth: 300 }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.2)', border: '1px solid rgba(54,182,232,.4)', borderRadius: 9999, padding: '.3rem .85rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.2)', border: '1px solid rgba(54,182,232,.4)', borderRadius: 3, padding: '.3rem .85rem', marginBottom: '1rem' }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#36b6e8', animation: 'pulse 2s infinite' }} />
                   <span style={{ fontSize: '.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                     Acesso Temporário — 48 Horas
@@ -462,7 +462,7 @@ export default function SobrePage() {
               </div>
 
               {/* Card de credenciais */}
-              <div style={{ background: 'rgba(255,255,255,.07)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,.12)', borderRadius: 16, padding: '1.5rem', minWidth: 280, flexShrink: 0 }}>
+              <div style={{ background: 'rgba(255,255,255,.07)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,.12)', borderRadius: 4, padding: '1.5rem', minWidth: 280, flexShrink: 0 }}>
                 <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#36b6e8', marginBottom: '1rem' }}>
                   🔐 Dados de Acesso
                 </div>
@@ -483,7 +483,7 @@ export default function SobrePage() {
                 {/* Login */}
                 <div style={{ marginBottom: '.65rem' }}>
                   <div style={{ fontSize: '.6rem', fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.07em', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.25rem' }}>📧 Login</div>
-                  <div style={{ background: 'rgba(255,255,255,.06)', borderRadius: 8, padding: '.5rem .75rem', fontSize: '.72rem', color: '#fff', fontFamily: 'var(--font-inter,sans-serif)', letterSpacing: '.01em' }}>
+                  <div style={{ background: 'rgba(255,255,255,.06)', borderRadius: 2, padding: '.5rem .75rem', fontSize: '.72rem', color: '#fff', fontFamily: 'var(--font-inter,sans-serif)', letterSpacing: '.01em' }}>
                     demonstracao@kairos.com.br [COMPLETAR: credencial real de demo]
                   </div>
                 </div>
@@ -491,7 +491,7 @@ export default function SobrePage() {
                 {/* Senha */}
                 <div style={{ marginBottom: '1.1rem' }}>
                   <div style={{ fontSize: '.6rem', fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.07em', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.25rem' }}>🔑 Senha</div>
-                  <div style={{ background: 'rgba(255,255,255,.06)', borderRadius: 8, padding: '.5rem .75rem', fontSize: '.875rem', color: '#fbbf24', fontFamily: 'var(--font-montserrat,sans-serif)', fontWeight: 800, letterSpacing: '.1em' }}>
+                  <div style={{ background: 'rgba(255,255,255,.06)', borderRadius: 2, padding: '.5rem .75rem', fontSize: '.875rem', color: '#fbbf24', fontFamily: 'var(--font-montserrat,sans-serif)', fontWeight: 800, letterSpacing: '.1em' }}>
                     12345678
                   </div>
                 </div>
@@ -500,7 +500,7 @@ export default function SobrePage() {
                 <a href="[COMPLETAR: link da plataforma de demonstração Kairós]" target="_blank" rel="noopener noreferrer" style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.45rem',
                   background: 'linear-gradient(135deg, #36b6e8, #12789f)',
-                  color: '#fff', padding: '.7rem 1rem', borderRadius: 9999,
+                  color: '#fff', padding: '.7rem 1rem', borderRadius: 3,
                   textDecoration: 'none', fontWeight: 700, fontSize: '.78rem',
                   fontFamily: 'var(--font-montserrat,sans-serif)',
                   boxShadow: '0 4px 14px rgba(54,182,232,.4)',
@@ -512,7 +512,7 @@ export default function SobrePage() {
             </div>
 
             {/* Aviso de prazo */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 10, padding: '.75rem 1rem', marginTop: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)', borderRadius: 2, padding: '.75rem 1rem', marginTop: '1.25rem' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#36b6e8" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               <span style={{ fontSize: '.72rem', color: 'rgba(255,255,255,.5)', fontFamily: 'var(--font-inter,sans-serif)' }}>
                 Para novas visualizações ou acesso em outros momentos, será necessário realizar uma <strong style={{ color: 'rgba(255,255,255,.7)' }}>nova solicitação</strong> conforme o avanço da negociação. Nossa equipe estará à disposição.
@@ -522,7 +522,7 @@ export default function SobrePage() {
         </div>
 
         {/* ── Mensagem pronta para WhatsApp/Email ── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', marginBottom: '1.5rem', boxShadow: '0 2px 8px rgba(34,29,55,.04)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', marginBottom: '1.5rem', boxShadow: '0 2px 8px rgba(34,29,55,.04)' }}>
           <div style={{ padding: '.9rem 1.5rem', background: '#f8fafc', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem' }}>
               <div style={{ width: 28, height: 28, borderRadius: 7, background: '#221d37', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -538,7 +538,7 @@ export default function SobrePage() {
             <pre style={{
               fontFamily: 'var(--font-inter,sans-serif)', fontSize: '.78rem',
               color: '#2d284a', lineHeight: 1.75, whiteSpace: 'pre-wrap',
-              background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10,
+              background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2,
               padding: '1.25rem', margin: 0,
             }}>{`🎓 *PLATAFORMA DE DEMONSTRAÇÃO – PAIDEIA*
 _(Acesso temporário por 48 horas)_

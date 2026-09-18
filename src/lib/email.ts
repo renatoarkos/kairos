@@ -45,7 +45,7 @@ function htmlConvite(p: ConviteParams) {
 
         <!-- Header -->
         <tr>
-          <td style="background:linear-gradient(135deg,#221d37,#2d284a);border-radius:16px 16px 0 0;padding:32px 40px;">
+          <td style="background:linear-gradient(135deg,#221d37,#2d284a);border-radius: 4px 16px 0 0;padding:32px 40px;">
             <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#36b6e8;margin-bottom:8px;">
               ✦ Kairós Gestão Comercial
             </div>
@@ -67,7 +67,7 @@ function htmlConvite(p: ConviteParams) {
             </p>
 
             <!-- Detalhes -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:24px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius: 3px;overflow:hidden;margin-bottom:24px;">
               <tr>
                 <td style="padding:16px 20px;border-bottom:1px solid #f1f5f9;">
                   <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:4px;">Data e Horário</div>
@@ -100,7 +100,7 @@ function htmlConvite(p: ConviteParams) {
             <!-- CTA se tiver link -->
             ${isLink ? `
             <div style="text-align:center;margin-bottom:24px;">
-              <a href="${p.local}" style="display:inline-block;background:linear-gradient(135deg,#36b6e8,#12789f);color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:9999px;box-shadow:0 4px 14px rgba(54,182,232,0.4);">
+              <a href="${p.local}" style="display:inline-block;background:linear-gradient(135deg,#36b6e8,#12789f);color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:3px;box-shadow:0 4px 14px rgba(54,182,232,0.4);">
                 Entrar na Reunião Online
               </a>
             </div>` : ''}

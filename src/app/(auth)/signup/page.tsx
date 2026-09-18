@@ -40,7 +40,7 @@ export default function SignupPage() {
   if (done) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--brand-blue)' }}>
-        <div className="card" style={{ maxWidth: 400, width: '100%', margin: '1rem', padding: '2.5rem', textAlign: 'center', borderRadius: 16 }}>
+        <div className="card" style={{ maxWidth: 400, width: '100%', margin: '1rem', padding: '2.5rem', textAlign: 'center', borderRadius: 4 }}>
           <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>✅</div>
           <h2 style={{ color: 'var(--brand-blue)', marginBottom: '.5rem' }}>Conta criada!</h2>
           <p style={{ color: 'var(--text-s)', fontSize: '.9rem', marginBottom: '1.5rem' }}>
@@ -57,9 +57,9 @@ export default function SignupPage() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--brand-blue)', padding: '1rem' }}>
       <div style={{ width: '100%', maxWidth: 420 }}>
-        <div className="card" style={{ borderRadius: 16, overflow: 'hidden' }}>
+        <div className="card" style={{ borderRadius: 4, overflow: 'hidden' }}>
           <div style={{ padding: '2rem 2rem 1rem', textAlign: 'center' }}>
-            <div style={{ width: 60, height: 60, background: 'var(--brand-orange)', borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+            <div style={{ width: 60, height: 60, background: 'var(--brand-orange)', borderRadius: 3, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
               <School size={28} color="#fff" />
             </div>
             <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--brand-blue)' }}>Criar Conta</h1>

@@ -65,7 +65,7 @@ export function AlunosHistoricoCard({
   }
 
   return (
-    <div style={{ background: 'var(--surface, #fff)', border: '1px solid var(--border, #e2e8f0)', borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ background: 'var(--surface, #fff)', border: '1px solid var(--border, #e2e8f0)', borderRadius: 3, overflow: 'hidden' }}>
       <div style={{ padding: '1rem 1.25rem .75rem', borderBottom: '1px solid var(--border, #e2e8f0)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ fontSize: '.78rem', fontWeight: 700, color: '#221d37', textTransform: 'uppercase', letterSpacing: '.07em', fontFamily: 'var(--font-montserrat, sans-serif)', display: 'flex', alignItems: 'center', gap: '.4rem' }}>
           <Users size={14} color="#64748b" /> Alunos
@@ -119,7 +119,7 @@ export function AlunosHistoricoCard({
         {mostrarHistorico && historico.length > 1 && (
           <div style={{ marginTop: '.6rem', display: 'flex', flexDirection: 'column', gap: '.4rem', maxHeight: 200, overflowY: 'auto', paddingRight: '.2rem' }}>
             {historico.map(h => (
-              <div key={h.id} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 8, padding: '.45rem .6rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div key={h.id} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 2, padding: '.45rem .6rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div style={{ fontSize: '.78rem', fontWeight: 700, color: '#221d37', fontFamily: 'var(--font-montserrat, sans-serif)' }}>
                     {h.valor.toLocaleString('pt-BR')} alunos
@@ -158,7 +158,7 @@ export function AlunosHistoricoCard({
               onClick={salvar}
               disabled={pending || !valor.trim()}
               style={{
-                width: '100%', padding: '.55rem', borderRadius: 8, border: 'none', cursor: pending ? 'wait' : 'pointer',
+                width: '100%', padding: '.55rem', borderRadius: 2, border: 'none', cursor: pending ? 'wait' : 'pointer',
                 background: '#36b6e8', color: '#fff', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat, sans-serif)',
                 opacity: !valor.trim() ? .6 : 1,
               }}

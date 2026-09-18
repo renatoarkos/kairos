@@ -68,7 +68,7 @@ export default async function TabelaPage() {
         actions={
           <Link href="/comercial/escolas/nova" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            padding: '.45rem 1rem', borderRadius: 9999, background: '#36b6e8',
+            padding: '.45rem 1rem', borderRadius: 3, background: '#36b6e8',
             color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700,
             fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 12px rgba(54,182,232,.3)',
           }}>
@@ -89,7 +89,7 @@ export default async function TabelaPage() {
             { label: 'Leads Frios',     value: totalFrios,                   cor: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
             { label: 'Potencial Total', value: formatCurrency(potencialTotal), cor: '#16a34a', bg: '#f0fdf4', border: '#86efac' },
           ].map(k => (
-            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 14, padding: '.9rem 1rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)', minWidth: 0 }}>
+            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 3, padding: '.9rem 1rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)', minWidth: 0 }}>
               <div style={{ fontSize: '.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{k.label}</div>
               <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.5rem', fontWeight: 800, color: '#221d37', lineHeight: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{k.value}</div>
             </div>
@@ -97,7 +97,7 @@ export default async function TabelaPage() {
         </div>
 
         {/* ── Tabela rankeada ───────────────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
 
           {/* Legenda de ranking */}
           <div style={{ padding: '.85rem 1.5rem', background: '#fafafa', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
@@ -281,7 +281,7 @@ export default async function TabelaPage() {
               <p style={{ fontSize: '.85rem', color: '#475569', marginBottom: '1.25rem', fontFamily: 'var(--font-inter,sans-serif)' }}>
                 Cadastre a primeira escola para começar a rankear seus leads.
               </p>
-              <Link href="/comercial/escolas/nova" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem', borderRadius: 9999, textDecoration: 'none', fontSize: '.85rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+              <Link href="/comercial/escolas/nova" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem', borderRadius: 3, textDecoration: 'none', fontSize: '.85rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Cadastrar Escola
               </Link>

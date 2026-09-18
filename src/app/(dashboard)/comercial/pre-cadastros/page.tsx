@@ -119,7 +119,7 @@ function StatusBadge({ status }: { status: string | null }) {
   const s = map[status ?? 'pendente'] ?? map.pendente
   return (
     <span style={{
-      display: 'inline-block', padding: '.2rem .6rem', borderRadius: 9999,
+      display: 'inline-block', padding: '.2rem .6rem', borderRadius: 3,
       background: s.bg, color: s.text,
       fontSize: '.7rem', fontWeight: 700, letterSpacing: '.02em',
       fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -217,7 +217,7 @@ function RowDetails({ r }: { r: PreCadastro }) {
   )
   return (
     <details style={{
-      marginTop: '.5rem', background: '#f8fafc', borderRadius: 10, padding: '.85rem 1rem',
+      marginTop: '.5rem', background: '#f8fafc', borderRadius: 2, padding: '.85rem 1rem',
       border: '1px solid #e2e8f0',
     }}>
       <summary style={{
@@ -337,7 +337,7 @@ export default async function PreCadastrosPage() {
         {error && (
           <div style={{
             background: '#fef2f2', border: '1px solid #fca5a5', color: '#991b1b',
-            padding: '.85rem 1rem', borderRadius: 10, marginBottom: '1rem', fontSize: '.85rem',
+            padding: '.85rem 1rem', borderRadius: 2, marginBottom: '1rem', fontSize: '.85rem',
           }}>
             Não foi possível carregar os pré-cadastros: {error.message}
           </div>
@@ -346,7 +346,7 @@ export default async function PreCadastrosPage() {
         {!error && registros.length === 0 && (
           <div style={{
             textAlign: 'center', padding: '4rem 1rem',
-            background: '#fff', border: '1px dashed #e2e8f0', borderRadius: 14,
+            background: '#fff', border: '1px dashed #e2e8f0', borderRadius: 3,
           }}>
             <ClipboardList size={42} color="#94a3b8" style={{ margin: '0 auto .75rem' }} />
             <div style={{ fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '.35rem' }}>
@@ -362,7 +362,7 @@ export default async function PreCadastrosPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.85rem' }}>
             {registros.map(r => (
               <article key={r.id} className="mp-precad-card" style={{
-                background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14,
+                background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3,
                 padding: '1.1rem 1.25rem',
                 boxShadow: '0 1px 3px rgba(34,29,55,.04)',
               }}>
@@ -448,7 +448,7 @@ export default async function PreCadastrosPage() {
                     href={proposalHref(r)}
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: '.35rem',
-                      padding: '.4rem .8rem', borderRadius: 8,
+                      padding: '.4rem .8rem', borderRadius: 2,
                       fontSize: '.75rem', fontWeight: 600, textDecoration: 'none',
                       fontFamily: 'var(--font-montserrat,sans-serif)',
                       background: '#f0fdf4', color: '#166534', border: '1px solid #86efac',

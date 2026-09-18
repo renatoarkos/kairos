@@ -118,7 +118,7 @@ export default async function Image({ params }: { params: Promise<{ token: strin
               <div style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'flex-end',
                 background: 'rgba(255,204,0,0.12)', border: `1px solid rgba(255,204,0,0.4)`,
-                borderRadius: 12, padding: '10px 16px',
+                borderRadius: 3, padding: '10px 16px',
               }}>
                 <div style={{ display: 'flex', fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: 'rgba(255,204,0,0.7)', marginBottom: 4 }}>
                   Proposta válida até

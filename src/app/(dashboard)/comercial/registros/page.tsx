@@ -53,7 +53,7 @@ export default async function RegistrosPage({ searchParams }: Props) {
         title="Registros de Interação"
         subtitle={`${count ?? 0} registro${(count ?? 0) !== 1 ? 's' : ''}`}
         actions={
-          <Link href="/comercial/registros/novo" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.45rem 1rem', borderRadius: 9999, fontSize: '.82rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 12px rgba(54,182,232,.3)', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+          <Link href="/comercial/registros/novo" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.45rem 1rem', borderRadius: 3, fontSize: '.82rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 12px rgba(54,182,232,.3)', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             <Plus size={14} /> Novo Registro
           </Link>
         }
@@ -62,11 +62,11 @@ export default async function RegistrosPage({ searchParams }: Props) {
       <div style={{ padding: '2rem 2.5rem' }}>
 
         {/* Filtros */}
-        <form style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1rem 1.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
+        <form style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1rem 1.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(0,0,0,.04)' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: 220, maxWidth: 360 }}>
             <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#475569', pointerEvents: 'none' }} />
             <input name="q" defaultValue={q} placeholder="Buscar no resumo..."
-              style={{ width: '100%', paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, fontSize: '.82rem', border: '1.5px solid #e2e8f0', borderRadius: 8, outline: 'none', color: '#221d37', background: '#f8fafc', fontFamily: 'var(--font-inter,sans-serif)', boxSizing: 'border-box' }} />
+              style={{ width: '100%', paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, fontSize: '.82rem', border: '1.5px solid #e2e8f0', borderRadius: 2, outline: 'none', color: '#221d37', background: '#f8fafc', fontFamily: 'var(--font-inter,sans-serif)', boxSizing: 'border-box' }} />
           </div>
           {/* Filtro por classificação */}
           <div style={{ display: 'flex', gap: '.5rem' }}>
@@ -76,7 +76,7 @@ export default async function RegistrosPage({ searchParams }: Props) {
                 <Link key={c}
                   href={`/comercial/registros?q=${q}&classif=${classif === c ? '' : c}`}
                   style={{
-                    padding: '6px 14px', borderRadius: 9999, fontSize: '.72rem', fontWeight: 700,
+                    padding: '6px 14px', borderRadius: 3, fontSize: '.72rem', fontWeight: 700,
                     textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '.05em',
                     background: classif === c ? cor.bg : '#f8fafc',
                     color: classif === c ? cor.text : '#64748b',
@@ -88,14 +88,14 @@ export default async function RegistrosPage({ searchParams }: Props) {
               )
             })}
           </div>
-          <button type="submit" style={{ background: '#221d37', color: '#fff', padding: '9px 18px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: '.82rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+          <button type="submit" style={{ background: '#221d37', color: '#fff', padding: '9px 18px', borderRadius: 2, border: 'none', cursor: 'pointer', fontSize: '.82rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             Buscar
           </button>
           {(q || classif) && <Link href="/comercial/registros" style={{ fontSize: '.78rem', color: '#475569', textDecoration: 'none' }}>Limpar</Link>}
         </form>
 
         {/* Tabela */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
           {registros && registros.length > 0 ? (
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -177,7 +177,7 @@ export default async function RegistrosPage({ searchParams }: Props) {
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
               </svg>
               <h3 style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.3rem', color: '#221d37', marginBottom: '.4rem' }}>Nenhum registro encontrado</h3>
-              <Link href="/comercial/registros/novo" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem', borderRadius: 9999, textDecoration: 'none', fontSize: '.85rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', marginTop: '.75rem' }}>
+              <Link href="/comercial/registros/novo" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem', borderRadius: 3, textDecoration: 'none', fontSize: '.85rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', marginTop: '.75rem' }}>
                 <Plus size={14} /> Novo Registro
               </Link>
             </div>

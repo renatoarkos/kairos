@@ -23,7 +23,7 @@ function ActionButton({
         disabled={loading}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-          padding: '.4rem .9rem', borderRadius: 8,
+          padding: '.4rem .9rem', borderRadius: 2,
           border: `1px solid ${color}22`,
           background: '#fff', color, fontSize: '.78rem', fontWeight: 600,
           cursor: loading ? 'wait' : 'pointer',
@@ -103,7 +103,7 @@ export default function SincronizarLeadsButton() {
           disabled={dedupState === 'loading'}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            padding: '.4rem .9rem', borderRadius: 8,
+            padding: '.4rem .9rem', borderRadius: 2,
             border: `1px solid ${confirming ? '#dc262644' : '#e2e8f0'}`,
             background: confirming ? '#fef2f2' : '#fff',
             color: confirming ? '#dc2626' : '#64748b',
@@ -122,7 +122,7 @@ export default function SincronizarLeadsButton() {
           <button
             onClick={() => setConfirming(false)}
             style={{
-              padding: '.35rem .7rem', borderRadius: 8,
+              padding: '.35rem .7rem', borderRadius: 2,
               border: '1px solid #e2e8f0', background: '#fff',
               color: '#64748b', fontSize: '.75rem', cursor: 'pointer',
               fontFamily: 'var(--font-montserrat,sans-serif)',

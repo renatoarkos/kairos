@@ -22,7 +22,7 @@ export const dynamic = 'force-dynamic'
 interface Props { searchParams: Promise<{ escola?: string; fase?: string; q?: string }> }
 
 const card: React.CSSProperties = {
-  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4,
   marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)',
 }
 const secHdr = (color = '#36b6e8'): React.CSSProperties => ({
@@ -46,7 +46,7 @@ const lbl: React.CSSProperties = {
 const inp: React.CSSProperties = {
   width: '100%', padding: '.7rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none', boxSizing: 'border-box',
 }
 const g2: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem 1.5rem' }
@@ -312,7 +312,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
             { label: 'Em Implantação',     value: kpis.emImplantacao, sub: 'pós-arquivamento', cor: '#7c3aed', bg: '#f5f3ff', border: '#c4b5fd' },
             { label: 'Meta de Receita 2027', value: `${pctReceita}%`, sub: formatCurrency(META_RECEITA), cor: '#221d37', bg: '#f8fafc', border: '#e2e8f0' },
           ].map(k => (
-            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderRadius: 14, padding: '1.1rem 1.25rem', borderTop: `3px solid ${k.cor}` }}>
+            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderRadius: 3, padding: '1.1rem 1.25rem', borderTop: `3px solid ${k.cor}` }}>
               <div style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.35rem' }}>{k.label}</div>
               <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.6rem', fontWeight: 800, lineHeight: 1, color: '#221d37' }}>{k.value}</div>
               <div style={{ fontSize: '.7rem', color: '#64748b', marginTop: '.2rem', fontFamily: 'var(--font-inter,sans-serif)' }}>{k.sub}</div>
@@ -359,7 +359,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
               <Link key={fase} href={faseFiltro === fase ? '/comercial/funil-contratacao' : `/comercial/funil-contratacao?fase=${fase}`} style={{ textDecoration: 'none' }}>
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.55rem .9rem',
-                  borderRadius: 10, background: faseFiltro === fase ? '#221d37' : '#f8fafc',
+                  borderRadius: 2, background: faseFiltro === fase ? '#221d37' : '#f8fafc',
                   border: `1.5px solid ${faseFiltro === fase ? '#221d37' : '#e2e8f0'}`,
                 }}>
                   <span style={{ fontSize: '.78rem', fontWeight: 700, color: faseFiltro === fase ? '#fff' : '#334155', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -382,7 +382,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
             busca do EscolaSelector é position:absolute e ficava cortado pelo
             overflow:hidden do card. */}
         <div style={{ ...card, overflow: 'visible' }}>
-          <div style={{ ...secHdr(), borderRadius: '16px 16px 0 0' }}>
+          <div style={{ ...secHdr(), borderRadius: '4px 4px 0 0' }}>
             <div style={secTitle}>Registrar / Atualizar Negociação</div>
           </div>
           <div style={{ padding: '1.25rem 1.75rem' }}>
@@ -393,10 +393,10 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
               placeholder="— Escolha uma escola para registrar a negociação —"
               extraButton={escolaSelecionada ? (
                 <>
-                  <Link href={`/comercial/contratos?escola=${escolaId}`} style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
+                  <Link href={`/comercial/contratos?escola=${escolaId}`} style={{ padding: '8px 14px', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
                     Editar Contrato Completo →
                   </Link>
-                  <Link href={`/comercial/jornada?escola=${escolaId}`} style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
+                  <Link href={`/comercial/jornada?escola=${escolaId}`} style={{ padding: '8px 14px', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
                     Ver Jornada →
                   </Link>
                 </>
@@ -441,7 +441,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
                   placeholder="Histórico de negociação, condições especiais, motivo de recusa..." />
               </div>
 
-              <button type="submit" style={{ background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff', padding: '.7rem 2rem', borderRadius: 9999, border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 14px rgba(54,182,232,.35)' }}>
+              <button type="submit" style={{ background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff', padding: '.7rem 2rem', borderRadius: 3, border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 14px rgba(54,182,232,.35)' }}>
                 Salvar Negociação
               </button>
             </form>

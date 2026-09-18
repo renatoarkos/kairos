@@ -56,7 +56,7 @@ export function EscolasToolbar({ q: initialQ, estado: initialEstado, classif, vi
       ref={formRef}
       className="mp-toolbar"
       style={{
-        background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12,
+        background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3,
         padding: '.85rem 1.1rem', boxShadow: '0 1px 3px rgba(0,0,0,.04)',
         display: 'flex', alignItems: 'center', gap: '.75rem', flexWrap: 'wrap',
       }}
@@ -85,7 +85,7 @@ export function EscolasToolbar({ q: initialQ, estado: initialEstado, classif, vi
             paddingTop: 8, paddingBottom: 8,
             fontSize: '.82rem',
             border: `1.5px solid ${focusSearch ? '#36b6e8' : '#e2e8f0'}`,
-            borderRadius: 8, outline: 'none', color: '#221d37',
+            borderRadius: 2, outline: 'none', color: '#221d37',
             background: '#f8fafc',
             fontFamily: 'var(--font-inter,sans-serif)',
             boxShadow: focusSearch ? '0 0 0 3px rgba(54,182,232,.12)' : 'none',
@@ -104,7 +104,7 @@ export function EscolasToolbar({ q: initialQ, estado: initialEstado, classif, vi
         {sugestoes.length > 0 && focusSearch && (
           <div style={{
             position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4,
-            background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10,
+            background: '#fff', border: '1px solid #e2e8f0', borderRadius: 2,
             boxShadow: '0 8px 24px rgba(34,29,55,.12)', zIndex: 50, overflow: 'hidden',
           }}>
             {sugestoes.map(e => (
@@ -157,7 +157,7 @@ export function EscolasToolbar({ q: initialQ, estado: initialEstado, classif, vi
         defaultValue={initialEstado}
         style={{
           padding: '8px 12px', fontSize: '.82rem',
-          border: '1.5px solid #e2e8f0', borderRadius: 8,
+          border: '1.5px solid #e2e8f0', borderRadius: 2,
           background: '#f8fafc', color: '#221d37', outline: 'none',
           fontFamily: 'var(--font-inter,sans-serif)', cursor: 'pointer',
         }}
@@ -170,7 +170,7 @@ export function EscolasToolbar({ q: initialQ, estado: initialEstado, classif, vi
         type="submit"
         style={{
           background: '#221d37', color: '#fff', padding: '8px 16px',
-          borderRadius: 8, border: 'none', cursor: 'pointer',
+          borderRadius: 2, border: 'none', cursor: 'pointer',
           fontSize: '.82rem', fontWeight: 700,
           fontFamily: 'var(--font-montserrat,sans-serif)',
           transition: 'background .15s',
@@ -193,7 +193,7 @@ export function EscolasToolbar({ q: initialQ, estado: initialEstado, classif, vi
       {/* View toggle */}
       <div className="mp-view-toggle" style={{
         marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 2,
-        background: '#f1f5f9', borderRadius: 8, padding: 3,
+        background: '#f1f5f9', borderRadius: 2, padding: 3,
       }}>
         {[
           { v: 'table', icon: '☰', label: 'Lista' },

@@ -48,14 +48,14 @@ export default async function LeadsBancoPage({ searchParams }: Props) {
       <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
         <PageHeader title="Banco de Leads" subtitle="Leads importados dos congressos e CRM" />
         <div style={{ padding: '3rem 2rem', textAlign: 'center' }}>
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: '3rem', maxWidth: 520, margin: '0 auto' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '3rem', maxWidth: 520, margin: '0 auto' }}>
             <h3 style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.4rem', fontWeight: 700, color: '#221d37', marginBottom: '.5rem' }}>Banco não configurado</h3>
             <p style={{ fontSize: '.875rem', color: '#64748b', fontFamily: 'var(--font-inter,sans-serif)', marginBottom: '1.5rem' }}>Execute o SQL e depois importe os dados.</p>
             <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'center' }}>
-              <a href="https://supabase.com/dashboard/project/lyisdsnocroocxfblvqf/sql/new" target="_blank" rel="noopener noreferrer" style={{ background: '#36b6e8', color: '#fff', padding: '.6rem 1.5rem', borderRadius: 9999, textDecoration: 'none', fontWeight: 700, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+              <a href="https://supabase.com/dashboard/project/lyisdsnocroocxfblvqf/sql/new" target="_blank" rel="noopener noreferrer" style={{ background: '#36b6e8', color: '#fff', padding: '.6rem 1.5rem', borderRadius: 3, textDecoration: 'none', fontWeight: 700, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 Criar tabelas (SQL)
               </a>
-              <Link href="/importacao" style={{ border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', padding: '.6rem 1.5rem', borderRadius: 9999, textDecoration: 'none', fontWeight: 600, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+              <Link href="/importacao" style={{ border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', padding: '.6rem 1.5rem', borderRadius: 3, textDecoration: 'none', fontWeight: 600, fontSize: '.82rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 Importar dados
               </Link>
             </div>
@@ -160,7 +160,7 @@ export default async function LeadsBancoPage({ searchParams }: Props) {
             {/* Exportar Excel completo */}
             <a href={exportUrl} title="Exportação completa com todos os campos" style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              padding: '.45rem 1rem', borderRadius: 9999,
+              padding: '.45rem 1rem', borderRadius: 3,
               background: '#16a34a', color: '#fff', textDecoration: 'none',
               fontSize: '.78rem', fontWeight: 700,
               fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -172,7 +172,7 @@ export default async function LeadsBancoPage({ searchParams }: Props) {
             {/* Importar */}
             <Link href="/importacao" style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              padding: '.45rem 1rem', borderRadius: 9999,
+              padding: '.45rem 1rem', borderRadius: 3,
               background: '#36b6e8', color: '#fff', textDecoration: 'none',
               fontSize: '.78rem', fontWeight: 700,
               fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -219,7 +219,7 @@ export default async function LeadsBancoPage({ searchParams }: Props) {
               icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
             },
           ].map(k => (
-            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 14, padding: '1rem 1.1rem', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderTop: `3px solid ${k.cor}`, borderRadius: 3, padding: '1rem 1.1rem', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ fontSize: '.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{k.label}</div>
                 <div style={{ color: k.cor, opacity: .5, flexShrink: 0 }}>{k.icon}</div>
@@ -231,7 +231,7 @@ export default async function LeadsBancoPage({ searchParams }: Props) {
         </div>
 
         {/* ── Barra de progresso de alcançabilidade ────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '.85rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '.85rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
           {[
             { label: 'Decisores', n: totalDecisores ?? 0, total: totalGeral ?? 0, cor: '#dc2626' },
             { label: 'Com E-mail', n: totalComEmail ?? 0, total: totalGeral ?? 0, cor: '#2563eb' },
@@ -258,13 +258,13 @@ export default async function LeadsBancoPage({ searchParams }: Props) {
         </div>
 
         {/* ── Filtros ──────────────────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '.85rem 1.25rem', marginBottom: '1.25rem', display: 'flex', gap: '.75rem', alignItems: 'center', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '.85rem 1.25rem', marginBottom: '1.25rem', display: 'flex', gap: '.75rem', alignItems: 'center', flexWrap: 'wrap', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
 
           {/* Busca */}
           <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" style={{ position: 'absolute', left: '.75rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <form method="get" action="/leads-banco" style={{ display: 'contents' }}>
-              <input name="q" defaultValue={q} placeholder="Buscar por nome, e-mail ou escola..." style={{ width: '100%', padding: '.6rem .85rem .6rem 2.1rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37', boxSizing: 'border-box' as const }} />
+              <input name="q" defaultValue={q} placeholder="Buscar por nome, e-mail ou escola..." style={{ width: '100%', padding: '.6rem .85rem .6rem 2.1rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37', boxSizing: 'border-box' as const }} />
               <input type="hidden" name="fonte" value={fonte} />
               <input type="hidden" name="tipo" value={tipo} />
               <input type="hidden" name="uf" value={uf} />

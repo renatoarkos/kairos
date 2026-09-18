@@ -155,7 +155,7 @@ export default async function MetasPage() {
         {/* ── Hero de contexto ─────────────────────────────── */}
         <div className="mp-metas-hero" style={{
           background: 'linear-gradient(135deg, #221d37 0%, #2d284a 60%, #221d37 100%)',
-          borderRadius: 18, padding: '1.75rem 2rem',
+          borderRadius: 4, padding: '1.75rem 2rem',
           marginBottom: '2rem',
           display: 'grid', gridTemplateColumns: '1fr auto',
           gap: '2rem', alignItems: 'center',
@@ -181,7 +181,7 @@ export default async function MetasPage() {
         {/* ── Meta de Alunos — widget principal ─────────────── */}
         <div style={{
           background: 'linear-gradient(135deg, #221d37 0%, #14532d 130%)',
-          borderRadius: 18, padding: '1.75rem 2rem', marginBottom: '2rem',
+          borderRadius: 4, padding: '1.75rem 2rem', marginBottom: '2rem',
           boxShadow: '0 8px 32px rgba(34,29,55,.18)',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
@@ -209,9 +209,9 @@ export default async function MetasPage() {
             </div>
           </div>
           <div style={{ marginTop: '1.4rem' }}>
-            <div style={{ height: 16, background: 'rgba(255,255,255,.12)', borderRadius: 8, overflow: 'hidden' }}>
+            <div style={{ height: 16, background: 'rgba(255,255,255,.12)', borderRadius: 2, overflow: 'hidden' }}>
               <div style={{
-                height: '100%', width: `${Math.min(100, Math.max(0, pctAlunos))}%`, borderRadius: 8,
+                height: '100%', width: `${Math.min(100, Math.max(0, pctAlunos))}%`, borderRadius: 2,
                 background: 'linear-gradient(90deg, #16a34a, #86efac)',
                 transition: 'width .8s ease',
               }} />
@@ -282,7 +282,7 @@ export default async function MetasPage() {
         </div>
 
         {/* ── Funil de conversão do sprint ──────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, marginBottom: '2rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, marginBottom: '2rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
           <div style={{ padding: '1rem 1.75rem', borderBottom: '1px solid #f1f5f9', background: '#fafafa', display: 'flex', alignItems: 'center', gap: '.65rem' }}>
             <div style={{ width: 28, height: 28, borderRadius: 7, background: '#334155', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
@@ -337,7 +337,7 @@ export default async function MetasPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
 
           {/* Prospecção — últimas reuniões */}
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
             <div style={{ padding: '1rem 1.4rem', borderBottom: '1px solid #f1f5f9', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
                 <div style={{ width: 26, height: 26, borderRadius: 7, background: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -382,7 +382,7 @@ export default async function MetasPage() {
           </div>
 
           {/* Novas escolas */}
-          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
+          <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
             <div style={{ padding: '1rem 1.4rem', borderBottom: '1px solid #f1f5f9', background: '#fafafa', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
                 <div style={{ width: 26, height: 26, borderRadius: 7, background: '#36b6e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -422,7 +422,7 @@ export default async function MetasPage() {
         </div>
 
         {/* ── Resumo de progresso geral ────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.5rem 1.75rem', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.5rem 1.75rem', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
           <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#221d37', marginBottom: '1.25rem' }}>
             Painel de Progresso Consolidado — Sprint até {METAS.prazo}
           </div>
@@ -436,7 +436,7 @@ export default async function MetasPage() {
               const p = Math.min(100, Math.round((m.atual / m.meta) * 100))
               const falta = Math.max(0, m.meta - m.atual)
               return (
-                <div key={m.label} style={{ padding: '.85rem 1rem', background: '#f8fafc', border: `1px solid ${m.cor}20`, borderTop: `3px solid ${m.cor}`, borderRadius: 10 }}>
+                <div key={m.label} style={{ padding: '.85rem 1rem', background: '#f8fafc', border: `1px solid ${m.cor}20`, borderTop: `3px solid ${m.cor}`, borderRadius: 2 }}>
                   <div style={{ fontSize: '.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: m.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.4rem' }}>{m.label}</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '.3rem', marginBottom: '.5rem' }}>
                     <span style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.5rem', fontWeight: 800, color: '#221d37', lineHeight: 1 }}>{m.atual.toLocaleString('pt-BR')}</span>

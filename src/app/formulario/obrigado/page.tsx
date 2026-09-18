@@ -66,7 +66,7 @@ export default function FormularioObrigado() {
           background: 'linear-gradient(135deg, #87cde8, #36b6e8)',
           color: '#fff',
           textDecoration: 'none',
-          borderRadius: 9999,
+          borderRadius: 3,
           fontWeight: 700,
           fontSize: '.95rem',
           fontFamily: 'var(--font-montserrat, sans-serif)',

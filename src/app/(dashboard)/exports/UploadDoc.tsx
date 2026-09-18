@@ -57,7 +57,7 @@ export function UploadDoc({ tipo, label }: Props) {
         className="mp-upload-btn"
         style={{
           display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-          padding: '6px 14px', borderRadius: 8, cursor: loading ? 'not-allowed' : 'pointer',
+          padding: '6px 14px', borderRadius: 2, cursor: loading ? 'not-allowed' : 'pointer',
           border: '1.5px solid #e2e8f0', background: loading ? '#f1f5f9' : '#fff',
           fontSize: '.72rem', fontWeight: 700, color: '#475569',
           fontFamily: 'var(--font-montserrat,sans-serif)', transition: 'all .15s',

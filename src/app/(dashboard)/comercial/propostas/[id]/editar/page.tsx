@@ -19,7 +19,7 @@ const labelStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '.65rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none',
   boxSizing: 'border-box', transition: 'border-color .15s, box-shadow .15s',
 }
@@ -45,9 +45,9 @@ function SectionCard({ title, icon, accent, bg, children }: {
   title: string; icon: React.ReactNode; accent: string; bg: string; children: React.ReactNode
 }) {
   return (
-    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
+    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
       <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f1f5f9', background: '#fafafa', display: 'flex', alignItems: 'center', gap: '.65rem' }}>
-        <div style={{ width: 30, height: 30, borderRadius: 8, background: accent, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div style={{ width: 30, height: 30, borderRadius: 2, background: accent, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           {icon}
         </div>
         <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#221d37' }}>
@@ -104,19 +104,19 @@ Essa foi a proposta oficial que enviamos para a escola.`
         </div>
 
         {salvo === '1' && (
-          <div style={{ marginBottom: '1.5rem', padding: '.9rem 1.25rem', background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 12, fontSize: '.82rem', color: '#15803d', fontFamily: 'var(--font-inter,sans-serif)', fontWeight: 600 }}>
+          <div style={{ marginBottom: '1.5rem', padding: '.9rem 1.25rem', background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 3, fontSize: '.82rem', color: '#15803d', fontFamily: 'var(--font-inter,sans-serif)', fontWeight: 600 }}>
             ✓ Alterações salvas com sucesso.
           </div>
         )}
 
         {erro && (
-          <div style={{ marginBottom: '1.5rem', padding: '.9rem 1.25rem', background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 12, fontSize: '.82rem', color: '#b91c1c', fontFamily: 'var(--font-inter,sans-serif)', fontWeight: 600 }}>
+          <div style={{ marginBottom: '1.5rem', padding: '.9rem 1.25rem', background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 3, fontSize: '.82rem', color: '#b91c1c', fontFamily: 'var(--font-inter,sans-serif)', fontWeight: 600 }}>
             ⚠ Erro ao salvar: {erro}
           </div>
         )}
 
         {arquivada && (
-          <div style={{ marginBottom: '1.5rem', padding: '.9rem 1.25rem', background: '#fffbeb', border: '1.5px solid #fcd34d', borderRadius: 12, fontSize: '.82rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
+          <div style={{ marginBottom: '1.5rem', padding: '.9rem 1.25rem', background: '#fffbeb', border: '1.5px solid #fcd34d', borderRadius: 3, fontSize: '.82rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
             Esta proposta está arquivada — não aparece na listagem principal nem deve ser enviada à escola.
           </div>
         )}
@@ -145,7 +145,7 @@ Essa foi a proposta oficial que enviamos para a escola.`
 
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={labelStyle}>Link da proposta</label>
-            <div style={{ display: 'flex', gap: '.6rem', alignItems: 'center', background: '#fff', border: '1.5px solid #fde68a', borderRadius: 8, padding: '.6rem .9rem' }}>
+            <div style={{ display: 'flex', gap: '.6rem', alignItems: 'center', background: '#fff', border: '1.5px solid #fde68a', borderRadius: 2, padding: '.6rem .9rem' }}>
               <a href={`/proposta/${p.token}`} target="_blank" rel="noopener noreferrer" style={{ flex: 1, fontSize: '.8rem', color: '#2563eb', textDecoration: 'none', wordBreak: 'break-all', fontFamily: 'var(--font-inter,sans-serif)' }}>
                 /proposta/{p.token}
               </a>
@@ -156,7 +156,7 @@ Essa foi a proposta oficial que enviamos para a escola.`
           <div>
             <label style={labelStyle}>Mensagem pronta para enviar</label>
             <div style={{
-              background: '#fff', border: '1.5px solid #fde68a', borderRadius: 8,
+              background: '#fff', border: '1.5px solid #fde68a', borderRadius: 2,
               padding: '.9rem 1.1rem', fontSize: '.8rem', color: '#334155',
               lineHeight: 1.65, whiteSpace: 'pre-line', fontFamily: 'var(--font-inter,sans-serif)',
               marginBottom: '.6rem',
@@ -269,7 +269,7 @@ Essa foi a proposta oficial que enviamos para a escola.`
                 { val: p.comodato_notebooks ?? '—', label: 'notebooks' },
                 { val: p.comodato_parcela ? formatCurrency(p.comodato_parcela) : '—', label: 'parcela comodato' },
               ].map((s, i) => (
-                <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: '.85rem 1rem' }}>
+                <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 2, padding: '.85rem 1rem' }}>
                   <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.4rem', fontWeight: 800, color: '#221d37', lineHeight: 1 }}>{s.val}</div>
                   <div style={{ fontSize: '.68rem', color: '#94a3b8', fontFamily: 'var(--font-inter,sans-serif)', marginTop: '.3rem' }}>{s.label}</div>
                 </div>
@@ -279,19 +279,19 @@ Essa foi a proposta oficial que enviamos para a escola.`
 
           <div style={{
             display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
-            padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+            padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4,
             boxShadow: '0 1px 4px rgba(34,29,55,.06)',
           }}>
             <button type="submit" style={{
               background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff',
-              padding: '.7rem 2rem', borderRadius: 9999, border: 'none', cursor: 'pointer',
+              padding: '.7rem 2rem', borderRadius: 3, border: 'none', cursor: 'pointer',
               fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)',
               boxShadow: '0 4px 14px rgba(54,182,232,.35)',
             }}>
               Salvar alterações
             </button>
             <Link href="/comercial/propostas" style={{
-              padding: '.7rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0', background: '#fff',
+              padding: '.7rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0', background: '#fff',
               color: '#64748b', textDecoration: 'none', fontSize: '.875rem', fontWeight: 600,
               fontFamily: 'var(--font-montserrat,sans-serif)',
             }}>

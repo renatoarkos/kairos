@@ -86,7 +86,7 @@ export function PrioridadeInline({ escolaId, prioridade: prioridadeInicial, esco
       {aberto && pos && (
         <div ref={painelRef} style={{
           position: 'fixed', top: pos.top, left: pos.left, zIndex: 2000,
-          width: 200, background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 12,
+          width: 200, background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 3,
           boxShadow: '0 12px 32px rgba(34,29,55,.18)', padding: '1rem',
         }}>
           <div style={{ fontSize: '.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.06em', color: '#221d37', marginBottom: '.6rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -106,14 +106,14 @@ export function PrioridadeInline({ escolaId, prioridade: prioridadeInicial, esco
           </div>
           <div style={{ display: 'flex', gap: '.4rem' }}>
             <button onClick={() => salvar(valor)} disabled={pending} style={{
-              flex: 1, padding: '.45rem', borderRadius: 8, border: 'none', cursor: pending ? 'wait' : 'pointer',
+              flex: 1, padding: '.45rem', borderRadius: 2, border: 'none', cursor: pending ? 'wait' : 'pointer',
               background: '#36b6e8', color: '#fff', fontSize: '.72rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)',
             }}>
               {pending ? '...' : 'Salvar'}
             </button>
             {temPrioridade && (
               <button onClick={() => salvar(null)} disabled={pending} title="Remover prioridade" style={{
-                padding: '.45rem .6rem', borderRadius: 8, border: '1.5px solid #fca5a5', background: '#fff', cursor: 'pointer',
+                padding: '.45rem .6rem', borderRadius: 2, border: '1.5px solid #fca5a5', background: '#fff', cursor: 'pointer',
                 fontSize: '.72rem', fontWeight: 600, color: '#dc2626', fontFamily: 'var(--font-montserrat,sans-serif)',
               }}>
                 ✕

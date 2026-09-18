@@ -47,7 +47,7 @@ export function PriorizacaoSearch({ q, uf, cidade, bairro, perfil }: Props) {
             width: '100%', paddingLeft: 32, paddingRight: val ? 32 : 12,
             paddingTop: 8, paddingBottom: 8, fontSize: '.8rem',
             border: `1.5px solid ${focus ? '#36b6e8' : '#E2E8F0'}`,
-            borderRadius: 8, outline: 'none', color: '#221d37',
+            borderRadius: 2, outline: 'none', color: '#221d37',
             background: '#F8FAFC',
             fontFamily: 'var(--font-inter, sans-serif)',
             boxShadow: focus ? '0 0 0 3px rgba(54,182,232,.12)' : 'none',
@@ -73,7 +73,7 @@ export function PriorizacaoSearch({ q, uf, cidade, bairro, perfil }: Props) {
         type="submit"
         style={{
           background: '#221d37', color: '#fff', padding: '8px 16px',
-          borderRadius: 8, border: 'none', cursor: 'pointer',
+          borderRadius: 2, border: 'none', cursor: 'pointer',
           fontSize: '.78rem', fontWeight: 700,
           fontFamily: 'var(--font-montserrat, sans-serif)',
         }}

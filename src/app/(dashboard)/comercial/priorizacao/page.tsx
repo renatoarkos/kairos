@@ -58,7 +58,7 @@ function KpiCard({
         ? 'linear-gradient(135deg, #FEF2F2 0%, #FFF1F2 100%)'
         : 'white',
       border: `1.5px solid ${urgente ? '#FCA5A5' : '#E2E8F0'}`,
-      borderRadius: 14, padding: '1.25rem 1.5rem',
+      borderRadius: 3, padding: '1.25rem 1.5rem',
       display: 'flex', flexDirection: 'column', gap: '.5rem',
       boxShadow: urgente
         ? '0 2px 12px rgba(220,38,38,.08)'
@@ -78,7 +78,7 @@ function KpiCard({
           fontFamily: 'var(--font-montserrat, sans-serif)',
         }}>{label}</span>
         <div style={{
-          width: 36, height: 36, borderRadius: 10,
+          width: 36, height: 36, borderRadius: 2,
           background: cor + '18',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
@@ -242,7 +242,7 @@ function TabelaEscolas({
                     : escola.alunosEfetivo >= 200
                     ? '1px solid #BBF7D0'
                     : '1px solid #E2E8F0',
-                  borderRadius: 8, padding: '3px 8px',
+                  borderRadius: 2, padding: '3px 8px',
                 }}>
                   <GraduationCap size={11} style={{
                     color: escola.alunosEstimado ? '#7C3AED'
@@ -533,7 +533,7 @@ export default async function PriorizacaoPage({ searchParams }: Props) {
       {/* ── Cabeçalho ─────────────────────────────────────────────────────── */}
       <div style={{
         background: 'linear-gradient(135deg, #221d37 0%, #2d284a 100%)',
-        borderRadius: 16, padding: '1.75rem 2rem',
+        borderRadius: 4, padding: '1.75rem 2rem',
         marginBottom: '1.75rem',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: '1rem',
@@ -542,7 +542,7 @@ export default async function PriorizacaoPage({ searchParams }: Props) {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.35rem' }}>
             <div style={{
-              width: 38, height: 38, borderRadius: 10,
+              width: 38, height: 38, borderRadius: 2,
               background: 'linear-gradient(135deg, #36b6e8, #87cde8)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
@@ -808,7 +808,7 @@ export default async function PriorizacaoPage({ searchParams }: Props) {
       <div style={{
         background: 'white',
         border: '1.5px solid #E2E8F0',
-        borderRadius: 14,
+        borderRadius: 3,
         overflow: 'hidden',
         marginBottom: '2rem',
         boxShadow: '0 1px 4px rgba(0,0,0,.04)',
@@ -877,7 +877,7 @@ export default async function PriorizacaoPage({ searchParams }: Props) {
           </div>
           <div style={{
             background: 'white', border: '1.5px solid #FDE68A',
-            borderRadius: 14, overflow: 'hidden',
+            borderRadius: 3, overflow: 'hidden',
             boxShadow: '0 1px 4px rgba(0,0,0,.04)',
           }}>
             <div className="mp-prioriz-table-wrap" style={{ overflowX: 'auto' }}>
@@ -987,7 +987,7 @@ export default async function PriorizacaoPage({ searchParams }: Props) {
           </div>
           <div style={{
             background: 'white', border: '1.5px solid #A7F3D0',
-            borderRadius: 14, overflow: 'hidden',
+            borderRadius: 3, overflow: 'hidden',
             boxShadow: '0 1px 4px rgba(0,0,0,.04)',
           }}>
             <div className="mp-prioriz-table-wrap" style={{ overflowX: 'auto' }}>

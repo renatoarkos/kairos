@@ -86,7 +86,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
 
   const inp: React.CSSProperties = {
     width: '100%', padding: '.65rem .9rem', border: '1.5px solid #e2e8f0',
-    borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)',
+    borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)',
     outline: 'none', background: '#f8fafc', color: '#221d37', boxSizing: 'border-box' as const,
   }
   const lbl: React.CSSProperties = {
@@ -100,7 +100,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
       {/* Botão principal */}
       <button onClick={() => setAberto(true)} style={{
         display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-        padding: '.45rem 1.1rem', borderRadius: 9999, border: 'none',
+        padding: '.45rem 1.1rem', borderRadius: 3, border: 'none',
         background: 'linear-gradient(135deg, #36b6e8, #12789f)',
         color: '#fff', fontWeight: 700, fontSize: '.78rem',
         cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -114,7 +114,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
       {aberto && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(34,29,55,.55)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
           onClick={e => { if (e.target === e.currentTarget) setAberto(false) }}>
-          <div style={{ background: '#fff', borderRadius: 18, width: '100%', maxWidth: 520, boxShadow: '0 24px 64px rgba(0,0,0,.18)', overflow: 'hidden' }}>
+          <div style={{ background: '#fff', borderRadius: 4, width: '100%', maxWidth: 520, boxShadow: '0 24px 64px rgba(0,0,0,.18)', overflow: 'hidden' }}>
 
             {/* Header */}
             <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', padding: '1.1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -131,7 +131,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
               <div>
                 <label style={lbl}>Escola *</label>
                 {escolaSel ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', padding: '.6rem .9rem', background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', padding: '.6rem .9rem', background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 2 }}>
                     <div style={{ width: 28, height: 28, borderRadius: 7, background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
@@ -150,7 +150,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
                       onBlur={() => setTimeout(() => setSugestoes([]), 200)}
                       style={{ ...inp, paddingLeft: '2.1rem' }} autoFocus />
                     {sugestoes.length > 0 && (
-                      <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,.12)', zIndex: 10, overflow: 'hidden' }}>
+                      <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 2, boxShadow: '0 8px 24px rgba(0,0,0,.12)', zIndex: 10, overflow: 'hidden' }}>
                         {sugestoes.map(e => (
                           <div key={e.id} onMouseDown={() => { setEscolaSel(e); setBusca(e.nome); setSugestoes([]) }}
                             style={{ padding: '.6rem 1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '.6rem', borderBottom: '1px solid #f8fafc' }}
@@ -178,7 +178,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '.4rem' }}>
                   {STAGES.map(s => (
                     <button key={s.id} type="button" onClick={() => setStage(s.id)} style={{
-                      padding: '.45rem .5rem', borderRadius: 8, border: `1.5px solid ${stage === s.id ? '#36b6e8' : '#e2e8f0'}`,
+                      padding: '.45rem .5rem', borderRadius: 2, border: `1.5px solid ${stage === s.id ? '#36b6e8' : '#e2e8f0'}`,
                       background: stage === s.id ? '#fffbeb' : '#f8fafc',
                       color: stage === s.id ? '#36b6e8' : '#475569',
                       fontSize: '.7rem', fontWeight: stage === s.id ? 700 : 400,
@@ -205,11 +205,11 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
                 </div>
               </div>
 
-              {erro && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.65rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>{erro}</div>}
+              {erro && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.65rem .9rem', fontSize: '.78rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>{erro}</div>}
 
               <div style={{ display: 'flex', gap: '.75rem', paddingTop: '.25rem' }}>
                 <button onClick={handleSalvar} disabled={salvando || !escolaSel} style={{
-                  flex: 1, padding: '.75rem', borderRadius: 9999, border: 'none',
+                  flex: 1, padding: '.75rem', borderRadius: 3, border: 'none',
                   background: !escolaSel || salvando ? '#e2e8f0' : 'linear-gradient(135deg, #36b6e8, #12789f)',
                   color: !escolaSel || salvando ? '#94a3b8' : '#fff',
                   fontWeight: 700, fontSize: '.875rem', cursor: !escolaSel || salvando ? 'not-allowed' : 'pointer',
@@ -218,7 +218,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
                 }}>
                   {salvando ? 'Adicionando...' : 'Adicionar ao Pipeline'}
                 </button>
-                <button onClick={() => setAberto(false)} style={{ padding: '.75rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                <button onClick={() => setAberto(false)} style={{ padding: '.75rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   Cancelar
                 </button>
               </div>

@@ -84,7 +84,7 @@ export function EscolaDetailClient({ escolaId, registros, negociacoes, tarefas, 
                         {MEIO_SVG[r.meio_contato] ?? MEIO_SVG.outro}
                       </div>
                     </div>
-                    <div style={{ flex: 1, background: '#fff', border: '1px solid #e2e8f0', borderLeft: `4px solid ${cor}`, borderRadius: 12, padding: '1rem 1.25rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+                    <div style={{ flex: 1, background: '#fff', border: '1px solid #e2e8f0', borderLeft: `4px solid ${cor}`, borderRadius: 3, padding: '1rem 1.25rem', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '.6rem', flexWrap: 'wrap', gap: '.4rem' }}>
                         <div>
                           <div style={{ fontWeight: 700, fontSize: '.875rem', color: '#221d37', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -101,7 +101,7 @@ export function EscolaDetailClient({ escolaId, registros, negociacoes, tarefas, 
                           <Link href={`/comercial/registros/${r.id}/editar`} className="btn btn-ghost btn-sm">Editar</Link>
                         </div>
                       </div>
-                      <p style={{ fontSize: '.875rem', color: '#334155', lineHeight: 1.6, background: '#f8fafc', borderRadius: 8, padding: '.6rem .85rem', borderLeft: '3px solid #e2e8f0' }}>{r.resumo}</p>
+                      <p style={{ fontSize: '.875rem', color: '#334155', lineHeight: 1.6, background: '#f8fafc', borderRadius: 2, padding: '.6rem .85rem', borderLeft: '3px solid #e2e8f0' }}>{r.resumo}</p>
                       {Array.isArray(r.encaminhamentos) && r.encaminhamentos.length > 0 && (
                         <div style={{ marginTop: '.6rem', display: 'flex', flexWrap: 'wrap', gap: '.35rem', alignItems: 'center' }}>
                           <span style={{ fontSize: '.68rem', fontWeight: 700, color: '#64748b', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Encaminhamento:</span>
@@ -173,7 +173,7 @@ export function EscolaDetailClient({ escolaId, registros, negociacoes, tarefas, 
           {tarefas.length > 0 ? tarefas.map((t: any) => {
             const vencida = t.vencimento && new Date(t.vencimento) < new Date()
             return (
-              <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '.75rem', padding: '.75rem 1rem', marginBottom: '.5rem', background: vencida ? '#fef2f2' : '#fff', border: `1px solid ${vencida ? '#fca5a5' : '#e2e8f0'}`, borderLeft: `4px solid ${vencida ? '#dc2626' : '#36b6e8'}`, borderRadius: 10 }}>
+              <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '.75rem', padding: '.75rem 1rem', marginBottom: '.5rem', background: vencida ? '#fef2f2' : '#fff', border: `1px solid ${vencida ? '#fca5a5' : '#e2e8f0'}`, borderLeft: `4px solid ${vencida ? '#dc2626' : '#36b6e8'}`, borderRadius: 2 }}>
                 <form action={concluirTarefaEscola.bind(null, t.id) as any}>
                   <button type="submit" style={{ width: 22, height: 22, borderRadius: '50%', cursor: 'pointer', border: '2px solid #94a3b8', background: 'none' }} />
                 </form>
@@ -205,7 +205,7 @@ export function EscolaDetailClient({ escolaId, registros, negociacoes, tarefas, 
             </div>
           </form>
           {notas.length > 0 ? notas.map((n: any) => (
-            <div key={n.id} style={{ padding: '.85rem 1rem', marginBottom: '.5rem', background: '#fff', border: '1px solid #e2e8f0', borderLeft: n.fixada ? '4px solid #36b6e8' : '4px solid #e2e8f0', borderRadius: 10 }}>
+            <div key={n.id} style={{ padding: '.85rem 1rem', marginBottom: '.5rem', background: '#fff', border: '1px solid #e2e8f0', borderLeft: n.fixada ? '4px solid #36b6e8' : '4px solid #e2e8f0', borderRadius: 2 }}>
               <div style={{ fontSize: '.875rem', lineHeight: 1.6, color: '#334155' }}>{n.texto}</div>
               <div style={{ fontSize: '.68rem', color: 'var(--text-s)', marginTop: '.4rem' }}>{formatDateTime(n.created_at)}</div>
             </div>

@@ -15,7 +15,7 @@ interface Props { params: Promise<{ id: string }> }
 const inp: React.CSSProperties = {
   width: '100%', padding: '.7rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none', boxSizing: 'border-box',
 }
 const lbl: React.CSSProperties = {
@@ -24,7 +24,7 @@ const lbl: React.CSSProperties = {
   letterSpacing: '.06em', color: '#64748b', marginBottom: '.45rem',
 }
 const card: React.CSSProperties = {
-  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4,
   marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)',
 }
 const secHdr = (c = '#36b6e8'): React.CSSProperties => ({
@@ -63,7 +63,7 @@ export default async function RegistroEditar({ params }: Props) {
         title="Editar Registro"
         subtitle={`${(r.escola as any)?.nome ?? '—'} · ${new Date(r.data_contato + 'T12:00:00').toLocaleDateString('pt-BR')}`}
         actions={
-          <Link href={`/comercial/escolas/${r.escola_id}`} style={{ padding: '.45rem 1rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+          <Link href={`/comercial/escolas/${r.escola_id}`} style={{ padding: '.45rem 1rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.82rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             ← Voltar
           </Link>
         }
@@ -189,7 +189,7 @@ export default async function RegistroEditar({ params }: Props) {
               <label style={lbl}>Encaminhamentos</label>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '.5rem' }}>
                 {ENCAMINHAMENTOS_OPTIONS.map(o => (
-                  <label key={o.value} style={{ display: 'flex', alignItems: 'center', gap: '.65rem', padding: '.75rem 1rem', background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 10, cursor: 'pointer', fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)' }}>
+                  <label key={o.value} style={{ display: 'flex', alignItems: 'center', gap: '.65rem', padding: '.75rem 1rem', background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 2, cursor: 'pointer', fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)' }}>
                     <input type="checkbox" name="encaminhamentos" value={o.value}
                       defaultChecked={Array.isArray(r.encaminhamentos) && r.encaminhamentos.includes(o.value)}
                       style={{ width: 16, height: 16, accentColor: '#36b6e8', flexShrink: 0 }} />
@@ -238,11 +238,11 @@ export default async function RegistroEditar({ params }: Props) {
           </div>
 
           {/* Ações */}
-          <div className="mp-form-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16 }}>
-            <button type="submit" style={{ background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff', padding: '.7rem 2rem', borderRadius: 9999, border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 14px rgba(54,182,232,.35)' }}>
+          <div className="mp-form-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.75rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4 }}>
+            <button type="submit" style={{ background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff', padding: '.7rem 2rem', borderRadius: 3, border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 14px rgba(54,182,232,.35)' }}>
               Salvar Alterações
             </button>
-            <Link href={`/comercial/escolas/${r.escola_id}`} style={{ padding: '.7rem 1.5rem', borderRadius: 9999, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', textDecoration: 'none', fontSize: '.875rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+            <Link href={`/comercial/escolas/${r.escola_id}`} style={{ padding: '.7rem 1.5rem', borderRadius: 3, border: '1.5px solid #e2e8f0', background: '#fff', color: '#64748b', textDecoration: 'none', fontSize: '.875rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
               Cancelar
             </Link>
           </div>

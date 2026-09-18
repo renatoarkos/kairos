@@ -79,7 +79,7 @@ export default function LoginPage() {
         <a href="/formulario" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.6rem',
           background: '#87cde8', color: '#221d37',
-          padding: '0 1.2rem', borderRadius: 9999,
+          padding: '0 1.2rem', borderRadius: 3,
           minHeight: 48,
           fontSize: '.9rem', fontWeight: 700, textDecoration: 'none',
           boxShadow: '0 6px 20px rgba(135,205,232,.5)',
@@ -117,7 +117,7 @@ export default function LoginPage() {
           <Link href="/" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.35rem',
             background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.85)',
-            padding: '.45rem 1rem', borderRadius: 9999,
+            padding: '.45rem 1rem', borderRadius: 3,
             fontSize: '.78rem', fontWeight: 600, textDecoration: 'none',
             border: '1px solid rgba(255,255,255,.15)',
             fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -134,7 +134,7 @@ export default function LoginPage() {
             background: 'rgba(118,243,205,0.1)',
             border: '1px solid rgba(118,243,205,0.3)',
             color: '#76f3cd',
-            padding: '.45rem 1.1rem', borderRadius: 9999,
+            padding: '.45rem 1.1rem', borderRadius: 3,
             fontSize: '.78rem', fontWeight: 600, textDecoration: 'none',
             letterSpacing: '.02em',
             transition: 'all .2s',
@@ -149,7 +149,7 @@ export default function LoginPage() {
           <a href="/formulario" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: '#87cde8', color: '#221d37',
-            padding: '.45rem 1.1rem', borderRadius: 9999,
+            padding: '.45rem 1.1rem', borderRadius: 3,
             fontSize: '.78rem', fontWeight: 700, textDecoration: 'none',
           letterSpacing: '.03em', boxShadow: '0 4px 14px rgba(135,205,232,.4)',
           transition: 'all .2s',
@@ -232,7 +232,7 @@ export default function LoginPage() {
               background: 'rgba(34,29,55,.7)',
               border: '1px solid rgba(135,205,232,.4)',
               backdropFilter: 'blur(8px)',
-              borderRadius: 9999, padding: '.3rem .9rem',
+              borderRadius: 3, padding: '.3rem .9rem',
               marginBottom: '1.5rem',
               fontSize: '.68rem', fontWeight: 700, letterSpacing: '.1em',
               textTransform: 'uppercase', color: '#87cde8',
@@ -268,7 +268,7 @@ export default function LoginPage() {
               background: 'linear-gradient(135deg, rgba(135,205,232,.18) 0%, rgba(135,205,232,.08) 100%)',
               border: '1px solid rgba(135,205,232,.35)',
               borderLeft: '4px solid #87cde8',
-              borderRadius: 14, padding: '1.35rem 1.5rem',
+              borderRadius: 3, padding: '1.35rem 1.5rem',
               backdropFilter: 'blur(8px)',
               maxWidth: 500,
               boxShadow: '0 8px 32px rgba(135,205,232,.12)',
@@ -276,7 +276,7 @@ export default function LoginPage() {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
                 {/* Ícone */}
                 <div style={{
-                  width: 46, height: 46, borderRadius: 12, flexShrink: 0,
+                  width: 46, height: 46, borderRadius: 3, flexShrink: 0,
                   background: 'linear-gradient(135deg, #87cde8, #36b6e8)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   boxShadow: '0 4px 12px rgba(135,205,232,.4)',
@@ -317,7 +317,7 @@ export default function LoginPage() {
                   <a href="/formulario" style={{
                     display: 'inline-flex', alignItems: 'center', gap: '.45rem',
                     background: '#87cde8', color: '#221d37',
-                    padding: '.55rem 1.25rem', borderRadius: 9999,
+                    padding: '.55rem 1.25rem', borderRadius: 3,
                     fontSize: '.8rem', fontWeight: 700, textDecoration: 'none',
                     boxShadow: '0 4px 16px rgba(135,205,232,.45)',
                     fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -335,7 +335,7 @@ export default function LoginPage() {
             background: 'rgba(34,29,55,.85)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,255,255,.08)',
-            borderRadius: 20,
+            borderRadius: 6,
             padding: '2.5rem',
             boxShadow: '0 24px 64px rgba(0,0,0,.5)',
           }}>
@@ -364,7 +364,7 @@ export default function LoginPage() {
             {error && (
               <div style={{
                 background: 'rgba(220,38,38,.15)', border: '1px solid rgba(220,38,38,.3)',
-                borderRadius: 8, padding: '.7rem 1rem', marginBottom: '1.25rem',
+                borderRadius: 2, padding: '.7rem 1rem', marginBottom: '1.25rem',
                 color: '#fca5a5', fontSize: '.82rem',
                 fontFamily: 'var(--font-inter, sans-serif)',
               }}>
@@ -388,7 +388,7 @@ export default function LoginPage() {
                     width: '100%', padding: '.75rem 1rem',
                     background: 'rgba(255,255,255,.06)',
                     border: '1.5px solid rgba(255,255,255,.1)',
-                    borderRadius: 10, outline: 'none',
+                    borderRadius: 2, outline: 'none',
                     color: '#fff', fontSize: '.875rem',
                     transition: 'border-color .15s, box-shadow .15s',
                     fontFamily: 'var(--font-inter, sans-serif)',
@@ -414,7 +414,7 @@ export default function LoginPage() {
                       width: '100%', padding: '.75rem 2.75rem .75rem 1rem',
                       background: 'rgba(255,255,255,.06)',
                       border: '1.5px solid rgba(255,255,255,.1)',
-                      borderRadius: 10, outline: 'none',
+                      borderRadius: 2, outline: 'none',
                       color: '#fff', fontSize: '.875rem',
                       transition: 'border-color .15s, box-shadow .15s',
                       fontFamily: 'var(--font-inter, sans-serif)',
@@ -438,7 +438,7 @@ export default function LoginPage() {
                 background: loading ? 'rgba(135,205,232,.4)' : '#87cde8',
                 color: loading ? '#fff' : '#221d37', fontWeight: 700, fontSize: '.9rem',
                 border: '1px solid rgba(135,205,232,.5)',
-                borderRadius: 9999, cursor: loading ? 'not-allowed' : 'pointer',
+                borderRadius: 3, cursor: loading ? 'not-allowed' : 'pointer',
                 transition: 'all .2s',
                 boxShadow: loading ? 'none' : '0 4px 16px rgba(135,205,232,.4)',
                 fontFamily: 'var(--font-montserrat, sans-serif)',
@@ -465,7 +465,7 @@ export default function LoginPage() {
             {/* Link formulário dentro do card */}
             <a href="/formulario" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '.6rem',
-              padding: '.75rem 1rem', borderRadius: 10,
+              padding: '.75rem 1rem', borderRadius: 2,
               border: '1px solid rgba(135,205,232,.25)',
               background: 'rgba(135,205,232,.08)',
               color: '#87cde8', textDecoration: 'none',
@@ -488,7 +488,7 @@ export default function LoginPage() {
             <Link href="/proposta/acesso" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.45rem',
               marginTop: '.75rem',
-              padding: '.6rem 1rem', borderRadius: 10,
+              padding: '.6rem 1rem', borderRadius: 2,
               border: '1px solid rgba(255,255,255,.08)',
               background: 'transparent',
               color: 'rgba(255,255,255,.38)', textDecoration: 'none',
@@ -615,7 +615,7 @@ export default function LoginPage() {
                 <a href="/formulario" style={{
                   display: 'inline-flex', alignItems: 'center', gap: '.4rem',
                   background: '#87cde8', color: '#221d37',
-                  padding: '.45rem 1rem', borderRadius: 9999,
+                  padding: '.45rem 1rem', borderRadius: 3,
                   fontSize: '.75rem', fontWeight: 700, textDecoration: 'none',
                   boxShadow: '0 4px 12px rgba(135,205,232,.3)',
                   fontFamily: 'var(--font-montserrat, sans-serif)',

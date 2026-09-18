@@ -574,7 +574,7 @@ export default function TutorialPage() {
         {/* ── Hero ─────────────────────────────────────────────── */}
         <div className="mp-banner-stack" style={{
           background: 'linear-gradient(135deg, #221d37 0%, #2d284a 60%, #1e3a5f 100%)',
-          borderRadius: 20, padding: '2.5rem 3rem', marginBottom: '2.5rem',
+          borderRadius: 6, padding: '2.5rem 3rem', marginBottom: '2.5rem',
           display: 'grid', gridTemplateColumns: '1fr auto',
           gap: '2rem', alignItems: 'center',
           boxShadow: '0 8px 32px rgba(34,29,55,.25)',
@@ -582,7 +582,7 @@ export default function TutorialPage() {
         }}>
           <div style={{ position: 'absolute', top: -40, right: 200, width: 200, height: 200, borderRadius: '50%', background: 'rgba(54,182,232,.05)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.15)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 9999, padding: '.3rem .9rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', background: 'rgba(54,182,232,.15)', border: '1px solid rgba(54,182,232,.3)', borderRadius: 3, padding: '.3rem .9rem', marginBottom: '1rem' }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#36b6e8' }} />
               <span style={{ fontSize: '.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.1em', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                 Guia Completo
@@ -604,7 +604,7 @@ export default function TutorialPage() {
               { n: '3', label: 'Grupos' },
               { n: '∞', label: 'Dados' },
             ].map(s => (
-              <div key={s.label} style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.1)', borderRadius: 12, padding: '.85rem 1.25rem', textAlign: 'center' }}>
+              <div key={s.label} style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.1)', borderRadius: 3, padding: '.85rem 1.25rem', textAlign: 'center' }}>
                 <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.8rem', fontWeight: 800, color: '#36b6e8', lineHeight: 1 }}>{s.n}</div>
                 <div style={{ fontSize: '.62rem', color: 'rgba(255,255,255,.4)', fontFamily: 'var(--font-montserrat,sans-serif)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.25rem' }}>{s.label}</div>
               </div>
@@ -613,7 +613,7 @@ export default function TutorialPage() {
         </div>
 
         {/* ── Índice rápido ───────────────────────────────────── */}
-        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.5rem 2rem', marginBottom: '2.5rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.5rem 2rem', marginBottom: '2.5rem', boxShadow: '0 1px 4px rgba(34,29,55,.05)' }}>
           <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#64748b', marginBottom: '1rem' }}>
             Navegação rápida
           </div>
@@ -642,7 +642,7 @@ export default function TutorialPage() {
             {/* Group header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
               <div style={{ height: 2, flex: 1, background: 'linear-gradient(to right, #e2e8f0, transparent)' }} />
-              <div style={{ padding: '.4rem 1.25rem', background: '#221d37', borderRadius: 9999 }}>
+              <div style={{ padding: '.4rem 1.25rem', background: '#221d37', borderRadius: 3 }}>
                 <span style={{ fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.12em', color: '#36b6e8', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                   {grupo === 'CRM' ? 'CRM — Gestão de Clientes' : grupo === 'PROCESSO' ? 'Processos Comerciais' : 'Ferramentas'}
                 </span>
@@ -654,7 +654,7 @@ export default function TutorialPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {MODULOS.filter(m => m.tag === grupo).map((m, idx) => (
                 <div key={m.id} id={m.id} className="mp-tutorial-card" style={{
-                  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20,
+                  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 6,
                   overflow: 'hidden', boxShadow: '0 2px 12px rgba(34,29,55,.06)',
                   display: 'grid',
                   gridTemplateColumns: idx % 2 === 0 ? '380px 1fr' : '1fr 380px',
@@ -704,7 +704,7 @@ export default function TutorialPage() {
                     </div>
 
                     {/* Dica */}
-                    <div style={{ background: m.bg, border: `1px solid ${m.border}`, borderRadius: 10, padding: '.75rem 1rem', display: 'flex', alignItems: 'flex-start', gap: '.6rem' }}>
+                    <div style={{ background: m.bg, border: `1px solid ${m.border}`, borderRadius: 2, padding: '.75rem 1rem', display: 'flex', alignItems: 'flex-start', gap: '.6rem' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={m.cor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '.15rem' }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                       <span style={{ fontSize: '.78rem', color: m.cor, fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.6 }}>
                         <strong>Dica:</strong> {m.dica}
@@ -715,7 +715,7 @@ export default function TutorialPage() {
                     <div style={{ marginTop: '1.25rem' }}>
                       <Link href={m.href} style={{
                         display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-                        padding: '.55rem 1.25rem', borderRadius: 9999,
+                        padding: '.55rem 1.25rem', borderRadius: 3,
                         background: m.cor, color: '#fff', textDecoration: 'none',
                         fontSize: '.78rem', fontWeight: 700,
                         fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -740,7 +740,7 @@ export default function TutorialPage() {
         ))}
 
         {/* ── Rodapé ──────────────────────────────────────────── */}
-        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 16, padding: '2rem', textAlign: 'center', marginTop: '1rem' }}>
+        <div style={{ background: 'linear-gradient(135deg, #221d37, #2d284a)', borderRadius: 4, padding: '2rem', textAlign: 'center', marginTop: '1rem' }}>
           <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.4rem', fontWeight: 700, color: '#fff', marginBottom: '.5rem' }}>
             Precisa de ajuda?
           </div>
@@ -748,11 +748,11 @@ export default function TutorialPage() {
             Fale com Renato Assis para suporte técnico ou dúvidas sobre a plataforma.
           </p>
           <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="https://wa.me/5583996541530" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.55rem 1.25rem', borderRadius: 9999, background: '#16a34a', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+            <a href="https://wa.me/5583996541530" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.55rem 1.25rem', borderRadius: 3, background: '#16a34a', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               WhatsApp (83) 99654-1530
             </a>
-            <a href="mailto:contato@kairos.com.br" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.55rem 1.25rem', borderRadius: 9999, border: '1px solid rgba(255,255,255,.2)', background: 'rgba(255,255,255,.06)', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+            <a href="mailto:contato@kairos.com.br" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.55rem 1.25rem', borderRadius: 3, border: '1px solid rgba(255,255,255,.2)', background: 'rgba(255,255,255,.06)', color: '#fff', textDecoration: 'none', fontSize: '.78rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               contato@kairos.com.br
             </a>

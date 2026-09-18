@@ -211,7 +211,7 @@ function TabelaAlunos({ titulo, subtitulo, corAccent, linhas, livroColunaExiste,
   const totalGeral = linhas.reduce((soma, l) => soma + l.total, 0)
 
   return (
-    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden', borderTop: `4px solid ${corAccent}` }}>
+    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', borderTop: `4px solid ${corAccent}` }}>
       <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '.5rem' }}>
         <div>
           <div style={{ fontSize: '.85rem', fontWeight: 800, color: '#221d37', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -364,7 +364,7 @@ export function QuantidadeAlunosClient({ linhasIniciais, escolasDisponiveis, liv
       `}</style>
 
       {/* ── Adicionar escola veterana manualmente ─────────────────────── */}
-      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: '1rem 1.25rem', position: 'relative' }}>
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, padding: '1rem 1.25rem', position: 'relative' }}>
         <div style={{ fontSize: '.72rem', fontWeight: 800, color: '#221d37', marginBottom: '.4rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
           + Adicionar escola parceira à lista
         </div>
@@ -376,7 +376,7 @@ export function QuantidadeAlunosClient({ linhasIniciais, escolasDisponiveis, liv
             value={buscaAdicionar}
             onChange={e => setBuscaAdicionar(e.target.value)}
             placeholder="Buscar escola pelo nome..."
-            style={{ flex: '1 1 260px', maxWidth: 360, padding: '.5rem .7rem', borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: '.8rem', boxSizing: 'border-box' }}
+            style={{ flex: '1 1 260px', maxWidth: 360, padding: '.5rem .7rem', borderRadius: 2, border: '1.5px solid #e2e8f0', fontSize: '.8rem', boxSizing: 'border-box' }}
           />
           {buscaAdicionar.trim().length >= 2 && candidatos.length === 0 && (
             <>
@@ -385,12 +385,12 @@ export function QuantidadeAlunosClient({ linhasIniciais, escolasDisponiveis, liv
                 onChange={e => setNovaEstado(e.target.value.toUpperCase().slice(0, 2))}
                 placeholder="UF"
                 maxLength={2}
-                style={{ width: 56, padding: '.5rem .4rem', textAlign: 'center', textTransform: 'uppercase', borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: '.8rem', boxSizing: 'border-box' }}
+                style={{ width: 56, padding: '.5rem .4rem', textAlign: 'center', textTransform: 'uppercase', borderRadius: 2, border: '1.5px solid #e2e8f0', fontSize: '.8rem', boxSizing: 'border-box' }}
               />
               <button
                 onClick={criarNova} disabled={criando}
                 style={{
-                  padding: '.5rem .9rem', borderRadius: 8, border: 'none', cursor: criando ? 'wait' : 'pointer',
+                  padding: '.5rem .9rem', borderRadius: 2, border: 'none', cursor: criando ? 'wait' : 'pointer',
                   background: '#36b6e8', color: '#fff', fontSize: '.76rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap',
                 }}
               >
@@ -402,7 +402,7 @@ export function QuantidadeAlunosClient({ linhasIniciais, escolasDisponiveis, liv
         {candidatos.length > 0 && (
           <div style={{
             position: 'absolute', zIndex: 10, marginTop: '.3rem', width: '100%', maxWidth: 360,
-            background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 10, boxShadow: '0 12px 28px rgba(34,29,55,.14)', overflow: 'hidden',
+            background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 2, boxShadow: '0 12px 28px rgba(34,29,55,.14)', overflow: 'hidden',
           }}>
             {candidatos.map(c => (
               <button
@@ -423,17 +423,17 @@ export function QuantidadeAlunosClient({ linhasIniciais, escolasDisponiveis, liv
       {(!livroColunaExiste || !veteranaColunaExiste || !livroQtdsColunaExiste) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
           {!livroColunaExiste && (
-            <div style={{ padding: '.6rem 1.25rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, fontSize: '.72rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
+            <div style={{ padding: '.6rem 1.25rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 2, fontSize: '.72rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
               A tag "Livro" ainda não está ativa — rode a migração <code>add_livro_impresso.sql</code> no Supabase pra habilitá-la.
             </div>
           )}
           {!veteranaColunaExiste && (
-            <div style={{ padding: '.6rem 1.25rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, fontSize: '.72rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
+            <div style={{ padding: '.6rem 1.25rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 2, fontSize: '.72rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
               A tag Veterana/Nova ainda não é editável — rode a migração <code>add_contrato_marcado_veterana.sql</code> no Supabase pra habilitá-la.
             </div>
           )}
           {!livroQtdsColunaExiste && (
-            <div style={{ padding: '.6rem 1.25rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 8, fontSize: '.72rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
+            <div style={{ padding: '.6rem 1.25rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 2, fontSize: '.72rem', color: '#92400e', fontFamily: 'var(--font-inter,sans-serif)' }}>
               A tabela da gráfica ainda não é editável de forma independente — rode a migração <code>add_contrato_livro_qtds.sql</code> no Supabase pra habilitá-la.
             </div>
           )}
@@ -467,7 +467,7 @@ export function QuantidadeAlunosClient({ linhasIniciais, escolasDisponiveis, liv
       />
 
       {/* ── Distribuição pra gráfica (só escolas marcadas com Livro) ───── */}
-      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden' }}>
         <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #f1f5f9' }}>
           <div style={{ fontSize: '.85rem', fontWeight: 800, color: '#221d37', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             Pedido pra gráfica — distribuição de livros por série

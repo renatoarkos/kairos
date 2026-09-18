@@ -98,7 +98,7 @@ export default async function EscolasPage({ searchParams }: Props) {
             <Link href="/comercial/escolas/nova" style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
               background: '#36b6e8', color: '#fff', padding: '.45rem 1rem',
-              borderRadius: 9999, fontSize: '.82rem', fontWeight: 700,
+              borderRadius: 3, fontSize: '.82rem', fontWeight: 700,
               textDecoration: 'none', boxShadow: '0 4px 12px rgba(54,182,232,.3)',
               fontFamily: 'var(--font-montserrat,sans-serif)',
             }}>
@@ -123,7 +123,7 @@ export default async function EscolasPage({ searchParams }: Props) {
                   display: 'block', textDecoration: 'none',
                   background: isActive ? cor.bg : '#fff',
                   border: `1.5px solid ${isActive ? cor.border : '#e2e8f0'}`,
-                  borderRadius: 14, padding: '1.1rem 1.25rem',
+                  borderRadius: 3, padding: '1.1rem 1.25rem',
                   boxShadow: isActive ? `0 4px 20px ${cor.dot}20` : '0 1px 3px rgba(0,0,0,.05)',
                   transition: 'all .2s',
                   position: 'relative', overflow: 'hidden',
@@ -132,7 +132,7 @@ export default async function EscolasPage({ searchParams }: Props) {
                 {/* Barra de accent */}
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, height: 3,
-                  background: cor.dot, borderRadius: '14px 14px 0 0',
+                  background: cor.dot, borderRadius: '3px 3px 0 0',
                 }} />
 
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
@@ -222,7 +222,7 @@ export default async function EscolasPage({ searchParams }: Props) {
                     textDecoration: 'none', display: 'block',
                     background: '#fff', border: '1px solid #e2e8f0',
                     borderTop: `3px solid ${cor.dot}`,
-                    borderRadius: 14,
+                    borderRadius: 3,
                     boxShadow: '0 2px 8px rgba(34,29,55,.05)',
                     transition: 'all .2s', overflow: 'hidden',
                   }}
@@ -279,11 +279,11 @@ export default async function EscolasPage({ searchParams }: Props) {
 
                       {/* Métricas */}
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem', marginBottom: '.9rem' }}>
-                        <div style={{ background: '#f8fafc', borderRadius: 8, padding: '.5rem .75rem' }}>
+                        <div style={{ background: '#f8fafc', borderRadius: 2, padding: '.5rem .75rem' }}>
                           <div style={{ fontSize: '.6rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '.05em', fontFamily: 'var(--font-montserrat,sans-serif)', fontWeight: 700 }}>Alunos</div>
                           <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.15rem', fontWeight: 800, color: '#221d37', lineHeight: 1.2 }}>{e.total_alunos ?? 0}</div>
                         </div>
-                        <div style={{ background: '#fffbeb', borderRadius: 8, padding: '.5rem .75rem', border: '1px solid #fef3c7' }}>
+                        <div style={{ background: '#fffbeb', borderRadius: 2, padding: '.5rem .75rem', border: '1px solid #fef3c7' }}>
                           <div style={{ fontSize: '.6rem', color: '#92400e', textTransform: 'uppercase', letterSpacing: '.05em', fontFamily: 'var(--font-montserrat,sans-serif)', fontWeight: 700 }}>Potencial</div>
                           <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1rem', fontWeight: 800, color: '#36b6e8', lineHeight: 1.2 }}>{formatCurrency(e.potencial_financeiro ?? 0)}</div>
                         </div>
@@ -324,7 +324,7 @@ export default async function EscolasPage({ searchParams }: Props) {
             </div>
           ) : (
             /* ── Tabela premium ─────────────────────────────────── */
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
               <div className="mp-escolas-table-wrap" style={{ overflowX: 'auto' }}>
                 <table className="mp-escolas-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
@@ -507,7 +507,7 @@ export default async function EscolasPage({ searchParams }: Props) {
         ) : (
           /* Empty state */
           <div style={{
-            background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14,
+            background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3,
             padding: '4rem 2rem', textAlign: 'center',
             boxShadow: '0 2px 8px rgba(34,29,55,.05)',
           }}>
@@ -526,7 +526,7 @@ export default async function EscolasPage({ searchParams }: Props) {
             <Link href="/comercial/escolas/nova" style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
               background: '#36b6e8', color: '#fff', padding: '.55rem 1.25rem',
-              borderRadius: 9999, textDecoration: 'none',
+              borderRadius: 3, textDecoration: 'none',
               fontSize: '.85rem', fontWeight: 700,
               fontFamily: 'var(--font-montserrat,sans-serif)',
               boxShadow: '0 4px 14px rgba(54,182,232,.3)',

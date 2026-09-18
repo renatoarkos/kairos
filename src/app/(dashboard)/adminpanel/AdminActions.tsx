@@ -17,7 +17,7 @@ interface Props {
 const inp: React.CSSProperties = {
   width: '100%', padding: '.7rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none', boxSizing: 'border-box',
 }
 const lbl: React.CSSProperties = {
@@ -90,7 +90,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
       {/* ════════════════════════════════════════════════════════
           PAINEL ESQUERDO — Criar novo usuário
           ════════════════════════════════════════════════════════ */}
-      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.06)' }}>
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.06)' }}>
         {/* Header */}
         <div style={{ background: '#221d37', padding: '1.1rem 1.5rem' }}>
           <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.25rem' }}>
@@ -143,7 +143,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
             {/* Mensagem de feedback */}
             {criarMsg && (
               <div style={{
-                padding: '.85rem 1rem', borderRadius: 10,
+                padding: '.85rem 1rem', borderRadius: 2,
                 background: criarMsg.tipo === 'ok' ? '#f0fdf4' : '#fef2f2',
                 border: `1.5px solid ${criarMsg.tipo === 'ok' ? '#86efac' : '#fca5a5'}`,
                 color: criarMsg.tipo === 'ok' ? '#15803d' : '#dc2626',
@@ -158,7 +158,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
               width: '100%', padding: '.8rem',
               background: criando ? '#94a3b8' : 'linear-gradient(135deg, #36b6e8, #12789f)',
               color: '#fff', fontWeight: 700, fontSize: '.875rem',
-              border: 'none', borderRadius: 9999, cursor: criando ? 'not-allowed' : 'pointer',
+              border: 'none', borderRadius: 3, cursor: criando ? 'not-allowed' : 'pointer',
               fontFamily: 'var(--font-montserrat,sans-serif)',
               boxShadow: criando ? 'none' : '0 4px 14px rgba(54,182,232,.3)',
               transition: 'all .2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem',
@@ -177,7 +177,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
       {/* ════════════════════════════════════════════════════════
           LISTA DE USUÁRIOS com botões editar inline
           ════════════════════════════════════════════════════════ */}
-      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+      <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
         <div style={{ background: '#221d37', padding: '1rem 1.5rem' }}>
           <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', color: '#36b6e8', marginBottom: '.2rem' }}>
             Equipe Comercial
@@ -197,7 +197,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
                 background: p.is_active ? '#fff' : '#fafafa',
                 border: `1px solid ${p.is_active ? '#e2e8f0' : '#f1f5f9'}`,
                 borderLeft: `4px solid ${p.is_active ? (ROLE_COLORS[p.role]?.border ?? '#e2e8f0') : '#f1f5f9'}`,
-                borderRadius: 12, opacity: p.is_active ? 1 : .65,
+                borderRadius: 3, opacity: p.is_active ? 1 : .65,
                 boxShadow: '0 1px 3px rgba(34,29,55,.04)',
                 transition: 'box-shadow .15s',
               }}>
@@ -226,7 +226,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
                 <div className="mp-admin-user-badges" style={{ display: 'flex', gap: '.35rem', alignItems: 'center', flexShrink: 0 }}>
                   <span style={{
                     background: roleStyle.bg, color: roleStyle.text, border: `1px solid ${roleStyle.border}`,
-                    padding: '.2rem .6rem', borderRadius: 9999,
+                    padding: '.2rem .6rem', borderRadius: 3,
                     fontSize: '.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.05em',
                     fontFamily: 'var(--font-montserrat,sans-serif)',
                   }}>{p.role}</span>
@@ -234,7 +234,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
                     background: p.is_active ? '#f0fdf4' : '#fef2f2',
                     color: p.is_active ? '#16a34a' : '#dc2626',
                     border: `1px solid ${p.is_active ? '#86efac' : '#fca5a5'}`,
-                    padding: '.2rem .55rem', borderRadius: 9999,
+                    padding: '.2rem .55rem', borderRadius: 3,
                     fontSize: '.6rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)',
                   }}>
                     {p.is_active ? '● Ativo' : '○ Inativo'}
@@ -276,7 +276,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
           padding: '1rem',
         }} onClick={e => { if (e.target === e.currentTarget) setEditando(null) }}>
           <div className="mp-modal-fs" style={{
-            background: '#fff', borderRadius: 20, width: '100%', maxWidth: 480,
+            background: '#fff', borderRadius: 6, width: '100%', maxWidth: 480,
             boxShadow: '0 24px 64px rgba(0,0,0,.4)',
             overflow: 'hidden',
           }}>
@@ -290,7 +290,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
                   {editando.full_name}
                 </div>
               </div>
-              <button onClick={() => setEditando(null)} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid rgba(255,255,255,.15)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <button onClick={() => setEditando(null)} style={{ width: 32, height: 32, borderRadius: 2, border: '1px solid rgba(255,255,255,.15)', background: 'rgba(255,255,255,.08)', color: '#fff', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 ×
               </button>
             </div>
@@ -302,7 +302,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {/* Info: e-mail não editável */}
-                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '.65rem 1rem', fontSize: '.75rem', color: '#64748b', fontFamily: 'var(--font-inter,sans-serif)' }}>
+                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: '.65rem 1rem', fontSize: '.75rem', color: '#64748b', fontFamily: 'var(--font-inter,sans-serif)' }}>
                   <strong style={{ color: '#221d37' }}>E-mail:</strong> {editando.email}
                   <span style={{ marginLeft: '.5rem', fontSize: '.65rem', color: '#94a3b8' }}>(não editável)</span>
                 </div>
@@ -336,7 +336,7 @@ export function AdminActions({ roleOptions, profiles }: Props) {
                 {/* Feedback edição */}
                 {editMsg && (
                   <div style={{
-                    padding: '.85rem 1rem', borderRadius: 10,
+                    padding: '.85rem 1rem', borderRadius: 2,
                     background: editMsg.tipo === 'ok' ? '#f0fdf4' : '#fef2f2',
                     border: `1.5px solid ${editMsg.tipo === 'ok' ? '#86efac' : '#fca5a5'}`,
                     color: editMsg.tipo === 'ok' ? '#15803d' : '#dc2626',
@@ -352,14 +352,14 @@ export function AdminActions({ roleOptions, profiles }: Props) {
                     flex: 1, padding: '.8rem',
                     background: editando2 ? '#94a3b8' : 'linear-gradient(135deg, #36b6e8, #12789f)',
                     color: '#fff', fontWeight: 700, fontSize: '.875rem',
-                    border: 'none', borderRadius: 9999, cursor: editando2 ? 'not-allowed' : 'pointer',
+                    border: 'none', borderRadius: 3, cursor: editando2 ? 'not-allowed' : 'pointer',
                     fontFamily: 'var(--font-montserrat,sans-serif)',
                     boxShadow: editando2 ? 'none' : '0 4px 14px rgba(54,182,232,.3)',
                   }}>
                     {editando2 ? 'Salvando...' : 'Salvar Alterações'}
                   </button>
                   <button type="button" onClick={() => setEditando(null)} style={{
-                    padding: '.8rem 1.25rem', borderRadius: 9999,
+                    padding: '.8rem 1.25rem', borderRadius: 3,
                     border: '1.5px solid #e2e8f0', background: '#fff',
                     color: '#64748b', fontWeight: 600, fontSize: '.875rem',
                     cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)',

@@ -98,7 +98,7 @@ export function AnotacaoContatoInline({ escolaId, notas: notasIniciais }: { esco
       {aberto && pos && (
         <div ref={painelRef} style={{
           position: 'fixed', top: pos.top, left: pos.left, zIndex: 2000,
-          width: 340, background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 12,
+          width: 340, background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 3,
           boxShadow: '0 12px 32px rgba(34,29,55,.18)', padding: '1rem',
         }}>
           <div style={{ fontSize: '.72rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.06em', color: '#221d37', marginBottom: '.6rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -108,7 +108,7 @@ export function AnotacaoContatoInline({ escolaId, notas: notasIniciais }: { esco
           {temNotas ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem', maxHeight: 160, overflowY: 'auto', marginBottom: '.75rem', paddingRight: '.2rem' }}>
               {notasIniciais.map((n, i) => (
-                <div key={i} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 8, padding: '.5rem .6rem' }}>
+                <div key={i} style={{ background: '#f8fafc', border: '1px solid #f1f5f9', borderRadius: 2, padding: '.5rem .6rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '.15rem' }}>
                     <span style={{ fontSize: '.66rem', fontWeight: 700, color: '#221d37', fontFamily: 'var(--font-montserrat,sans-serif)' }}>{n.autor}</span>
                     <span style={{ fontSize: '.6rem', color: '#94a3b8' }}>{tempoRelativo(n.criadoEm)}</span>
@@ -131,14 +131,14 @@ export function AnotacaoContatoInline({ escolaId, notas: notasIniciais }: { esco
           />
           <div style={{ display: 'flex', gap: '.5rem' }}>
             <button onClick={salvar} disabled={pending || !texto.trim()} style={{
-              flex: 1, padding: '.5rem', borderRadius: 8, border: 'none', cursor: pending ? 'wait' : 'pointer',
+              flex: 1, padding: '.5rem', borderRadius: 2, border: 'none', cursor: pending ? 'wait' : 'pointer',
               background: '#36b6e8', color: '#fff', fontSize: '.75rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)',
               opacity: !texto.trim() ? .6 : 1,
             }}>
               {pending ? 'Salvando...' : 'Adicionar'}
             </button>
             <button onClick={() => setAberto(false)} style={{
-              padding: '.5rem .75rem', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer',
+              padding: '.5rem .75rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer',
               fontSize: '.75rem', fontWeight: 600, color: '#64748b', fontFamily: 'var(--font-montserrat,sans-serif)',
             }}>
               Fechar

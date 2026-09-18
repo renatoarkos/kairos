@@ -126,12 +126,12 @@ export function PipelineBoard({ escolas, userId, viewMode, filtroResp }: Props) 
         <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', flexWrap: 'wrap' }}>
           <span style={{ fontSize: '.68rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '.06em', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Filtrar:</span>
           <Link href={`/comercial/pipeline?view=${viewMode}`}
-            style={{ padding: '4px 12px', borderRadius: 9999, textDecoration: 'none', fontSize: '.72rem', fontWeight: 700, background: !filtroResp ? '#221d37' : '#f1f5f9', color: !filtroResp ? '#fff' : '#475569', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+            style={{ padding: '4px 12px', borderRadius: 3, textDecoration: 'none', fontSize: '.72rem', fontWeight: 700, background: !filtroResp ? '#221d37' : '#f1f5f9', color: !filtroResp ? '#fff' : '#475569', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
             Todos
           </Link>
           {profiles.map(p => (
             <Link key={p.id} href={`/comercial/pipeline?view=${viewMode}&responsavel=${p.id}`}
-              style={{ padding: '4px 12px', borderRadius: 9999, textDecoration: 'none', fontSize: '.72rem', fontWeight: 700, background: filtroResp === p.id ? '#36b6e8' : '#f1f5f9', color: filtroResp === p.id ? '#fff' : '#475569', fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: filtroResp === p.id ? '0 2px 8px rgba(54,182,232,.3)' : 'none' }}>
+              style={{ padding: '4px 12px', borderRadius: 3, textDecoration: 'none', fontSize: '.72rem', fontWeight: 700, background: filtroResp === p.id ? '#36b6e8' : '#f1f5f9', color: filtroResp === p.id ? '#fff' : '#475569', fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: filtroResp === p.id ? '0 2px 8px rgba(54,182,232,.3)' : 'none' }}>
               {p.full_name.split(' ')[0]}
             </Link>
           ))}
@@ -154,7 +154,7 @@ export function PipelineBoard({ escolas, userId, viewMode, filtroResp }: Props) 
 
       {/* ── Erro de banco ── */}
       {erroDb && (
-        <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10, padding: '.85rem 1.1rem', marginBottom: '1rem', fontSize: '.8rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
+        <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.85rem 1.1rem', marginBottom: '1rem', fontSize: '.8rem', color: '#dc2626', fontFamily: 'var(--font-inter,sans-serif)' }}>
           <strong>Erro RLS:</strong> {erroDb}
         </div>
       )}
@@ -164,8 +164,8 @@ export function PipelineBoard({ escolas, userId, viewMode, filtroResp }: Props) 
         <>
           {/* Banner "pipeline vazio" apenas quando não há dados E não está carregando */}
           {!loading && !erroDb && kanbanNegs.length === 0 && (
-            <div style={{ background: '#fffbeb', border: '1.5px dashed #fde68a', borderRadius: 12, padding: '1rem 1.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: '#fff', border: '1.5px solid #fde68a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ background: '#fffbeb', border: '1.5px dashed #fde68a', borderRadius: 3, padding: '1rem 1.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 2, background: '#fff', border: '1.5px solid #fde68a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#36b6e8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="6" height="18" rx="2"/><rect x="9" y="3" width="6" height="18" rx="2"/><rect x="16" y="3" width="6" height="18" rx="2"/></svg>
               </div>
               <div style={{ flex: 1 }}>
@@ -197,7 +197,7 @@ export function PipelineBoard({ escolas, userId, viewMode, filtroResp }: Props) 
                 { label: 'Ganhos',   items: ganhos,   cor: '#16a34a', bg: '#f0fdf4', border: '#86efac' },
                 { label: 'Perdidos', items: perdidos, cor: '#dc2626', bg: '#fef2f2', border: '#fca5a5' },
               ].map(group => (
-                <div key={group.label} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 14, overflow: 'hidden' }}>
+                <div key={group.label} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden' }}>
                   <div style={{ padding: '.65rem 1.25rem', background: group.bg, borderBottom: `1px solid ${group.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontWeight: 700, color: group.cor, fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.78rem', textTransform: 'uppercase', letterSpacing: '.06em' }}>
                       {group.label === 'Ganhos' ? '✓ ' : '✗ '}{group.label}
@@ -226,7 +226,7 @@ export function PipelineBoard({ escolas, userId, viewMode, filtroResp }: Props) 
             <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8', fontFamily: 'var(--font-inter,sans-serif)', fontSize: '.85rem' }}>Nenhuma negociação cadastrada.</div>
           )}
           {consultorStats.map(({ profile: prof, negs: negsList, ativos: a, ganhos: g, potencial }) => (
-            <div key={prof.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
+            <div key={prof.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, overflow: 'hidden', boxShadow: '0 2px 8px rgba(34,29,55,.05)' }}>
               <div style={{ background: '#221d37', padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                 <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#36b6e8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '.8rem', fontWeight: 800, fontFamily: 'var(--font-montserrat,sans-serif)', flexShrink: 0 }}>
                   {prof.full_name.split(' ').slice(0,2).map((n: string) => n[0]).join('').toUpperCase()}

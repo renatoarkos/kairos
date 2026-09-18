@@ -53,14 +53,14 @@ export function BancoSearch() {
   const inp: React.CSSProperties = {
     width: '100%', padding: '.75rem 1rem .75rem 2.8rem', fontSize: '.95rem',
     fontFamily: 'var(--font-inter,sans-serif)', border: '2px solid #e2e8f0',
-    borderRadius: 10, background: '#fff', color: '#221d37', outline: 'none',
+    borderRadius: 2, background: '#fff', color: '#221d37', outline: 'none',
     boxSizing: 'border-box' as const,
   }
 
   const total = (result?.escolas.length ?? 0) + (result?.leads.length ?? 0)
 
   return (
-    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.5rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
+    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.5rem', boxShadow: '0 1px 4px rgba(34,29,55,.04)' }}>
       <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#64748b', marginBottom: '.65rem' }}>
         Buscar escola ou pessoa no banco de dados
       </div>
@@ -96,7 +96,7 @@ export function BancoSearch() {
               <div
                 key={e.id}
                 onClick={() => window.location.href = `/comercial/escolas/${e.id}`}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.75rem 1rem', borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', transition: 'all .15s' }}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.75rem 1rem', borderRadius: 2, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', transition: 'all .15s' }}
                 onMouseEnter={el => { el.currentTarget.style.borderColor = '#36b6e8'; el.currentTarget.style.background = '#eff6ff' }}
                 onMouseLeave={el => { el.currentTarget.style.borderColor = '#e2e8f0'; el.currentTarget.style.background = '#f8fafc' }}
               >

@@ -193,7 +193,7 @@ export default function MobileNav({ mobileMenuOpen, setMobileMenuOpen, menuItems
                 background: 'linear-gradient(135deg, #87cde8, #36b6e8)',
                 color: '#fff',
                 textDecoration: 'none',
-                borderRadius: '9999px',
+                borderRadius: '3px',
                 fontSize: '0.95rem',
                 fontWeight: 700,
                 textAlign: 'center',

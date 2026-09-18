@@ -16,7 +16,7 @@ const labelStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '.65rem .9rem', fontSize: '.875rem',
   fontFamily: 'var(--font-inter,sans-serif)',
-  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  border: '1.5px solid #e2e8f0', borderRadius: 2,
   background: '#f8fafc', color: '#221d37', outline: 'none',
   boxSizing: 'border-box',
 }
@@ -177,7 +177,7 @@ export default async function EscolaEditar({ params }: Props) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
                 
                 {/* Infantil */}
-                <div style={{ background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 12, padding: '1rem' }}>
+                <div style={{ background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 3, padding: '1rem' }}>
                   <label style={{ ...labelStyle, color: '#ea580c', fontSize: '.68rem' }}>Ed. Infantil</label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.4rem' }}>
                     <TurmaField name="qtd_infantil2" label="Inf. 2" value={e.qtd_infantil2 ?? 0} />
@@ -193,7 +193,7 @@ export default async function EscolaEditar({ params }: Props) {
                 </div>
 
                 {/* Fund I */}
-                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 12, padding: '1rem' }}>
+                <div style={{ background: '#eff6ff', border: '1.5px solid #bfdbfe', borderRadius: 3, padding: '1rem' }}>
                   <label style={{ ...labelStyle, color: '#2563eb', fontSize: '.68rem' }}>Fund. I</label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '.4rem' }}>
                     <TurmaField name="qtd_fund1_ano1" label="1º Ano" value={e.qtd_fund1_ano1 ?? 0} />
@@ -210,7 +210,7 @@ export default async function EscolaEditar({ params }: Props) {
                 </div>
 
                 {/* Fund II */}
-                <div style={{ background: '#f5f3ff', border: '1.5px solid #ddd6fe', borderRadius: 12, padding: '1rem' }}>
+                <div style={{ background: '#f5f3ff', border: '1.5px solid #ddd6fe', borderRadius: 3, padding: '1rem' }}>
                   <label style={{ ...labelStyle, color: '#7c3aed', fontSize: '.68rem' }}>Fund. II</label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.4rem' }}>
                     <TurmaField name="qtd_fund2_ano6" label="6º Ano" value={e.qtd_fund2_ano6 ?? 0} />
@@ -226,7 +226,7 @@ export default async function EscolaEditar({ params }: Props) {
                 </div>
 
                 {/* Médio */}
-                <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 12, padding: '1rem' }}>
+                <div style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 3, padding: '1rem' }}>
                   <label style={{ ...labelStyle, color: '#dc2626', fontSize: '.68rem' }}>Ens. Médio</label>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '.4rem' }}>
                     <TurmaField name="qtd_medio_1s" label="1ª S" value={e.qtd_medio_1s ?? 0} />
@@ -243,7 +243,7 @@ export default async function EscolaEditar({ params }: Props) {
               </div>
 
               {/* Maior turma */}
-              <div style={{ marginTop: '1.25rem', padding: '1.1rem 1.25rem', background: 'linear-gradient(135deg, #eff6ff, #f5f3ff)', border: '2px solid #bfdbfe', borderRadius: 14, display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+              <div style={{ marginTop: '1.25rem', padding: '1.1rem 1.25rem', background: 'linear-gradient(135deg, #eff6ff, #f5f3ff)', border: '2px solid #bfdbfe', borderRadius: 3, display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
                 <div style={{ flex: '0 0 auto' }}>
                   <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#2563eb', marginBottom: '.3rem' }}>
                     Maior Turma <span style={{ color: '#dc2626' }}>*</span>
@@ -296,7 +296,7 @@ export default async function EscolaEditar({ params }: Props) {
             className="mp-form-actions"
             style={{
               display: 'flex', gap: '.75rem', alignItems: 'center', justifyContent: 'flex-end',
-              padding: '1.1rem 1.4rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12,
+              padding: '1.1rem 1.4rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 3,
               boxShadow: '0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04)',
               position: 'sticky', bottom: '1rem', zIndex: 5,
             }}

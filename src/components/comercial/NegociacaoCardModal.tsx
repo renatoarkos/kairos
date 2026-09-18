@@ -242,7 +242,7 @@ export function NegociacaoCardModal({ negociacaoId, onClose, onChange }: Props) 
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
       <div style={{
-        background: '#fff', borderRadius: 16, width: '100%', maxWidth: 820,
+        background: '#fff', borderRadius: 4, width: '100%', maxWidth: 820,
         boxShadow: '0 24px 64px rgba(0,0,0,.25)', overflow: 'hidden',
       }}>
         {/* HEADER */}
@@ -294,7 +294,7 @@ export function NegociacaoCardModal({ negociacaoId, onClose, onChange }: Props) 
             )}
           </div>
           <button onClick={onClose} style={{
-            width: 32, height: 32, borderRadius: 8,
+            width: 32, height: 32, borderRadius: 2,
             border: '1px solid rgba(255,255,255,.15)', background: 'rgba(255,255,255,.08)',
             color: '#fff', cursor: 'pointer', fontSize: '1rem',
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
@@ -310,7 +310,7 @@ export function NegociacaoCardModal({ negociacaoId, onClose, onChange }: Props) 
             {/* COLUNA PRINCIPAL */}
             <div style={{ padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
               {erro && (
-                <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.55rem .85rem', fontSize: '.75rem', color: '#dc2626' }}>{erro}</div>
+                <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.55rem .85rem', fontSize: '.75rem', color: '#dc2626' }}>{erro}</div>
               )}
 
               {/* MEMBROS + DUE DATE inline */}
@@ -437,7 +437,7 @@ export function NegociacaoCardModal({ negociacaoId, onClose, onChange }: Props) 
                   <div onClick={() => setEditDesc(true)}
                     style={{
                       minHeight: 60, background: '#f8fafc', padding: '.65rem .8rem',
-                      borderRadius: 8, fontSize: '.82rem', color: neg.descricao ? '#221d37' : '#94a3b8',
+                      borderRadius: 2, fontSize: '.82rem', color: neg.descricao ? '#221d37' : '#94a3b8',
                       fontFamily: 'var(--font-inter,sans-serif)', cursor: 'pointer',
                       whiteSpace: 'pre-wrap', lineHeight: 1.5,
                     }}>
@@ -508,7 +508,7 @@ export function NegociacaoCardModal({ negociacaoId, onClose, onChange }: Props) 
                             )}
                           </div>
                           <div style={{
-                            background: '#f8fafc', padding: '.5rem .75rem', borderRadius: 8,
+                            background: '#f8fafc', padding: '.5rem .75rem', borderRadius: 2,
                             marginTop: '.25rem', fontSize: '.8rem', color: '#221d37',
                             fontFamily: 'var(--font-inter,sans-serif)', lineHeight: 1.45,
                             whiteSpace: 'pre-wrap',
@@ -548,7 +548,7 @@ export function NegociacaoCardModal({ negociacaoId, onClose, onChange }: Props) 
         {showMembros && (
           <div style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(0,0,0,.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
             onClick={e => { if (e.target === e.currentTarget) setShowMembros(false) }}>
-            <div style={{ background: '#fff', borderRadius: 12, width: '100%', maxWidth: 360, maxHeight: '70vh', overflow: 'auto', boxShadow: '0 16px 48px rgba(0,0,0,.25)' }}>
+            <div style={{ background: '#fff', borderRadius: 3, width: '100%', maxWidth: 360, maxHeight: '70vh', overflow: 'auto', boxShadow: '0 16px 48px rgba(0,0,0,.25)' }}>
               <div style={{ padding: '.85rem 1rem', borderBottom: '1px solid #e2e8f0', fontWeight: 700, fontSize: '.85rem', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Marcar usuários no card</div>
               <div style={{ padding: '.5rem' }}>
                 {todosProfiles.map(p => {

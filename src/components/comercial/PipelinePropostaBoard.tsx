@@ -242,9 +242,9 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
           return (
             <div key={stage.id}
               onDragOver={onDragOver} onDrop={e => onDrop(e, stage.id)}
-              style={{ background: '#f8fafc', border: `1.5px solid ${stage.cor}25`, borderRadius: 14, minHeight: 220 }}>
+              style={{ background: '#f8fafc', border: `1.5px solid ${stage.cor}25`, borderRadius: 3, minHeight: 220 }}>
               {/* Header coluna */}
-              <div style={{ padding: '.7rem .9rem', borderBottom: `2.5px solid ${stage.cor}`, borderRadius: '14px 14px 0 0', background: '#fff' }}>
+              <div style={{ padding: '.7rem .9rem', borderBottom: `2.5px solid ${stage.cor}`, borderRadius: '3px 3px 0 0', background: '#fff' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '.4rem' }}>
                   <span style={{ fontSize: '.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.06em', color: stage.cor, fontFamily: 'var(--font-montserrat,sans-serif)', lineHeight: 1.3 }}>{stage.label}</span>
                   <span style={{ width: 21, height: 21, borderRadius: '50%', flexShrink: 0, background: stage.cor, color: '#fff', fontSize: '.65rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-montserrat,sans-serif)' }}>{colCards.length}</span>
@@ -262,7 +262,7 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                     <div key={card.precadastro_id}
                       draggable onDragStart={() => onDragStart(card.precadastro_id)}
                       onClick={() => { setModal(card); setNovoComent(''); setShowTagForm(false); setUploadErr('') }}
-                      style={{ background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 10, padding: '.65rem .8rem', cursor: 'grab', boxShadow: '0 1px 4px rgba(34,29,55,.06)', transition: 'box-shadow .15s', borderLeft: `3px solid ${stage.cor}` }}
+                      style={{ background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 2, padding: '.65rem .8rem', cursor: 'grab', boxShadow: '0 1px 4px rgba(34,29,55,.06)', transition: 'box-shadow .15s', borderLeft: `3px solid ${stage.cor}` }}
                       onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(34,29,55,.12)' }}
                       onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 1px 4px rgba(34,29,55,.06)' }}
                     >
@@ -310,7 +310,7 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
       {modal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}
           onClick={e => { if (e.target === e.currentTarget) setModal(null) }}>
-          <div style={{ background: '#fff', borderRadius: 16, width: '100%', maxWidth: 680, maxHeight: '92vh', overflow: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,.28)', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ background: '#fff', borderRadius: 4, width: '100%', maxWidth: 680, maxHeight: '92vh', overflow: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,.28)', display: 'flex', flexDirection: 'column' }}>
 
             {/* Header */}
             <div style={{ padding: '1rem 1.25rem', borderBottom: `3px solid ${stageModal?.cor ?? '#36b6e8'}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexShrink: 0 }}>
@@ -364,7 +364,7 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                         autoFocus value={novaTagLabel} onChange={e => setNovaTagLabel(e.target.value)}
                         onKeyDown={e => { if (e.key === 'Enter') adicionarTag(); if (e.key === 'Escape') { setShowTagForm(false); setNovaTagLabel('') } }}
                         placeholder="Nome da tag"
-                        style={{ padding: '.3rem .65rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.75rem', width: 130, fontFamily: 'var(--font-inter,sans-serif)', outline: 'none' }}
+                        style={{ padding: '.3rem .65rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.75rem', width: 130, fontFamily: 'var(--font-inter,sans-serif)', outline: 'none' }}
                       />
                       {/* Paleta de cores */}
                       <div style={{ display: 'flex', gap: '.25rem', flexWrap: 'wrap' }}>
@@ -376,11 +376,11 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                       </div>
                       <button type="button" onClick={adicionarTag}
                         disabled={!novaTagLabel.trim()}
-                        style={{ padding: '.3rem .75rem', borderRadius: 8, border: 'none', background: novaTagLabel.trim() ? novaTagCor : '#e2e8f0', color: novaTagLabel.trim() ? '#fff' : '#94a3b8', fontSize: '.72rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                        style={{ padding: '.3rem .75rem', borderRadius: 2, border: 'none', background: novaTagLabel.trim() ? novaTagCor : '#e2e8f0', color: novaTagLabel.trim() ? '#fff' : '#94a3b8', fontSize: '.72rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                         Adicionar
                       </button>
                       <button type="button" onClick={() => { setShowTagForm(false); setNovaTagLabel('') }}
-                        style={{ padding: '.3rem .55rem', borderRadius: 8, border: '1px solid #e2e8f0', background: '#fff', color: '#94a3b8', fontSize: '.7rem', cursor: 'pointer' }}>
+                        style={{ padding: '.3rem .55rem', borderRadius: 2, border: '1px solid #e2e8f0', background: '#fff', color: '#94a3b8', fontSize: '.7rem', cursor: 'pointer' }}>
                         ✕
                       </button>
                     </div>
@@ -421,7 +421,7 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                   <input type="date"
                     value={modal.pipeline_due_date ?? ''}
                     onChange={e => { syncCard(modal.precadastro_id, { pipeline_due_date: e.target.value || null }); salvarDueDate(e.target.value) }}
-                    style={{ padding: '.5rem .85rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37' }}
+                    style={{ padding: '.5rem .85rem', border: '1.5px solid #e2e8f0', borderRadius: 2, fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', outline: 'none', background: '#f8fafc', color: '#221d37' }}
                   />
                   {modal.pipeline_due_date && (() => { const b = dueBadge(modal.pipeline_due_date); return b ? <span style={{ background: b.bg, color: b.fg, padding: '.2rem .65rem', borderRadius: 99, fontSize: '.68rem', fontWeight: 800, fontFamily: 'var(--font-montserrat,sans-serif)' }}>{b.label}</span> : null })()}
                   {modal.pipeline_due_date && (
@@ -442,7 +442,7 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                     <button type="button"
                       onClick={() => fileRef.current?.click()}
                       disabled={uploading}
-                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.45rem 1rem', borderRadius: 8, border: '1.5px solid #36b6e8', background: uploading ? '#f8fafc' : '#eff6ff', color: '#2563eb', cursor: uploading ? 'not-allowed' : 'pointer', fontSize: '.75rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.45rem 1rem', borderRadius: 2, border: '1.5px solid #36b6e8', background: uploading ? '#f8fafc' : '#eff6ff', color: '#2563eb', cursor: uploading ? 'not-allowed' : 'pointer', fontSize: '.75rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
                       {uploading ? 'Enviando…' : 'Anexar arquivo'}
                     </button>
@@ -450,7 +450,7 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                   </div>
                   <input ref={fileRef} type="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.xlsx" style={{ display: 'none' }} onChange={handleUpload} disabled={uploading} />
 
-                  {uploadErr && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '.5rem .8rem', fontSize: '.75rem', color: '#dc2626' }}>{uploadErr}</div>}
+                  {uploadErr && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2, padding: '.5rem .8rem', fontSize: '.75rem', color: '#dc2626' }}>{uploadErr}</div>}
 
                   {modal.pipeline_anexos.length === 0 ? (
                     <div style={{ fontSize: '.72rem', color: '#94a3b8', fontStyle: 'italic', padding: '.5rem 0' }}>Nenhum arquivo anexado ainda.</div>
@@ -486,10 +486,10 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                     value={novoComent} onChange={e => setNovoComent(e.target.value)}
                     placeholder="Adicionar nota ou comentário sobre esta escola…"
                     rows={2}
-                    style={{ flex: 1, padding: '.6rem .85rem', fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', border: '1.5px solid #e2e8f0', borderRadius: 8, background: '#f8fafc', color: '#221d37', outline: 'none', resize: 'vertical', minHeight: 60 }}
+                    style={{ flex: 1, padding: '.6rem .85rem', fontSize: '.82rem', fontFamily: 'var(--font-inter,sans-serif)', border: '1.5px solid #e2e8f0', borderRadius: 2, background: '#f8fafc', color: '#221d37', outline: 'none', resize: 'vertical', minHeight: 60 }}
                   />
                   <button onClick={adicionarComentario} disabled={enviandoC || !novoComent.trim()} type="button"
-                    style={{ padding: '.6rem 1rem', borderRadius: 8, border: 'none', background: enviandoC || !novoComent.trim() ? '#e2e8f0' : '#36b6e8', color: enviandoC || !novoComent.trim() ? '#94a3b8' : '#fff', fontWeight: 700, fontSize: '.78rem', cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)', alignSelf: 'flex-start', transition: 'all .12s' }}>
+                    style={{ padding: '.6rem 1rem', borderRadius: 2, border: 'none', background: enviandoC || !novoComent.trim() ? '#e2e8f0' : '#36b6e8', color: enviandoC || !novoComent.trim() ? '#94a3b8' : '#fff', fontWeight: 700, fontSize: '.78rem', cursor: 'pointer', fontFamily: 'var(--font-montserrat,sans-serif)', alignSelf: 'flex-start', transition: 'all .12s' }}>
                     {enviandoC ? '…' : 'Salvar'}
                   </button>
                 </div>
@@ -499,7 +499,7 @@ export function PipelinePropostaBoard({ cards: cardsIniciais }: Props) {
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem' }}>
                     {modal.pipeline_comentarios.map(c => (
-                      <div key={c.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '.7rem .9rem' }}>
+                      <div key={c.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 2, padding: '.7rem .9rem' }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '.3rem' }}>
                           <span style={{ fontSize: '.62rem', color: '#94a3b8', fontFamily: 'var(--font-inter,sans-serif)' }}>
                             {new Date(c.criado_em).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}

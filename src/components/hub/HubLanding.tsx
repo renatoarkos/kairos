@@ -119,7 +119,7 @@ export default function HubLanding() {
             {MODULES.map(m => (
               <Link key={m.id} href={m.href}
                 style={{
-                  padding: '.5rem .95rem', borderRadius: 8,
+                  padding: '.5rem .95rem', borderRadius: 2,
                   fontSize: '.78rem', fontWeight: 600,
                   color: 'rgba(255,255,255,.85)', textDecoration: 'none',
                   fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -139,7 +139,7 @@ export default function HubLanding() {
               </Link>
             ))}
             <Link href="/login" style={{
-              marginLeft: '.5rem', padding: '.5rem 1.1rem', borderRadius: 9999,
+              marginLeft: '.5rem', padding: '.5rem 1.1rem', borderRadius: 3,
               background: 'linear-gradient(135deg, #87cde8, #36b6e8)',
               color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: '.78rem',
               fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -201,7 +201,7 @@ export default function HubLanding() {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.45rem',
               background: 'rgba(135,205,232,.15)', border: '1px solid rgba(135,205,232,.4)',
-              borderRadius: 9999, padding: '.4rem 1rem', marginBottom: '1.75rem',
+              borderRadius: 3, padding: '.4rem 1rem', marginBottom: '1.75rem',
             }}>
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#87cde8' }} />
               <span style={{ fontSize: '.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.12em', color: '#87cde8', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
@@ -235,7 +235,7 @@ export default function HubLanding() {
 
             <div className="hero-cta-row" style={{ display: 'flex', gap: '.85rem', flexWrap: 'wrap' }}>
               <button onClick={scrollToModulos} style={{
-                padding: '.8rem 2.2rem', borderRadius: 9999, fontWeight: 700,
+                padding: '.8rem 2.2rem', borderRadius: 3, fontWeight: 700,
                 background: 'linear-gradient(135deg, #87cde8, #36b6e8)', color: '#fff',
                 border: 'none', cursor: 'pointer', fontSize: '.95rem',
                 fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -248,7 +248,7 @@ export default function HubLanding() {
                 Conhecer os módulos
               </button>
               <Link href="/login" style={{
-                padding: '.8rem 2.2rem', borderRadius: 9999, fontWeight: 700,
+                padding: '.8rem 2.2rem', borderRadius: 3, fontWeight: 700,
                 background: 'rgba(255,255,255,.1)', color: '#fff',
                 border: '1.5px solid rgba(255,255,255,.2)', cursor: 'pointer', fontSize: '.95rem',
                 fontFamily: 'var(--font-montserrat,sans-serif)',
@@ -294,7 +294,7 @@ export default function HubLanding() {
           }}>
             {MODULES.map(m => (
               <div key={m.id} className="modulo-card" style={{
-                background: m.bg, borderRadius: 16, padding: '2.5rem 2rem',
+                background: m.bg, borderRadius: 4, padding: '2.5rem 2rem',
                 border: `1px solid ${m.color}33`,
                 transition: 'all .3s',
               }}
@@ -302,7 +302,7 @@ export default function HubLanding() {
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
               >
                 <div style={{
-                  width: 56, height: 56, borderRadius: 14,
+                  width: 56, height: 56, borderRadius: 3,
                   background: m.color, display: 'flex', alignItems: 'center',
                   justifyContent: 'center', color: '#fff', marginBottom: '1.5rem',
                 }}>

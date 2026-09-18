@@ -40,7 +40,7 @@ export function RenovarValidadeBtn({ propostaId, escolaNome, variant = 'row' }: 
     return (
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: '.35rem',
-        background: '#fffbeb', border: '1.5px solid #fde68a', borderRadius: 8,
+        background: '#fffbeb', border: '1.5px solid #fde68a', borderRadius: 2,
         padding: '.25rem .4rem',
       }}>
         <input

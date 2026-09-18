@@ -45,7 +45,7 @@ export function ArquivarPropostaBtn({ propostaId, escolaNome, arquivada = false,
       <>
         {confirm && !arquivada && (
           <div style={{
-            background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
+            background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 2,
             padding: '.75rem 1rem', marginBottom: '.5rem',
             fontSize: '.72rem', color: '#dc2626', lineHeight: 1.5,
             fontFamily: 'var(--font-inter,sans-serif)',
