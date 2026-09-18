@@ -41,23 +41,6 @@ const MODULES = [
     features: ['Contratos digitais', 'Assinatura eletrônica', 'Auditoria completa', 'Templates reutilizáveis'],
     status: 'em breve',
   },
-  {
-    id: 'censo',
-    label: 'Censo Escolar',
-    tagline: 'Integração contínua com alunos',
-    description:
-      'Coleta de dados em momentos estratégicos do ano para criar perfis detalhados de alunos e oferecer experiências customizadas baseadas em insights reais.',
-    href: '#',
-    color: '#7C3AED',
-    bg: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><circle cx="9" cy="9" r="1" /><circle cx="15" cy="9" r="1" />
-      </svg>
-    ),
-    features: ['Coleta estratégica de dados', 'Perfis de alunos', 'Experiências customizadas', 'Análise de evolução'],
-    status: 'em breve',
-  },
 ]
 
 export default function HubLanding() {

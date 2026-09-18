@@ -22,7 +22,6 @@ export default function MobileFooter({ sections }: MobileFooterProps) {
       items: [
         { label: 'Gestão Comercial' },
         { label: 'Gestão de Contratos' },
-        { label: 'Censo Escolar' },
         { label: 'Jornada de Relacionamento' },
       ],
     },
