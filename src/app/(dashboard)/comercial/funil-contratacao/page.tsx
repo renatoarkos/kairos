@@ -1,0 +1,507 @@
+import { createAdminClient } from '@/lib/supabase/admin'
+import { buscarEscolasUnificadas } from '@/lib/escolas-unificadas'
+import { upsertNegociacao } from '@/lib/actions'
+import { getFunilContratacao, FASE_LABELS, FASE_FUNIL_ORDEM, type FaseFunil } from '@/lib/funil-contratacao'
+import { META_RECEITA } from '@/lib/metas'
+import PageHeader from '@/components/layout/PageHeader'
+import Link from 'next/link'
+import { formatCurrency, formatDate } from '@/lib/utils'
+import { EscolaSelector } from '@/components/ui/EscolaSelector'
+import { FunilVisual } from '@/components/comercial/FunilVisual'
+import { FasePopover } from '@/components/comercial/FasePopover'
+import { ResponsavelInlineSelect } from '@/components/comercial/ResponsavelInlineSelect'
+import { ContatoQuickEdit } from '@/components/comercial/ContatoQuickEdit'
+import { PrioridadeInline } from '@/components/comercial/PrioridadeInline'
+import { AnotacaoContatoInline } from '@/components/comercial/AnotacaoContatoInline'
+import { AnexarPropostaPdf } from '@/components/comercial/AnexarPropostaPdf'
+import { ContratoDocumentosPanel } from '@/components/comercial/ContratoDocumentosPanel'
+import { STAGE_OPTIONS } from '@/types/database'
+
+export const dynamic = 'force-dynamic'
+
+interface Props { searchParams: Promise<{ escola?: string; fase?: string; q?: string }> }
+
+const card: React.CSSProperties = {
+  background: '#fff', border: '1px solid #e2e8f0', borderRadius: 16,
+  marginBottom: '1.5rem', overflow: 'hidden', boxShadow: '0 1px 4px rgba(34,29,55,.06)',
+}
+const secHdr = (color = '#36b6e8'): React.CSSProperties => ({
+  padding: '1rem 1.75rem', borderBottom: '1px solid #f1f5f9',
+  background: '#fafafa', display: 'flex', alignItems: 'center', gap: '.65rem',
+})
+const dot = (c = '#36b6e8'): React.CSSProperties => ({
+  width: 28, height: 28, borderRadius: 7, flexShrink: 0, background: c,
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+})
+const secTitle: React.CSSProperties = {
+  fontFamily: 'var(--font-montserrat,sans-serif)',
+  fontSize: '.78rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#221d37',
+}
+const body: React.CSSProperties = { padding: '1.5rem 1.75rem' }
+const lbl: React.CSSProperties = {
+  display: 'block', fontFamily: 'var(--font-montserrat,sans-serif)',
+  fontSize: '.7rem', fontWeight: 700, textTransform: 'uppercase',
+  letterSpacing: '.06em', color: '#64748b', marginBottom: '.45rem',
+}
+const inp: React.CSSProperties = {
+  width: '100%', padding: '.7rem .9rem', fontSize: '.875rem',
+  fontFamily: 'var(--font-inter,sans-serif)',
+  border: '1.5px solid #e2e8f0', borderRadius: 8,
+  background: '#f8fafc', color: '#221d37', outline: 'none', boxSizing: 'border-box',
+}
+const g2: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem 1.5rem' }
+
+const FASE_COR: Record<FaseFunil, { bg: string; text: string; border: string }> = {
+  negociacao:        { bg: '#eff6ff', text: '#2563eb', border: '#93c5fd' },
+  proposta_enviada:  { bg: '#fffbeb', text: '#b45309', border: '#fcd34d' },
+  minuta:            { bg: '#fdf4ff', text: '#a21caf', border: '#e9d5ff' },
+  contrato_enviado:  { bg: '#f5f3ff', text: '#6d28d9', border: '#c4b5fd' },
+  contrato_assinado: { bg: '#f0fdf4', text: '#16a34a', border: '#86efac' },
+  implantacao:       { bg: '#f5f3ff', text: '#7c3aed', border: '#c4b5fd' },
+  parceiro_ativo:    { bg: '#ecfdf5', text: '#059669', border: '#6ee7b7' },
+}
+const FASE_DECLINADA = { bg: '#fef2f2', text: '#dc2626', border: '#fca5a5' }
+const FASE_EFETIVADA = { bg: '#f0fdfa', text: '#0f766e', border: '#5eead4' }
+
+// ─── Segmentação em quadros ──────────────────────────────────────────────────
+// A tabela única virou 6 quadros, um por etapa do funil comercial, pedido
+// explícito do usuário: "formulário preenchido" é a base de tudo (etapa
+// inicial, antes de qualquer proposta), depois proposta enviada, minuta
+// (agrupa minuta_enviada/retorno_minuta/minuta_atualizada — são sub-passos da
+// mesma etapa "em minuta"), contrato (agrupa contrato_enviado e qualquer fase
+// mais avançada — assinado, implantação, parceiro ativo — pra nenhuma escola
+// que já passou do contrato enviado desaparecer do quadro), declinaram
+// (sobrepõe todas as outras: uma escola que declinou sai do funil ativo
+// independente de que etapa estava, é sempre o quadro final dela), e
+// efetivadas (escolas veteranas/parcerias já fechadas em anos anteriores,
+// marcadas manualmente na tela Quantidade de Alunos — sem negócio 2027 em
+// andamento; se uma veterana começar a ser vendida de novo pro ano que vem,
+// ela sai daqui e vai pro quadro real da fase em que estiver).
+// A escola "anda" de quadro sozinha conforme o checklist muda (não é
+// drag-and-drop) — o quadro é sempre derivado do estado real salvo no banco.
+type QuadroId = 'formulario' | 'proposta' | 'minuta' | 'contrato' | 'declinou' | 'efetivada'
+
+const QUADRO_ORDEM: QuadroId[] = ['formulario', 'proposta', 'minuta', 'contrato', 'efetivada', 'declinou']
+
+const QUADRO_DEF: Record<QuadroId, { label: string; sub: string; cor: string; headerBg: string }> = {
+  formulario: { label: 'Formulário Preenchido', sub: 'Formulário recebido — negociação em andamento, ainda sem proposta', cor: '#2563eb', headerBg: '#eff6ff' },
+  proposta:   { label: 'Proposta Enviada',      sub: 'Proposta comercial já enviada pra escola',                          cor: '#b45309', headerBg: '#fffbeb' },
+  minuta:     { label: 'Minuta',                sub: 'Minuta enviada, em retorno ou em atualização',                     cor: '#a21caf', headerBg: '#fdf4ff' },
+  contrato:   { label: 'Contrato',              sub: 'Contrato enviado para assinatura, assinado ou em implantação',     cor: '#6d28d9', headerBg: '#f5f3ff' },
+  efetivada:  { label: 'Escolas Atendidas no Ano Corrente (Parcerias Efetivadas)', sub: 'Escolas veteranas — parceria já fechada, sem negócio novo em andamento pro ano que vem', cor: '#0f766e', headerBg: '#f0fdfa' },
+  declinou:   { label: 'Declinaram',            sub: 'Escola decidiu não seguir com a contratação',                      cor: '#dc2626', headerBg: '#fef2f2' },
+}
+
+const FASES_QUADRO_CONTRATO: FaseFunil[] = ['contrato_enviado', 'contrato_assinado', 'implantacao', 'parceiro_ativo']
+
+function classificarQuadro(l: { declinou: boolean; fase_funil: FaseFunil; marcado_veterana: boolean }): QuadroId {
+  if (l.declinou) return 'declinou'
+  if (FASES_QUADRO_CONTRATO.includes(l.fase_funil)) return 'contrato'
+  if (l.fase_funil === 'minuta') return 'minuta'
+  if (l.fase_funil === 'proposta_enviada') return 'proposta'
+  // Veterana sem negócio 2027 real em andamento (nenhuma fase acima bateu) —
+  // fica parcada aqui em vez de cair em "Formulário Preenchido" como se
+  // fosse um lead novo em negociação.
+  if (l.marcado_veterana) return 'efetivada'
+  return 'formulario'
+}
+
+export default async function FunilContratacaoPage({ searchParams }: Props) {
+  const params   = await searchParams
+  const escolaId = params.escola ?? ''
+  const faseFiltro = (params.fase ?? '') as FaseFunil | ''
+  const q = (params.q ?? '').toLowerCase()
+
+  const admin = createAdminClient()
+
+  const [{ linhas, kpis }, escolasSelect, { data: usuariosAtivos }, { data: usuariosTodos }, { data: notasContatoRaw }, { data: notasContratoRaw }, { data: anexosPropostaRaw }, { data: anexosContratoRaw }] = await Promise.all([
+    getFunilContratacao(),
+    buscarEscolasUnificadas(),
+    admin.from('usuarios').select('id, nome_completo').eq('ativo', true).order('nome_completo'),
+    admin.from('usuarios').select('id, nome_completo'),
+    admin.from('notas_escola').select('escola_id, texto, created_by, created_at').eq('categoria', 'contato').order('created_at', { ascending: false }),
+    admin.from('notas_escola').select('escola_id, texto, created_by, created_at').eq('categoria', 'contrato').order('created_at', { ascending: false }),
+    admin.from('contratos_arquivos').select('escola_id, path, created_at').eq('categoria', 'proposta').order('created_at', { ascending: false }),
+    admin.from('contratos_arquivos').select('id, escola_id, nome, path, categoria, created_at').in('categoria', ['minuta', 'contrato_final', 'contrato_assinado']).order('created_at', { ascending: false }),
+  ])
+
+  // Escolas sem proposta_id (não geradas pela Calculadora) podem ter o PDF da
+  // proposta enviada anexado manualmente — mesma tabela/bucket de
+  // ContratoUpload.tsx, só filtrando categoria:'proposta'. Mantém só o mais
+  // recente por escola.
+  const anexoPropostaPorEscola = new Map<string, string>()
+  for (const a of anexosPropostaRaw ?? []) {
+    if (anexoPropostaPorEscola.has(a.escola_id)) continue
+    const { data } = admin.storage.from('documentos-oficiais').getPublicUrl(a.path)
+    anexoPropostaPorEscola.set(a.escola_id, data.publicUrl)
+  }
+
+  const nomePorUsuario = new Map((usuariosTodos ?? []).map(u => [u.id, u.nome_completo]))
+  const notasPorEscola = new Map<string, { texto: string; autor: string; criadoEm: string }[]>()
+  for (const n of notasContatoRaw ?? []) {
+    const lista = notasPorEscola.get(n.escola_id) ?? []
+    if (lista.length < 5) {
+      lista.push({ texto: n.texto, autor: nomePorUsuario.get(n.created_by) ?? 'Equipe', criadoEm: n.created_at })
+      notasPorEscola.set(n.escola_id, lista)
+    }
+  }
+
+  const notasContratoPorEscola = new Map<string, { texto: string; autor: string; criadoEm: string }[]>()
+  for (const n of notasContratoRaw ?? []) {
+    const lista = notasContratoPorEscola.get(n.escola_id) ?? []
+    if (lista.length < 8) {
+      lista.push({ texto: n.texto, autor: nomePorUsuario.get(n.created_by) ?? 'Equipe', criadoEm: n.created_at })
+      notasContratoPorEscola.set(n.escola_id, lista)
+    }
+  }
+
+  // Minuta/versão final/assinado — cada upload é uma linha nova (nunca
+  // sobrescreve), por isso mantém TODAS as versões por escola, não só a mais
+  // recente.
+  const arquivosContratoPorEscola = new Map<string, { id: string; nome: string; url: string; criadoEm: string; categoria: string }[]>()
+  for (const a of anexosContratoRaw ?? []) {
+    const lista = arquivosContratoPorEscola.get(a.escola_id) ?? []
+    const { data } = admin.storage.from('documentos-oficiais').getPublicUrl(a.path)
+    lista.push({ id: a.id, nome: a.nome, url: data.publicUrl, criadoEm: a.created_at, categoria: a.categoria })
+    arquivosContratoPorEscola.set(a.escola_id, lista)
+  }
+
+  let escolaSelecionada: { id: string; nome: string; cidade: string | null; estado: string | null } | null = null
+  let negociacaoAtual: { id: string; stage: string; valor_estimado: number | null; observacoes: string | null; responsavel_id: string | null } | null = null
+
+  if (escolaId) {
+    const [{ data: e }, { data: n }] = await Promise.all([
+      admin.from('escolas').select('id, nome, cidade, estado').eq('id', escolaId).single(),
+      admin.from('negociacoes').select('id, stage, valor_estimado, observacoes, responsavel_id').eq('escola_id', escolaId).eq('ativa', true).maybeSingle(),
+    ])
+    escolaSelecionada = e
+    negociacaoAtual = n
+  }
+
+  const linhasFiltradas = linhas.filter(l => {
+    if (faseFiltro && l.fase_funil !== faseFiltro) return false
+    if (q && !l.escola_nome.toLowerCase().includes(q)) return false
+    return true
+  })
+
+  const porQuadro: Record<QuadroId, typeof linhasFiltradas> = {
+    formulario: [], proposta: [], minuta: [], contrato: [], efetivada: [], declinou: [],
+  }
+  for (const l of linhasFiltradas) porQuadro[classificarQuadro(l)].push(l)
+
+  const pctReceita = Math.min(100, Math.round((kpis.valorContratadoTotal / META_RECEITA) * 100))
+
+  // Extraído do corpo da tabela pra ser reaproveitado nos 5 quadros sem
+  // duplicar ~100 linhas de JSX por quadro — o conteúdo da linha é
+  // exatamente o mesmo de antes da segmentação, só o agrupamento mudou.
+  function renderLinhaFunil(l: typeof linhasFiltradas[number], idx: number, escolaIdsQuadro: string[]) {
+    return (
+      <tr key={l.escola_id} style={{ borderBottom: '1px solid #f1f5f9', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
+        <td style={{ padding: '.65rem .75rem', verticalAlign: 'middle' }}>
+          <PrioridadeInline escolaId={l.escola_id} prioridade={l.prioridade_manual} escolaIdsQuadro={escolaIdsQuadro} />
+        </td>
+        <td style={{ padding: '.65rem .75rem', verticalAlign: 'middle', width: 150, maxWidth: 150 }}>
+          <div style={{ fontWeight: 700, fontSize: '.8rem', color: '#221d37', fontFamily: 'var(--font-montserrat,sans-serif)', lineHeight: 1.3 }}>
+            {l.escola_nome}
+          </div>
+          <div style={{ fontSize: '.68rem', color: '#94a3b8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {l.contato_nome ? `${l.contato_nome} · ` : ''}{l.cidade ?? '—'}{l.estado ? `/${l.estado}` : ''}
+          </div>
+        </td>
+        <td style={{ padding: '.65rem .75rem', whiteSpace: 'nowrap' }}>
+          <ResponsavelInlineSelect escolaId={l.escola_id} responsavelId={l.responsavel_id} usuarios={usuariosAtivos ?? []} />
+        </td>
+        <td style={{ padding: '.65rem .75rem', fontSize: '.8rem', color: '#221d37', fontWeight: 700, textAlign: 'center' }}>{l.alunos_cadastro || '—'}</td>
+        <td style={{ padding: '.65rem .75rem', fontSize: '.72rem', color: '#334155', maxWidth: 160 }}
+          title={l.primeiro_contato_resumo ?? ''}>
+          {l.primeiro_contato ? (
+            <>
+              <div>{l.reunioes_total} reunião{l.reunioes_total > 1 ? 'ões' : ''}{l.ultima_interacao ? ` · últ. ${formatDate(l.ultima_interacao)}` : ''}</div>
+              <div style={{ fontSize: '.65rem', color: '#94a3b8' }}>1º contato: {formatDate(l.primeiro_contato)}</div>
+            </>
+          ) : (
+            <Link href={`/comercial/registros/novo?escola=${l.escola_id}`} style={{ fontSize: '.68rem', fontWeight: 700, color: '#b45309', textDecoration: 'none' }}>
+              + registrar
+            </Link>
+          )}
+        </td>
+        <td style={{ padding: '.65rem .75rem', whiteSpace: 'nowrap' }}>
+          <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '.85rem', fontWeight: 700, color: '#221d37' }}>
+            {l.proposta_valor_aluno_ano
+              ? `${formatCurrency(l.proposta_valor_aluno_ano)}/aluno`
+              : l.negociacao_valor_estimado
+                ? formatCurrency(l.negociacao_valor_estimado)
+                : l.contrato_valor_total > 0 ? formatCurrency(l.contrato_valor_total) : '—'}
+          </div>
+          {l.proposta_desconto_pct != null && l.proposta_desconto_pct > 0 && (
+            <div style={{ fontSize: '.63rem', color: '#b45309' }}>{l.proposta_desconto_pct}% desconto</div>
+          )}
+        </td>
+        <td style={{ padding: '.65rem .75rem', verticalAlign: 'middle' }}>
+          <FasePopover
+            escolaId={l.escola_id}
+            faseLabel={l.declinou ? 'Recusada' : classificarQuadro(l) === 'efetivada' ? 'Parceria Efetivada' : FASE_LABELS[l.fase_funil]}
+            faseCor={l.declinou ? FASE_DECLINADA : classificarQuadro(l) === 'efetivada' ? FASE_EFETIVADA : FASE_COR[l.fase_funil]}
+            checklist={{
+              formulario_enviado: l.formulario_enviado,
+              formulario_recebido: l.formulario_recebido,
+              proposta_enviada: l.proposta_enviada_manual,
+              minuta_enviada: l.minuta_enviada,
+              retorno_minuta: l.retorno_minuta,
+              minuta_atualizada: l.minuta_atualizada,
+              contrato_enviado: l.contrato_enviado,
+              contrato_assinado: l.contrato_assinado,
+              contrato_arquivado: l.contrato_arquivado,
+              declinou: l.declinou,
+            }}
+            implantacaoStatus={l.implantacao_status}
+          />
+        </td>
+        <td style={{ padding: '.65rem .75rem', verticalAlign: 'middle', maxWidth: 170 }}>
+          <ContatoQuickEdit escolaId={l.escola_id} telefone={l.telefone} email={l.email} escolaNome={l.escola_nome} />
+        </td>
+        <td style={{ padding: '.65rem .75rem', verticalAlign: 'middle' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+            <ContratoDocumentosPanel
+              escolaId={l.escola_id}
+              escolaNome={l.escola_nome}
+              arquivos={arquivosContratoPorEscola.get(l.escola_id) ?? []}
+              notas={notasContratoPorEscola.get(l.escola_id) ?? []}
+            />
+            <AnotacaoContatoInline escolaId={l.escola_id} notas={notasPorEscola.get(l.escola_id) ?? []} />
+            {l.proposta_id ? (
+              <a href={`/api/propostas/pdf/${l.proposta_id}`} style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                width: 28, height: 28, borderRadius: 7, flexShrink: 0,
+                background: '#f0fdf4', color: '#16a34a',
+              }} title="Baixar proposta em PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </a>
+            ) : anexoPropostaPorEscola.has(l.escola_id) ? (
+              <a href={anexoPropostaPorEscola.get(l.escola_id)} target="_blank" rel="noopener noreferrer" style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                width: 28, height: 28, borderRadius: 7, flexShrink: 0,
+                background: '#f0fdf4', color: '#16a34a',
+              }} title="Baixar PDF da proposta (anexado manualmente)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </a>
+            ) : (
+              <AnexarPropostaPdf escolaId={l.escola_id} escolaNome={l.escola_nome} />
+            )}
+            <Link href={`/comercial/escolas/${l.escola_id}`} style={{ fontSize: '.72rem', fontWeight: 700, color: '#36b6e8', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              Editar →
+            </Link>
+          </div>
+        </td>
+      </tr>
+    )
+  }
+
+  return (
+    <div>
+      <PageHeader title="Funil de Contratação" subtitle="Da negociação ao contrato assinado — visão consolidada por escola" />
+
+      <div className="mp-page-padding-x" style={{ padding: '2rem 2.5rem' }}>
+
+        {/* ── KPIs ──────────────────────────────────────────── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+          {[
+            { label: 'Escolas em Funil',   value: kpis.totalEscolasEmFunil, sub: 'ativas no funil', cor: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
+            { label: 'Valor em Pipeline',  value: formatCurrency(kpis.valorPipelineTotal), sub: 'negociações abertas', cor: '#b45309', bg: '#fffbeb', border: '#fcd34d' },
+            { label: 'Valor Contratado',   value: formatCurrency(kpis.valorContratadoTotal), sub: 'contratos assinados', cor: '#16a34a', bg: '#f0fdf4', border: '#86efac' },
+            { label: 'Em Implantação',     value: kpis.emImplantacao, sub: 'pós-arquivamento', cor: '#7c3aed', bg: '#f5f3ff', border: '#c4b5fd' },
+            { label: 'Meta de Receita 2027', value: `${pctReceita}%`, sub: formatCurrency(META_RECEITA), cor: '#221d37', bg: '#f8fafc', border: '#e2e8f0' },
+          ].map(k => (
+            <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderRadius: 14, padding: '1.1rem 1.25rem', borderTop: `3px solid ${k.cor}` }}>
+              <div style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.35rem' }}>{k.label}</div>
+              <div style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.6rem', fontWeight: 800, lineHeight: 1, color: '#221d37' }}>{k.value}</div>
+              <div style={{ fontSize: '.7rem', color: '#64748b', marginTop: '.2rem', fontFamily: 'var(--font-inter,sans-serif)' }}>{k.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Funil visual + classificação de leads ─────────── */}
+        <div style={card}>
+          <div style={secHdr('#221d37')}>
+            <div>
+              <div style={secTitle}>Funil de Vendas</div>
+              <div style={{ fontSize: '.68rem', color: '#475569', fontFamily: 'var(--font-inter,sans-serif)', marginTop: '.1rem' }}>
+                Cada etapa soma as escolas nela ou em qualquer etapa mais avançada. Cor = <strong>Quente</strong> (já chegou em Minuta ou fase mais avançada), <strong>Morno</strong> (formulário preenchido + proposta já enviada, mas ainda sem minuta) ou <strong>Frio</strong> (todo o resto — inclusive quem só teve reunião, ou nenhuma interação ainda). &quot;Base de Leads&quot; é o topo do funil: toda escola do nosso banco, mesmo sem nenhuma interação registrada. Escola que declinou não entra nessa conta.
+              </div>
+            </div>
+          </div>
+          <div style={{ padding: '1.5rem 1.75rem' }}>
+            <FunilVisual
+              estagios={[
+                { fase: 'base' as const, label: 'Base de Leads', ...kpis.baseDeLeads },
+                ...FASE_FUNIL_ORDEM.map((fase, idx) => {
+                  const faseComOuMaisAvancadas = FASE_FUNIL_ORDEM.slice(idx)
+                  const acumulado = faseComOuMaisAvancadas.reduce((acc, f) => ({
+                    total:  acc.total  + kpis.porFase[f],
+                    quente: acc.quente + kpis.porFaseTemperatura[f].quente,
+                    morno:  acc.morno  + kpis.porFaseTemperatura[f].morno,
+                    frio:   acc.frio   + kpis.porFaseTemperatura[f].frio,
+                  }), { total: 0, quente: 0, morno: 0, frio: 0 })
+                  return { fase, label: FASE_LABELS[fase], ...acumulado }
+                }),
+              ]}
+            />
+          </div>
+        </div>
+
+        {/* ── Distribuição por fase ─────────────────────────── */}
+        <div style={{ ...card }}>
+          <div style={secHdr('#221d37')}>
+            <div style={secTitle}>Distribuição por Fase</div>
+          </div>
+          <div style={{ padding: '1.25rem 1.75rem', display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
+            {(Object.keys(FASE_LABELS) as FaseFunil[]).map(fase => (
+              <Link key={fase} href={faseFiltro === fase ? '/comercial/funil-contratacao' : `/comercial/funil-contratacao?fase=${fase}`} style={{ textDecoration: 'none' }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.55rem .9rem',
+                  borderRadius: 10, background: faseFiltro === fase ? '#221d37' : '#f8fafc',
+                  border: `1.5px solid ${faseFiltro === fase ? '#221d37' : '#e2e8f0'}`,
+                }}>
+                  <span style={{ fontSize: '.78rem', fontWeight: 700, color: faseFiltro === fase ? '#fff' : '#334155', fontFamily: 'var(--font-montserrat,sans-serif)' }}>
+                    {FASE_LABELS[fase]}
+                  </span>
+                  <span style={{
+                    fontSize: '.72rem', fontWeight: 800, color: faseFiltro === fase ? '#fff' : '#221d37',
+                    fontFamily: 'var(--font-cormorant,serif)',
+                  }}>
+                    {kpis.porFase[fase]}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Seletor de escola + formulário rápido de negociação ── */}
+        {/* overflow: visible (sobrescrevendo o `card` padrão) — o dropdown de
+            busca do EscolaSelector é position:absolute e ficava cortado pelo
+            overflow:hidden do card. */}
+        <div style={{ ...card, overflow: 'visible' }}>
+          <div style={{ ...secHdr(), borderRadius: '16px 16px 0 0' }}>
+            <div style={secTitle}>Registrar / Atualizar Negociação</div>
+          </div>
+          <div style={{ padding: '1.25rem 1.75rem' }}>
+            <EscolaSelector
+              escolas={escolasSelect ?? []}
+              escolaId={escolaId}
+              basePath="/comercial/funil-contratacao"
+              placeholder="— Escolha uma escola para registrar a negociação —"
+              extraButton={escolaSelecionada ? (
+                <>
+                  <Link href={`/comercial/contratos?escola=${escolaId}`} style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
+                    Editar Contrato Completo →
+                  </Link>
+                  <Link href={`/comercial/jornada?escola=${escolaId}`} style={{ padding: '8px 14px', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', textDecoration: 'none', fontSize: '.8rem', fontWeight: 600, fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap' }}>
+                    Ver Jornada →
+                  </Link>
+                </>
+              ) : undefined}
+            />
+          </div>
+
+          {escolaSelecionada && (
+            <form action={upsertNegociacao} style={{ padding: '0 1.75rem 1.75rem' }}>
+              <input type="hidden" name="id" value={negociacaoAtual?.id ?? ''} />
+              <input type="hidden" name="escola_id" value={escolaId} />
+              <input type="hidden" name="ativa" value="true" />
+
+              <div style={{ ...g2, marginBottom: '1.25rem' }}>
+                <div>
+                  <label style={lbl}>Estágio</label>
+                  <select name="stage" defaultValue={negociacaoAtual?.stage ?? 'prospeccao'} style={{ ...inp, cursor: 'pointer' }}>
+                    {STAGE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label style={lbl}>Valor Total Estimado (R$/ano)</label>
+                  <input name="valor_estimado" type="number" min="0" step="0.01" style={inp}
+                    defaultValue={negociacaoAtual?.valor_estimado ?? ''} placeholder="Ex: 67550.00" />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '1.25rem' }}>
+                <label style={lbl}>Responsável</label>
+                <select name="responsavel_id" defaultValue={negociacaoAtual?.responsavel_id ?? ''} style={{ ...inp, cursor: 'pointer' }}>
+                  <option value="">— Selecione —</option>
+                  {(usuariosAtivos ?? []).map((u: { id: string; nome_completo: string }) => (
+                    <option key={u.id} value={u.id}>{u.nome_completo}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '1.25rem' }}>
+                <label style={lbl}>Observações da negociação</label>
+                <textarea name="observacoes" rows={3} style={{ ...inp, resize: 'vertical', minHeight: 80 }}
+                  defaultValue={negociacaoAtual?.observacoes ?? ''}
+                  placeholder="Histórico de negociação, condições especiais, motivo de recusa..." />
+              </div>
+
+              <button type="submit" style={{ background: 'linear-gradient(135deg, #36b6e8, #12789f)', color: '#fff', padding: '.7rem 2rem', borderRadius: 9999, border: 'none', cursor: 'pointer', fontSize: '.875rem', fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)', boxShadow: '0 4px 14px rgba(54,182,232,.35)' }}>
+                Salvar Negociação
+              </button>
+            </form>
+          )}
+        </div>
+
+        {/* ── Busca (comum a todos os quadros) ──────────────── */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '.75rem' }}>
+          <form style={{ display: 'flex', gap: '.5rem' }}>
+            {faseFiltro && <input type="hidden" name="fase" value={faseFiltro} />}
+            <input name="q" defaultValue={params.q ?? ''} placeholder="Buscar por escola..." style={{ ...inp, width: 240, padding: '.5rem .8rem', fontSize: '.8rem' }} />
+          </form>
+        </div>
+
+        {/* ── Quadros segmentados por etapa ──────────────────── */}
+        {/* Cada escola aparece em exatamente um quadro, derivado do estado real
+            salvo (checklist do contrato + declinou) — ela "anda" de quadro
+            sozinha conforme o checklist avança, não é arrastada manualmente. */}
+        {QUADRO_ORDEM.map(quadroId => {
+          const def = QUADRO_DEF[quadroId]
+          const quadroLinhas = porQuadro[quadroId]
+          const idsDoQuadro = quadroLinhas.map(x => x.escola_id)
+          return (
+            <div key={quadroId} style={{ ...card, borderTop: `4px solid ${def.cor}` }}>
+              <div style={{ ...secHdr(def.cor), background: def.headerBg, justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem' }}>
+                  <div style={dot(def.cor)}>
+                    <span style={{ color: '#fff', fontSize: '.75rem', fontWeight: 800, fontFamily: 'var(--font-cormorant,serif)' }}>{quadroLinhas.length}</span>
+                  </div>
+                  <div>
+                    <div style={{ ...secTitle, color: def.cor }}>{def.label}</div>
+                    <div style={{ fontSize: '.66rem', color: '#64748b', fontFamily: 'var(--font-inter,sans-serif)', marginTop: '.05rem' }}>{def.sub}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mp-escolas-table-wrap" style={{ overflowX: 'auto' }}>
+                {quadroLinhas.length > 0 ? (
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ background: '#221d37' }}>
+                        {['Prior.', 'Escola', 'Responsável', 'Alunos', 'Atividade', 'Valor/Desconto', 'Fase', 'Contato', ''].map(col => (
+                          <th key={col} style={{ padding: '.6rem .75rem', textAlign: 'left', fontSize: '.63rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: 'rgba(255,255,255,.65)', whiteSpace: 'nowrap', fontFamily: 'var(--font-montserrat,sans-serif)' }}>{col}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {quadroLinhas.map((l, idx) => renderLinhaFunil(l, idx, idsDoQuadro))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '1.75rem', color: '#94a3b8' }}>
+                    <div style={{ fontSize: '.8rem', fontFamily: 'var(--font-inter,sans-serif)' }}>Nenhuma escola nesta etapa no momento.</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
+
+      </div>
+    </div>
+  )
+}

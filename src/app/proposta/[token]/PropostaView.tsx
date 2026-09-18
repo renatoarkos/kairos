@@ -1,0 +1,1729 @@
+'use client'
+
+import { useEffect, useRef, useState, useCallback, useContext, createContext } from 'react'
+
+// Contexto de "modo impressão" — Reveal/TableRow/Counter usam IntersectionObserver
+// (sem `root` explícito, ou seja, o viewport da janela) pra disparar suas animações
+// de fade-in só quando o elemento entra na tela ao rolar. Na exportação em PDF a
+// página nunca rola antes do window.print() disparar, então tudo abaixo da
+// primeira tela ficava opacity:0 pra sempre — invisível no PDF. Esses componentes
+// checam este contexto pra já nascerem visíveis, sem depender de scroll.
+const PrintModeContext = createContext(false)
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+const R$ = (v: number) =>
+  v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+
+const fmtDate = (d: string) =>
+  new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+
+// ── Recursos Consumíveis — referência de custo pra implantação de uma sala
+// maker (materiais de consumo das aulas, não os equipamentos reutilizáveis
+// do comodato/patrimônio). Valores de referência fixos (mesmo parâmetro pra
+// todas as propostas); o que varia por escola é o texto, calculado a partir
+// dos segmentos da proposta — ver faixaSeriesTexto().
+const RECURSOS_CONSUMIVEIS = [
+  { nome: 'Fixador',    valor: 164.70 },
+  { nome: 'Adesivos',   valor: 937.11 },
+  { nome: 'Madeira',    valor: 320.05 },
+  { nome: 'Hidráulica', valor: 413.42 },
+  { nome: 'Diverso',    valor: 847.98 },
+  { nome: '3D',         valor: 1109.19 },
+  { nome: 'Ímã',        valor: 116.00 },
+  { nome: 'Papelaria',  valor: 649.56 },
+  { nome: 'Eletrônico', valor: 1200.17 },
+  { nome: 'Segurança',  valor: 113.37 },
+]
+const RECURSOS_CONSUMIVEIS_TOTAL = RECURSOS_CONSUMIVEIS.reduce((s, r) => s + r.valor, 0)
+
+// Descreve a faixa de séries atendidas com base nos segmentos da proposta —
+// é a parte do texto que muda de escola pra escola.
+function faixaSeriesTexto(p: Proposta): string {
+  const partes: string[] = []
+  if (p.seg_infantil) partes.push('da Educação Infantil')
+  if (p.seg_fundamental_1 && p.seg_fundamental_2) partes.push('do 1º ao 9º ano do Ensino Fundamental')
+  else if (p.seg_fundamental_1) partes.push('do 1º ao 5º ano do Ensino Fundamental')
+  else if (p.seg_fundamental_2) partes.push('do 6º ao 9º ano do Ensino Fundamental')
+  if (p.seg_ensino_medio) partes.push('da 1ª à 3ª série do Ensino Médio')
+
+  if (partes.length === 0) return 'turmas atendidas pela parceria'
+  if (partes.length === 1) return `turmas ${partes[0]}`
+  return `turmas ${partes.slice(0, -1).join(', ')} e ${partes[partes.length - 1]}`
+}
+
+const getPropostaSegmentosList = (p: Proposta): string[] => {
+  const list: string[] = []
+  if (p.seg_infantil) list.push('Infantil')
+  if (p.seg_fundamental_1) list.push('Fund. I')
+  if (p.seg_fundamental_2) list.push('Fund. II')
+  if (p.seg_ensino_medio) list.push('Ensino Médio')
+
+  // Fallback para propostas legadas
+  if (list.length === 0) {
+    if (p.segmentos === 1) return ['Fund. I']
+    if (p.segmentos === 2) return ['Fund. I', 'Fund. II']
+    if (p.segmentos === 3) return ['Fund. I', 'Fund. II', 'Ensino Médio']
+    if (p.segmentos === 4) return ['Infantil', 'Fund. I', 'Fund. II', 'Ensino Médio']
+  }
+  return list
+}
+
+// Capas reais dos livros Kairós (extraídas do plano de negócio em lp_wemake),
+// uma por segmento — mostradas dinamicamente conforme os segmentos da proposta.
+const CAPA_POR_SEGMENTO: Record<string, string> = {
+  'Infantil':      '/proposta/capas-livros/infantil-5.jpg',
+  'Fund. I':       '/proposta/capas-livros/1ano-ef.jpg',
+  'Fund. II':      '/proposta/capas-livros/6ano.jpg',
+  'Ensino Médio':  '/proposta/capas-livros/1ano-em.jpg',
+}
+
+const formatPropostaSegmentosLabel = (list: string[]): string => {
+  if (list.length === 0) return 'Nenhum segmento'
+  if (list.length === 1) return list[0]
+  if (list.length === 2) return `${list[0]} e ${list[1]}`
+  
+  if (list.includes('Fund. I') && list.includes('Fund. II') && list.includes('Ensino Médio') && list.includes('Infantil')) {
+    return 'Infantil, Fund. I, II e Ensino Médio'
+  }
+  if (list.includes('Fund. I') && list.includes('Fund. II') && list.includes('Ensino Médio') && !list.includes('Infantil')) {
+    return 'Fund. I, II e Ensino Médio'
+  }
+  if (list.includes('Infantil') && list.includes('Fund. I') && list.includes('Fund. II') && !list.includes('Ensino Médio')) {
+    return 'Infantil, Fund. I e Fund. II'
+  }
+
+  return `${list.slice(0, -1).join(', ')} e ${list[list.length - 1]}`
+}
+
+// ── exact site colors ─────────────────────────────────────────────────────────
+const C = {
+  navy:    '#0b1f44',
+  royal:   '#4c8ade',
+  royalD:  '#2a69ba',
+  mint:    '#76f3cd',
+  mintD:   '#27a884',
+  amber:   '#ffcc00',
+  white:   '#ffffff',
+  ivory:   '#f8fafc',
+}
+
+// ── types ─────────────────────────────────────────────────────────────────────
+interface Proposta {
+  id: string; token: string
+  escola_nome: string; escola_logo_url: string | null
+  tipo: 'curriculo' | 'curriculo_comodato'
+  validade: string; num_alunos: number; segmentos: number
+  valor_aluno_ano: number; num_parcelas: number; duracao_meses: number
+  num_parcelas_curriculo: number | null
+  valor_aluno_ano_comodato: number | null
+  comodato_pv: number | null; comodato_parcela: number | null
+  comodato_retorno_pct: number | null; comodato_notebooks: number | null
+  dados_calculo: Record<string, unknown>; texto_personalizado: string | null
+  created_at: string
+  seg_infantil?: boolean
+  seg_fundamental_1?: boolean
+  seg_fundamental_2?: boolean
+  seg_ensino_medio?: boolean
+}
+
+// ── glow orb ─────────────────────────────────────────────────────────────────
+function Glow({ color, size, style }: { color: string; size: number; style?: React.CSSProperties }) {
+  return (
+    <div aria-hidden style={{
+      position: 'absolute', width: size, height: size, borderRadius: '50%',
+      background: `radial-gradient(circle at center, ${color} 0%, transparent 70%)`,
+      pointerEvents: 'none', ...style,
+    }} />
+  )
+}
+
+// ── wave SVG divider (bottom of section) ─────────────────────────────────────
+function Wave({ fill, flip = false }: { fill: string; flip?: boolean }) {
+  return (
+    <div aria-hidden style={{ position: 'absolute', bottom: flip ? 'auto' : 0, top: flip ? 0 : 'auto', left: 0, right: 0, lineHeight: 0, transform: flip ? 'scaleY(-1)' : 'none', zIndex: 3 }}>
+      <svg viewBox="0 0 1440 64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{ width: '100%', height: 64, display: 'block' }}>
+        <path d="M0,32 C240,64 480,0 720,40 C960,80 1200,8 1440,32 L1440,64 L0,64 Z" fill={fill} />
+      </svg>
+    </div>
+  )
+}
+
+// ── aurora blob ───────────────────────────────────────────────────────────────
+function Aurora({ color1, color2, style }: { color1: string; color2: string; style?: React.CSSProperties }) {
+  return (
+    <div aria-hidden style={{
+      position: 'absolute', width: 520, height: 520, borderRadius: '62% 38% 47% 53% / 45% 60% 40% 55%',
+      background: `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`,
+      opacity: 0.12, filter: 'blur(1px)',
+      animation: 'aurora 20s ease-in-out infinite',
+      pointerEvents: 'none',
+      ...style,
+    }} />
+  )
+}
+
+// ── eyebrow label (exact site pattern) ───────────────────────────────────────
+function Eyebrow({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
+  return (
+    <p style={{
+      fontFamily: 'Geist, sans-serif', fontWeight: 700,
+      fontSize: 'clamp(0.7rem, 0.68rem + 0.1vw, 0.75rem)',
+      textTransform: 'uppercase', letterSpacing: '0.22em',
+      color: dark ? C.royal : C.mint,
+      marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+    }}>
+      <span style={{ display: 'inline-block', width: 22, height: 1.5, background: dark ? C.royal : C.mint, opacity: 0.7, borderRadius: 1 }} />
+      {children}
+    </p>
+  )
+}
+
+// ── animated counter ──────────────────────────────────────────────────────────
+function Counter({ to, suffix = '', duration = 1400 }: { to: number; suffix?: string; duration?: number }) {
+  const imprimir = useContext(PrintModeContext)
+  const [val, setVal] = useState(imprimir ? to : 0)
+  const ref = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    if (imprimir) return
+    const el = ref.current; if (!el) return
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; obs.disconnect()
+      const start = performance.now()
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / duration, 1)
+        setVal(Math.round((1 - Math.pow(1 - p, 3)) * to))
+        if (p < 1) requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    }, { threshold: 0.3 })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [to, duration, imprimir])
+  return <span ref={ref}>{val.toLocaleString('pt-BR')}{suffix}</span>
+}
+
+// ── fade-in on scroll (site's Reveal pattern) ─────────────────────────────────
+// ── status badge para a tabela ────────────────────────────────────────────────
+const STATUS_STYLE: Record<string, { bg: string; color: string; dot: string }> = {
+  'Obrigatório': { bg: 'rgba(11,31,68,0.08)',    color: '#0b1f44', dot: '#0b1f44' },
+  'Recomendado': { bg: 'rgba(76,138,222,0.10)',  color: '#2a69ba', dot: '#4c8ade' },
+  'Opcional':    { bg: 'rgba(148,163,184,0.15)', color: '#64748b', dot: '#94a3b8' },
+}
+
+function TableRow({ row, delay, catColor, pct }: { row: { req: string; spec: string; status: string }; delay: number; catColor: string; pct?: string }) {
+  const imprimir = useContext(PrintModeContext)
+  const ref = useRef<HTMLDivElement>(null)
+  const [vis, setVis] = useState(imprimir)
+  useEffect(() => {
+    if (imprimir) return
+    const el = ref.current; if (!el) return
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVis(true); obs.disconnect() }
+    }, { threshold: 0.1 })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [imprimir])
+  const st = STATUS_STYLE[row.status] ?? STATUS_STYLE['Opcional']
+  // modo "custo" (quando pct está presente): 3 colunas sem badge de status
+  if (pct !== undefined) {
+    return (
+      <>
+        <div ref={ref} className="pv-table-desktop" style={{
+          display: 'grid', gridTemplateColumns: '2fr 1fr 1fr',
+          padding: '9px 24px', gap: 12,
+          borderTop: '1px solid rgba(11,31,68,0.05)',
+          alignItems: 'center',
+          opacity: vis ? 1 : 0,
+          transform: vis ? 'none' : 'translateX(-16px)',
+          transition: `opacity 0.55s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.55s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+          background: 'transparent',
+        }}
+        onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(76,138,222,0.04)' }}
+        onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
+        >
+          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', fontWeight: 500, color: '#334155', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ width: 3, height: 12, borderRadius: 2, background: catColor, display: 'inline-block', flexShrink: 0 }} />
+            {row.req}
+          </span>
+          <span style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-sm)', fontWeight: 600, color: '#2d284a', textAlign: 'right' }}>{row.spec}</span>
+          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: '#94a3b8', textAlign: 'right' }}>{pct}</span>
+        </div>
+        {/* versão mobile — item + valor numa linha, % embaixo */}
+        <div className="pv-table-mobile" style={{ flexDirection: 'column', gap: 2, padding: '9px 24px', borderTop: '1px solid rgba(11,31,68,0.05)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', fontWeight: 500, color: '#334155', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 3, height: 12, borderRadius: 2, background: catColor, display: 'inline-block', flexShrink: 0 }} />
+              {row.req}
+            </span>
+            <span style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-sm)', fontWeight: 600, color: '#2d284a', whiteSpace: 'nowrap' }}>{row.spec}</span>
+          </div>
+          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', color: '#94a3b8', paddingLeft: 11 }}>{pct}</span>
+        </div>
+      </>
+    )
+  }
+  return (
+    <div ref={ref} style={{
+      display: 'grid', gridTemplateColumns: '2fr 3fr 1fr',
+      padding: '9px 20px', gap: 12,
+      borderTop: '1px solid rgba(11,31,68,0.05)',
+      alignItems: 'center',
+      opacity: vis ? 1 : 0,
+      transform: vis ? 'none' : 'translateX(-16px)',
+      transition: `opacity 0.55s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.55s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+      background: 'transparent',
+    }}
+    onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(76,138,222,0.04)' }}
+    onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
+    >
+      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', fontWeight: 600, color: '#2d284a', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ width: 3, height: 14, borderRadius: 2, background: catColor, display: 'inline-block', flexShrink: 0 }} />
+        {row.req}
+      </span>
+      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.45 }}>{row.spec}</span>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 9px', borderRadius: 99, background: st.bg, fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, color: st.color, textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
+        <span style={{ width: 5, height: 5, borderRadius: '50%', background: st.dot, display: 'inline-block' }} />
+        {row.status}
+      </span>
+    </div>
+  )
+}
+
+// ── fade-in on scroll (site's Reveal pattern) ─────────────────────────────────
+function Reveal({ children, delay = 0, style }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties }) {
+  const imprimir = useContext(PrintModeContext)
+  const ref = useRef<HTMLDivElement>(null)
+  const [vis, setVis] = useState(imprimir)
+  useEffect(() => {
+    if (imprimir) return
+    const el = ref.current; if (!el) return
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVis(true); obs.disconnect() }
+    }, { threshold: 0.08 })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [imprimir])
+  return (
+    <div ref={ref} style={{
+      opacity: vis ? 1 : 0,
+      transform: vis ? 'none' : 'translateY(24px)',
+      transition: `opacity 0.72s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.72s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+      ...style,
+    }}>
+      {children}
+    </div>
+  )
+}
+
+// ── monochromatic SVG icons ───────────────────────────────────────────────────
+const I = {
+  book:    (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
+  book2:   (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
+  screen:  (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>,
+  users:   (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  bolt:    (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+  clock:   (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+  chat:    (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  home:    (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+  check:   (c='currentColor') => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  x:       (c='currentColor') => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  arrow:   (c='currentColor') => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>,
+  tag:     (c='currentColor') => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>,
+  insta:   (c='currentColor') => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
+  mail:    (c='currentColor') => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
+  phone:   (c='currentColor') => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  globe:   (c='currentColor') => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+  laptop:  (c='currentColor') => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M2 20h20"/></svg>,
+}
+
+// ── countdown hook ────────────────────────────────────────────────────────────
+type Tick = { days: number; hours: number; minutes: number; seconds: number; expired: boolean }
+
+function useCountdown(targetDate: string, imprimir: boolean): Tick | null {
+  const [tick, setTick] = useState<Tick | null>(null)
+  useEffect(() => {
+    const calcDiff = (): Tick => {
+      const diff = Math.max(0, new Date(targetDate + 'T23:59:59').getTime() - Date.now())
+      return {
+        days:    Math.floor(diff / 86_400_000),
+        hours:   Math.floor((diff % 86_400_000) / 3_600_000),
+        minutes: Math.floor((diff % 3_600_000)  / 60_000),
+        seconds: Math.floor((diff % 60_000)      / 1_000),
+        // Exportação em PDF é registro interno — mostra sempre como válida,
+        // mesmo que a validade real já tenha passado (mesma regra de isExpired
+        // na página, só que aplicada aqui porque o contador calcula seu
+        // próprio "expirada" direto da data, sem depender daquele prop).
+        expired: !imprimir && diff === 0,
+      }
+    }
+    setTick(calcDiff())
+    const id = setInterval(() => setTick(calcDiff()), 1_000)
+    return () => clearInterval(id)
+  }, [targetDate, imprimir])
+  return tick
+}
+
+// ── main ──────────────────────────────────────────────────────────────────────
+export default function PropostaView({ proposta: p, isExpired, imprimir }: { proposta: Proposta; isExpired: boolean; imprimir?: boolean }) {
+  const [active, setActive] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const sectionRefs = useRef<(HTMLElement | null)[]>([])
+
+  const countdown = useCountdown(p.validade, !!imprimir)
+
+  // Exportação em PDF (rota interna /comercial/propostas/[id]/pdf): dispara o
+  // diálogo de impressão do navegador sozinho, depois que fontes/imagens
+  // carregaram — o próprio usuário confirma "Salvar como PDF".
+  useEffect(() => {
+    if (!imprimir) return
+    let cancelado = false
+    const disparar = () => { if (!cancelado) setTimeout(() => window.print(), 500) }
+    if (document.fonts?.ready) document.fonts.ready.then(disparar)
+    else disparar()
+    return () => { cancelado = true }
+  }, [imprimir])
+
+  const hasComodato = p.tipo === 'curriculo_comodato'
+  const totalAnual   = p.valor_aluno_ano * p.num_alunos
+  const mensalComd   = p.comodato_parcela ?? 0
+  const descPct      = Math.max(0, Math.round((1 - p.valor_aluno_ano / 420) * 100))
+  // Valor por aluno/ano do cenário Currículo + Comodato — usa o valor editado na
+  // calculadora quando existir; propostas antigas (sem esse campo) caem no cálculo
+  // anualizado a partir da parcela do comodato.
+  const valorAlunoAnoComodato = p.valor_aluno_ano_comodato ?? ((totalAnual / 12 + mensalComd) * 12 / (p.num_alunos || 1))
+  // Parcelamento do lado "Somente Currículo" — independente do parcelamento
+  // fixo em 12x do Comodato (p.num_parcelas), que é sempre mensal.
+  const numParcelasCurriculo = p.num_parcelas_curriculo || 5
+
+  // Itens reais do comodato vindos do dados_calculo (espelha tabela editável da calculadora)
+  type ComItem = { nome: string; qty: number; unit: number; qtyReal?: number; fixedQty?: boolean; total: number; nota?: string }
+  const comData = (p.dados_calculo as Record<string, Record<string, unknown>>)?.com ?? {}
+  const comItens: ComItem[] = (comData.itens as ComItem[] | undefined) ?? []
+  const comItensDisplay = comItens  // todos os itens, incluindo notebooks
+  const sumEquip = comItens.reduce((s, it) => s + it.total, 0)
+  const sumDisplay = sumEquip
+
+  // Preço do 2º ano negociado à parte (casos específicos) — quando presente,
+  // aparece como referência abaixo do valor principal exatamente como
+  // digitado na calculadora, com "+ IPCA" ao lado (não é pré-calculado: o
+  // reajuste real só é aplicado quando o 2º ano efetivamente ocorrer). Em
+  // branco na calculadora, não aparece nada (comportamento padrão de hoje).
+  const dadosCalculo = p.dados_calculo as Record<string, unknown>
+  const precoSegundoAnoCustom = (dadosCalculo?.precoSegundoAnoCustom as number | null) ?? null
+  const valorAno2 = precoSegundoAnoCustom != null && precoSegundoAnoCustom > 0
+    ? precoSegundoAnoCustom
+    : null
+
+  const sections = [
+    'capa', 'carta', 'div1', 'config', 'escopo',
+    ...(hasComodato
+      ? ['div2', 'maker-intro', 'modelo1', 'modelo2', 'consumiveis', 'investimento', 'resumo']
+      : ['maker-assessoria', 'consumiveis', 'investimento']),
+    'contato',
+  ]
+
+  const scrollTo = useCallback((i: number) => {
+    sectionRefs.current[i]?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    const container = containerRef.current; if (!container) return
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = sectionRefs.current.indexOf(e.target as HTMLElement)
+          if (idx >= 0) setActive(idx)
+        }
+      })
+    }, { root: container, threshold: 0.15 })
+    sectionRefs.current.forEach(el => el && obs.observe(el))
+    return () => obs.disconnect()
+  }, [])
+
+  const sec = (i: number) => (el: HTMLElement | null) => { sectionRefs.current[i] = el }
+
+  // ── expired ──
+  if (isExpired) return (
+    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: C.navy, gap: 20, padding: 40, textAlign: 'center' }}>
+      <img src="/proposta/logo-white.png" alt="Kairós" style={{ height: 40, marginBottom: 8 }} />
+      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-3xl)', color: C.white, fontWeight: 300 }}>Proposta expirada</h1>
+      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', color: 'rgba(255,255,255,.45)', maxWidth: 380, lineHeight: 1.7 }}>
+        Esta proposta não está mais disponível. Entre em contato para renovar.
+      </p>
+      <a href="mailto:contato@kairos.com.br" className="btn-primary" style={{ marginTop: 8 }}>contato@kairos.com.br</a>
+    </div>
+  )
+
+  return (
+    <PrintModeContext.Provider value={!!imprimir}>
+    <div className="pv-root" style={{ position: 'relative', height: '100dvh', overflow: 'hidden', background: C.navy }}>
+
+      {/* progress bar */}
+      <div className="pv-progress" style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 2, zIndex: 200, background: 'rgba(255,255,255,0.06)' }}>
+        <div style={{ height: '100%', background: `linear-gradient(90deg,${C.royal},${C.mint})`, width: `${((active + 1) / sections.length) * 100}%`, transition: 'width 0.5s cubic-bezier(0.16,1,0.3,1)' }} />
+      </div>
+
+      {/* nav dots */}
+      <nav aria-label="Navegação" className="pv-navdots" style={{ position: 'fixed', right: 20, top: '50%', transform: 'translateY(-50%)', zIndex: 200, display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {sections.map((_, i) => (
+          <button key={i} onClick={() => scrollTo(i)} aria-label={`Ir para seção ${i + 1}`} style={{
+            width: i === active ? 10 : 6, height: i === active ? 10 : 6,
+            borderRadius: '50%', border: 'none', cursor: 'pointer', padding: 0,
+            background: i === active ? C.mint : 'rgba(255,255,255,0.28)',
+            boxShadow: i === active ? `0 0 10px ${C.mint}` : 'none',
+            transition: 'all 0.3s cubic-bezier(0.16,1,0.3,1)',
+          }} />
+        ))}
+      </nav>
+
+      {/* scroll container */}
+      <div ref={containerRef} className="pv-scroll" style={{ height: '100dvh', overflowY: 'scroll', scrollSnapType: 'y proximity', scrollBehavior: 'smooth' }}>
+
+        {/* ══════════════════════════════════════════════════════════════
+            0 · CAPA  — layout fiel ao PDF, visual Kairós
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={sec(0)} className="pv-section" style={{ scrollSnapAlign: 'start', height: '100dvh', display: 'flex', flexDirection: 'column', background: '#fff', overflow: 'hidden', position: 'relative' }}>
+
+          {/* topo: 2 colunas */}
+          <div className="pv-hero-top" style={{ display: 'flex', flex: '0 0 clamp(44%,48%,54%)', minHeight: 0 }}>
+
+            {/* esquerda — royal blue */}
+            <div className="pv-hero-royal" style={{ width: '42%', background: C.royal, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'var(--gutter) var(--gutter) clamp(36px,5vw,56px)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg,${C.royal},${C.royalD})` }} />
+              <Glow color="rgba(118,243,205,0.2)" size={320} style={{ bottom: -80, right: -80 }} />
+              <Aurora color1="rgba(118,243,205,0.15)" color2="rgba(42,105,186,0.08)" style={{ bottom: -160, right: -160 }} />
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                <p style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.62rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)', marginBottom: 16 }}>
+                  PROPOSTA DE PARCERIA
+                </p>
+                <h1 style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-4xl)', color: '#fff', lineHeight: 1.08, textTransform: 'uppercase', letterSpacing: '-0.01em', textWrap: 'balance' } as React.CSSProperties}>
+                  {p.escola_nome}
+                </h1>
+                <div style={{ marginTop: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 32, height: 3, background: C.mint, borderRadius: 2 }} />
+                  <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: C.mint, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600 }}>Kairós</span>
+                </div>
+              </div>
+            </div>
+
+            {/* direita — logo escola */}
+            <div className="pv-hero-logo" style={{ flex: 1, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(12px,2vw,24px)', borderBottom: '1px solid rgba(226,232,240,0.7)' }}>
+              {p.escola_logo_url
+                ? <img src={p.escola_logo_url} alt={p.escola_nome} style={{ width: '78%', height: '78%', objectFit: 'contain' }} />
+                : <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-5xl)', color: C.navy, opacity: 0.15 }}>{p.escola_nome.charAt(0)}</div>
+              }
+            </div>
+          </div>
+
+          {/* baixo — foto de fundo */}
+          <div className="pv-hero-photo" style={{ flex: 1, position: 'relative', overflow: 'hidden', background: C.navy }}>
+            <img
+              src="/proposta/foto_propostacomercial.png"
+              alt=""
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center' }}
+            />
+            <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(180deg,rgba(11,31,68,0.55) 0%,transparent 30%,transparent 70%,rgba(11,31,68,0.75) 100%)` }} />
+            <Glow color="rgba(118,243,205,0.14)" size={400} style={{ bottom: -100, left: -80 }} />
+
+            {/* Kairós logo + validade/scroll — uma única barra flex (evita
+                sobreposição: em vez de dois elementos absolutos independentes
+                que dependiam de não colidir por acaso, agora dividem o mesmo
+                espaço com justify-content/gap reais). */}
+            <div className="pv-hero-bottom-bar" style={{ position: 'absolute', bottom: 28, left: 'var(--gutter)', right: 'var(--gutter)', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16 }}>
+              <img src="/proposta/logo-white.png" alt="Kairós" style={{ height: 36, objectFit: 'contain', flexShrink: 0 }} />
+
+              <div className="pv-hero-countdown" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
+                <div style={{ background: 'rgba(255,204,0,0.1)', border: '1px solid rgba(255,204,0,0.3)', borderRadius: 12, padding: '8px 14px', textAlign: 'right' }}>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.56rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,204,0,0.55)', marginBottom: 4 }}>
+                    {countdown?.expired ? 'Proposta expirada' : 'Proposta válida por'}
+                  </p>
+                  {countdown?.expired ? (
+                    <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: '0.9rem', color: '#f87171', lineHeight: 1 }}>Expirada</p>
+                  ) : (
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'baseline', justifyContent: 'flex-end' }}>
+                      {([
+                        { v: countdown?.days,    u: 'd' },
+                        { v: countdown?.hours,   u: 'h' },
+                        { v: countdown?.minutes, u: 'm' },
+                        { v: countdown?.seconds, u: 's' },
+                      ] as { v: number | undefined; u: string }[]).map(({ v, u }) => (
+                        <span key={u} style={{ fontFamily: 'Geist Mono, monospace', fontSize: '0.9rem', fontWeight: 700, color: C.amber, lineHeight: 1 }}>
+                          {v !== undefined ? String(v).padStart(2, '0') : '--'}<span style={{ fontSize: '0.55rem', color: 'rgba(255,204,0,0.5)', marginLeft: 1 }}>{u}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.56rem', color: 'rgba(255,204,0,0.4)', marginTop: 3 }}>
+                    até {fmtDate(p.validade)}
+                  </p>
+                </div>
+                <button onClick={() => scrollTo(1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', letterSpacing: '0.14em' }}>
+                  DESLIZAR
+                  <span style={{ animation: 'bob 1.8s ease-in-out infinite', display: 'block' }}>{I.arrow()}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* disclaimer — só no desktop; no mobile some pra faixa própria abaixo
+                (ver .pv-hero-mobile-footer), pra não brigar com a foto por espaço/contraste. */}
+            <p className="pv-hero-disclaimer-desktop" style={{ position: 'absolute', top: 14, left: 0, right: 0, textAlign: 'center', fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: 'rgba(255,255,255,0.28)', padding: '0 clamp(16px,8vw,48px)', letterSpacing: '0.04em' }}>
+              Esta proposta é confidencial e deve ser tratada com sigilo.
+            </p>
+          </div>
+
+          {/* Faixa de rodapé só-mobile — fundo sólido em vez de sobrepor texto na
+              foto. Substitui o contador dramático (que não cabia sem se sobrepor)
+              por uma validade simples, e traz o aviso de confidencialidade pra um
+              lugar legível. Escondida no desktop (ver .pv-hero-mobile-footer). */}
+          <div className="pv-hero-mobile-footer" style={{ background: C.navy, padding: '16px var(--gutter)', textAlign: 'center' }}>
+            <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', fontWeight: 600, color: countdown?.expired ? '#f87171' : C.mint, letterSpacing: '0.04em', marginBottom: 4 }}>
+              {countdown?.expired ? 'Proposta expirada' : `Proposta válida até ${fmtDate(p.validade)}`}
+            </p>
+            <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.02em' }}>
+              Confidencial — trate com sigilo.
+            </p>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════
+            1 · CARTA CEO  — minimalista: foto circular + texto limpo
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={sec(1)} className="pv-section pv-row" style={{ scrollSnapAlign: 'start', height: '100dvh', display: 'flex', alignItems: 'stretch', background: C.ivory, overflow: 'hidden', position: 'relative' }}>
+          <Glow color="rgba(76,138,222,0.05)" size={600} style={{ top: -100, right: -100 }} />
+          <Glow color="rgba(118,243,205,0.04)" size={400} style={{ bottom: -80, left: -80 }} />
+
+          {/* coluna esquerda — foto circular centralizada */}
+          <div className="pv-media-auto" style={{ width: 'clamp(260px,34%,420px)', flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24, padding: 'clamp(40px,6vh,64px) clamp(20px,3vw,40px)' }}>
+            {/* composição circular */}
+            <div style={{ position: 'relative', width: 'clamp(200px,20vw,280px)', height: 'clamp(200px,20vw,280px)', flexShrink: 0 }}>
+              {/* círculo azul de fundo */}
+              <div style={{ position: 'absolute', width: '92%', height: '92%', borderRadius: '50%', background: C.royal, top: '4%', left: '4%' }} />
+              {/* círculo accent teal */}
+              <div style={{ position: 'absolute', width: '36%', height: '36%', borderRadius: '50%', background: C.mint, top: '-8%', left: '-10%', opacity: 0.9 }} />
+              {/* foto circular */}
+              <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', overflow: 'hidden', boxShadow: '0 8px 40px rgba(11,31,68,0.15)' }}>
+                <img src="/proposta/denis_ceo.png" alt="Denis Júlio" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+              </div>
+            </div>
+            {/* nome colado abaixo da foto */}
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.05rem', color: C.navy, fontWeight: 600, fontStyle: 'italic', lineHeight: 1.2, marginBottom: 4 }}>Denis Júlio</p>
+              <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: C.royal, letterSpacing: '0.12em', textTransform: 'uppercase' }}>CEO · Kairós</p>
+            </div>
+          </div>
+
+          {/* divisor vertical */}
+          <div className="pv-divider-v" style={{ width: 1, background: 'rgba(11,31,68,0.07)', margin: '56px 0', flexShrink: 0 }} />
+
+          {/* coluna direita — carta usando toda a altura */}
+          <div className="pv-stack-gap" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 'clamp(48px,7vh,80px) clamp(24px,3vw,56px)', position: 'relative', zIndex: 2, overflow: 'auto' }}>
+            {/* topo: eyebrow + saudação */}
+            <div>
+              <Reveal>
+                <Eyebrow dark>Carta do CEO</Eyebrow>
+                <h2 style={{ fontFamily: 'Fraunces, serif', fontWeight: 400, fontSize: 'var(--text-3xl)', color: C.navy, marginBottom: 0, lineHeight: 1.2, letterSpacing: '-0.015em', textWrap: 'balance' } as React.CSSProperties}>
+                  Prezado(a) gestor(a) de <em style={{ color: C.royal }}>{p.escola_nome}</em>,
+                </h2>
+              </Reveal>
+            </div>
+
+            {/* meio: parágrafos espaçados */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(14px,2.2vh,22px)' }}>
+              <Reveal delay={100}>
+                <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.8 }}>
+                  {p.texto_personalizado
+                    ? p.texto_personalizado
+                    : `A Kairós é uma editora de soluções tecnológicas para escolas confessionais, criada com o objetivo de pensar, estudar, ensinar e desenvolver tecnologia a partir da Cosmovisão Cristã. Somos referência no compromisso da educação escolar distintamente cristã, que prima pela Verdade, Beleza e Bondade.`
+                  }
+                </p>
+              </Reveal>
+              <Reveal delay={160}>
+                <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.8 }}>
+                  Atuamos como parceira de escolas que desejam oferecer aos seus estudantes uma formação tecnológica consistente, organizada curricularmente e acompanhada com intencionalidade pedagógica. Nossa proposta não se limita ao fornecimento de aulas ou materiais: trabalhamos com currículo estruturado, formação docente, acompanhamento contínuo, orientação de implantação e apoio à organização do espaço maker, de modo coerente e com fidelidade à Cosmovisão Cristã.
+                </p>
+              </Reveal>
+              <Reveal delay={220}>
+                <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.8 }}>
+                  É com grande gratidão que agradecemos à <strong style={{ color: C.navy }}>{p.escola_nome}</strong> pela oportunidade de considerar a Kairós como uma parceira estratégica para enriquecer o trabalho pedagógico envolvendo a tecnologia e a cultura maker.
+                </p>
+              </Reveal>
+              <Reveal delay={280}>
+                <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.8 }}>
+                  Valorizamos profundamente o compromisso da sua escola com a inovação educacional e estamos entusiasmados com a possibilidade de colaborar para promover experiências de aprendizagem criativas e significativas, mas sem abrir mão dos princípios e valores cristãos.
+                </p>
+              </Reveal>
+            </div>
+
+            {/* base: assinatura */}
+            <Reveal delay={340}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <div style={{ width: 28, height: 2, background: C.royal, borderRadius: 1, opacity: 0.35 }} />
+                <div>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 3 }}>Com gratidão,</p>
+                  <p style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-2xl)', color: C.navy, fontWeight: 600, fontStyle: 'italic', lineHeight: 1.1, marginBottom: 2 }}>Denis Júlio</p>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.7rem', color: C.royal }}>CEO — Kairós Tecnologia Educacional</p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════
+            2 · DIVISÓRIA — tone: navy
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={sec(2)} className="pv-section" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.navy, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+          <Glow color="rgba(76,138,222,0.22)" size={600} style={{ top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+          <Aurora color1="rgba(118,243,205,0.1)" color2="rgba(76,138,222,0.12)" style={{ top: -200, right: -200 }} />
+          <div aria-hidden style={{ position: 'absolute', inset: 0, fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'clamp(160px,30vw,320px)', color: 'rgba(76,138,222,0.045)', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1, userSelect: 'none', letterSpacing: '-0.04em' }}>01</div>
+          <div aria-hidden style={{ position: 'absolute', width: '100%', height: 1, background: `linear-gradient(90deg,transparent,rgba(76,138,222,0.4),rgba(118,243,205,0.4),transparent)`, top: '50%' }} />
+          <Reveal style={{ textAlign: 'center', position: 'relative', zIndex: 2, padding: 48 }}>
+            <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.22em', color: C.mint, textTransform: 'uppercase', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+              <span style={{ width: 28, height: 1, background: C.mint, opacity: 0.6, display: 'inline-block' }} />PARTE 1<span style={{ width: 28, height: 1, background: C.mint, opacity: 0.6, display: 'inline-block' }} />
+            </p>
+            <h2 className="text-gradient-cinematic" style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 300, fontSize: 'var(--text-5xl)', lineHeight: 1.05, marginBottom: 16, letterSpacing: '-0.025em', textWrap: 'balance' } as React.CSSProperties}>
+              Proposta de Parceria
+            </h2>
+            <p style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: 'var(--text-lg)', color: C.royal, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              Currículo Kairós
+            </p>
+          </Reveal>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════
+            3 · CONFIGURAÇÃO — tone: navy
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={sec(3)} className="pv-section pv-row" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.navy, display: 'flex', alignItems: 'stretch', overflow: 'hidden', position: 'relative' }}>
+          <Glow color="rgba(118,243,205,0.1)" size={560} style={{ top: -140, left: -100 }} />
+          <Glow color="rgba(76,138,222,0.15)" size={440} style={{ bottom: -80, left: 200 }} />
+          <Aurora color1="rgba(76,138,222,0.07)" color2="rgba(118,243,205,0.05)" style={{ top: -160, right: -80 }} />
+
+          {/* coluna conteúdo — esquerda, sem scroll */}
+          <div className="pv-stack-gap" style={{ flex: 1, position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 'clamp(32px,5vh,52px) var(--gutter)', overflow: 'hidden' }}>
+
+            {/* topo: eyebrow + título + subtexto */}
+            {(() => {
+              const segsList = getPropostaSegmentosList(p)
+              const segsCount = segsList.length || p.segmentos || 1
+              const segsLabelText = formatPropostaSegmentosLabel(segsList)
+
+              return (
+                <>
+                  <Reveal>
+                    <Eyebrow>Objetivo da Parceria</Eyebrow>
+                    <h2 style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: C.white, marginBottom: 8, letterSpacing: '-0.02em', lineHeight: 1.05, textWrap: 'balance' } as React.CSSProperties}>
+                      Configuração considerada
+                    </h2>
+                    <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', maxWidth: 520, lineHeight: 1.6 }}>
+                      Atendimento a <strong style={{ color: C.mint }}>{p.num_alunos.toLocaleString('pt-BR')} alunos</strong> em <strong style={{ color: C.mint }}>{segsCount} {segsCount === 1 ? 'segmento' : 'segmentos'} ({segsLabelText})</strong>, pelo prazo de <strong style={{ color: C.mint }}>{p.duracao_meses} meses</strong>.
+                    </p>
+                  </Reveal>
+
+                  {/* 3 stat cards */}
+                  <Reveal delay={80}>
+                    <div className="pv-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+                      {[
+                        { icon: I.users(), label: 'Alunos',    val: p.num_alunos,      suffix: '',       note: 'alunos no escopo' },
+                        { icon: I.book(),  label: 'Segmentos', val: segsCount,        suffix: '',       note: segsLabelText },
+                        { icon: I.clock(), label: 'Duração',   val: p.duracao_meses,   suffix: ' meses', note: `${p.duracao_meses / 12} anos de contrato` },
+                      ].map((s, i) => (
+                        <div key={s.label} style={{ borderRadius: 18, padding: '20px 22px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}>
+                          <div style={{ color: C.mint, marginBottom: 10 }}>{s.icon}</div>
+                          <div style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: 'rgba(255,255,255,0.35)', marginBottom: 6 }}>{s.label}</div>
+                          <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-4xl)', color: C.white, lineHeight: 1, marginBottom: 4 }}>
+                            <Counter to={s.val} suffix={s.suffix} />
+                          </div>
+                          <div style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)' }}>{s.note}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </Reveal>
+                </>
+              )
+            })()}
+
+            {/* incluído / não incluído — cards destacados */}
+            <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              <Reveal delay={200}>
+                <div style={{ borderRadius: 18, padding: '18px 22px', background: 'rgba(118,243,205,0.06)', border: '1px solid rgba(118,243,205,0.22)', height: '100%' }}>
+                  <div style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.6rem', color: C.mint, textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    {I.check(C.mint)} Incluído
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px' }}>
+                    {['Currículo completo anual', 'Livro Maker do aluno', 'Plataforma digital', 'Acompanhamento pedagógico', 'Formação docente contínua', 'Onboarding presencial', 'Suporte contínuo', 'Memorial descritivo'].map(item => (
+                      <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, padding: '5px 0', borderBottom: '1px solid rgba(118,243,205,0.08)' }}>
+                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: C.mint, flexShrink: 0, marginTop: 5 }} />
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.73rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.35 }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+              <Reveal delay={300}>
+                <div style={{ borderRadius: 18, padding: '18px 22px', background: 'rgba(252,165,165,0.05)', border: '1px solid rgba(252,165,165,0.18)', height: '100%' }}>
+                  <div style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.6rem', color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    {I.x('#fca5a5')} Não incluído
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {['Visitas presenciais extras', 'Formações extraordinárias', 'Personalizações fora do escopo padrão', 'Produção de materiais adicionais não previstos', 'Aquisição de kits, insumos, máquinas, ferramentas ou equipamentos'].map(item => (
+                      <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, padding: '6px 0', borderBottom: '1px solid rgba(252,165,165,0.08)' }}>
+                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#fca5a5', flexShrink: 0, marginTop: 5, opacity: 0.7 }} />
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.73rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.35 }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+
+          {/* coluna imagem — direita (capas reais dos livros, por segmento) */}
+          <div className="pv-media" style={{ width: 'clamp(260px,35%,460px)', flexShrink: 0, position: 'relative', zIndex: 2, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.25)' }}>
+            {(() => {
+              const capas = getPropostaSegmentosList(p).map(l => CAPA_POR_SEGMENTO[l]).filter((src): src is string => !!src)
+              if (capas.length === 0) {
+                return <img src="/proposta/livros-wemake.png" alt="Livros Kairós" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} style={{ width: '85%', maxHeight: '85%', objectFit: 'contain', objectPosition: 'center', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }} />
+              }
+              const meio = (capas.length - 1) / 2
+              return (
+                <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '88%', height: '78%' }}>
+                  {capas.map((src, i) => {
+                    const offset = i - meio
+                    return (
+                      <img
+                        key={src} src={src} alt="Capa do Livro Kairós"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                        style={{
+                          width: capas.length === 1 ? '62%' : `${Math.max(38, 58 - capas.length * 4)}%`,
+                          borderRadius: 10, objectFit: 'cover', aspectRatio: '3 / 4',
+                          boxShadow: '0 24px 48px rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.12)',
+                          marginLeft: i === 0 ? 0 : `-${Math.max(6, 14 - capas.length)}%`,
+                          transform: `rotate(${offset * 6}deg) translateY(${Math.abs(offset) * 10}px)`,
+                          position: 'relative', zIndex: 10 - Math.abs(offset),
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+              )
+            })()}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(11,31,68,0.5) 0%, transparent 60%)' }} />
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════
+            4 · ESCOPO — tone: navy (escuro, igual à seção Soluções)
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={sec(4)} className="pv-section pv-row" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.navy, display: 'flex', alignItems: 'stretch', overflow: 'hidden', position: 'relative' }}>
+          <Glow color="rgba(118,243,205,0.14)" size={500} style={{ top: -100, right: -100 }} />
+          <Glow color="rgba(76,138,222,0.18)" size={400} style={{ bottom: -80, left: -100 }} />
+          <Aurora color1="rgba(118,243,205,0.08)" color2="rgba(76,138,222,0.1)" style={{ bottom: -200, right: -80 }} />
+
+          {/* coluna conteúdo — esquerda */}
+          <div className="pv-stack-gap" style={{ flex: 1, position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: 'var(--section-py) var(--gutter)', overflowY: 'auto' }}><div style={{ maxWidth: 700, width: '100%' }}>
+            <Reveal>
+              <Eyebrow>Escopo da Parceria</Eyebrow>
+              <h2 className="text-gradient-cinematic" style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', marginBottom: 8, letterSpacing: '-0.02em', lineHeight: 1.05 }}>
+                Composição da parceria
+              </h2>
+              <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.55)', marginBottom: 6, maxWidth: 560, lineHeight: 1.7 }}>
+                Esta proposta contempla, durante toda a vigência contratual, acesso completo ao ecossistema Kairós:
+              </p>
+              <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.38)', marginBottom: 20, maxWidth: 560, lineHeight: 1.65 }}>
+                Currículo estruturado · Plataforma digital · Livro Maker do Aluno · Onboarding presencial · Acompanhamento pedagógico recorrente · Assessoria tecnológica e teológica · Reuniões com professores e coordenação · Suporte contínuo · Orientação pedagógica da disciplina · Apoio à implantação do espaço maker · Memorial descritivo arquitetônico.
+              </p>
+            </Reveal>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 10 }}>
+              {[
+                { icon: I.book(),   title: 'Currículo Completo',    desc: 'Conteúdo maker anual alinhado à BNCC' },
+                { icon: I.book2(),  title: 'Livro Maker do Aluno',  desc: 'Material físico por estudante' },
+                { icon: I.screen(), title: 'Plataforma Digital',    desc: 'LMS exclusivo com trilhas maker' },
+                { icon: I.users(),  title: 'Formação Docente',      desc: 'Capacitação contínua para professores' },
+                { icon: I.bolt(),   title: 'Onboarding Presencial', desc: 'Implantação com equipe Kairós' },
+                { icon: I.clock(),  title: 'Acompanhamento',        desc: 'Pedagógico, tecnológico e teológico' },
+                { icon: I.chat(),   title: 'Suporte Contínuo',      desc: 'Atendimento durante todo o contrato' },
+                { icon: I.home(),   title: 'Memorial Descritivo',   desc: 'Projeto arquitetônico do espaço maker' },
+              ].map((item, i) => (
+                <Reveal key={item.title} delay={i * 50}>
+                  <div className="surface-glass card-lift" style={{ borderRadius: 14, padding: '15px 16px' }}>
+                    <div style={{ color: C.mint, marginBottom: 10 }}>{item.icon}</div>
+                    <p style={{ fontFamily: 'Geist, sans-serif', fontWeight: 600, fontSize: 'var(--text-sm)', color: C.white, marginBottom: 4, lineHeight: 1.35 }}>{item.title}</p>
+                    <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.5 }}>{item.desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+          </div></div>
+
+          {/* coluna imagem — direita */}
+          <div className="pv-media" style={{ width: 'clamp(280px,36%,460px)', flexShrink: 0, position: 'relative', zIndex: 2, overflow: 'hidden' }}>
+            <img src="/proposta/proposta5.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(11,31,68,0.8) 0%, rgba(11,31,68,0.2) 40%, transparent 70%)' }} />
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════
+            5 · ASSESSORIA SALA MAKER — apenas quando NÃO tem comodato
+        ══════════════════════════════════════════════════════════════ */}
+        {!hasComodato && (
+          <section ref={sec(5)} className="pv-section" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.navy, display: 'flex', alignItems: 'stretch', overflow: 'hidden', position: 'relative' }}>
+            <Glow color="rgba(118,243,205,0.12)" size={560} style={{ top: -120, left: -120 }} />
+            <Glow color="rgba(76,138,222,0.18)" size={420} style={{ bottom: -80, right: -80 }} />
+            <Aurora color1="rgba(76,138,222,0.08)" color2="rgba(118,243,205,0.06)" style={{ top: -180, right: -80 }} />
+
+            {/* layout adaptativo: 2 sub-colunas quando há tabela, coluna+imagem quando não há */}
+            <div className="pv-row" style={{ flex: 1, position: 'relative', zIndex: 2, display: 'flex', alignItems: 'stretch', overflowY: 'auto' }}>
+
+              {/* sub-coluna esquerda — serviços */}
+              <div className="pv-flex-reset pv-stack-gap" style={{ flex: comItensDisplay.length > 0 ? '0 0 42%' : 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 'clamp(32px,5vh,52px) clamp(20px,3vw,40px)' }}>
+                <Reveal>
+                  <Eyebrow>Espaço Maker</Eyebrow>
+                  <h2 style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: C.white, marginBottom: 10, letterSpacing: '-0.02em', lineHeight: 1.05, textWrap: 'balance' } as React.CSSProperties}>
+                    Apoio completo para sua Sala Maker
+                  </h2>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.6)', lineHeight: 1.65 }}>
+                    A Kairós orienta e apoia a escola em todo o processo de planejamento e implantação da Sala Maker.
+                  </p>
+                </Reveal>
+
+                <Reveal delay={100}>
+                  <div style={{ borderRadius: 16, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', padding: '14px 18px' }}>
+                    <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: C.mint, marginBottom: 10 }}>O que a Kairós oferece</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      {[
+                        'Planejamento e orientação para implantação da disciplina',
+                        'Onboarding presencial de implantação',
+                        'Apoio à organização do espaço maker',
+                        'Memorial descritivo (projeto arquitetônico)',
+                        'Acompanhamento pedagógico ao longo da vigência',
+                        'Assessoria tecnológica e teológica para uso do espaço',
+                      ].map((item) => (
+                        <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                          <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.mint, flexShrink: 0, marginTop: 5 }} />
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.76rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.4 }}>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={280}>
+                  <div style={{ padding: '10px 14px', borderLeft: `3px solid ${C.mint}`, background: 'rgba(118,243,205,0.05)', borderRadius: '0 10px 10px 0' }}>
+                    <p style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 300, fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.55 }}>
+                      A aquisição dos equipamentos é de responsabilidade da escola — não está incluída nesta proposta, salvo contratação específica.
+                    </p>
+                  </div>
+                </Reveal>
+              </div>
+
+              {/* sub-coluna direita: tabela de custos OU imagem lateral */}
+              {comItensDisplay.length > 0 ? (
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'clamp(32px,5vh,52px) clamp(20px,3vw,40px) clamp(32px,5vh,52px) 0', overflow: 'hidden' }}>
+                  <Reveal delay={160}>
+                    <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.16em', color: C.mint, marginBottom: 10 }}>
+                      Simulação de custos — referência para aquisição
+                    </p>
+                    <div className="pv-table-desktop" style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      {/* cabeçalho — 5 colunas igual à calculadora */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 0.6fr 1fr 1fr 0.7fr', background: 'rgba(11,31,68,0.7)', padding: '9px 18px', gap: 8 }}>
+                        {['Item', 'Qtd', 'Valor unit.', 'Total', '%'].map((h, i) => (
+                          <span key={h} style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.56rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.4)', textAlign: i > 0 ? 'right' : 'left' }}>{h}</span>
+                        ))}
+                      </div>
+                      {/* linha de total */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 0.6fr 1fr 1fr 0.7fr', padding: '10px 18px', gap: 8, background: 'rgba(118,243,205,0.08)', borderBottom: '2px solid rgba(118,243,205,0.18)' }}>
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.8rem', color: C.white, gridColumn: '1 / 4' }}>TOTAL ESTIMADO</span>
+                        <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '0.8rem', color: C.mint, textAlign: 'right' }}>{R$(sumDisplay)}</span>
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.8rem', color: C.white, fontWeight: 600, textAlign: 'right' }}>100%</span>
+                      </div>
+                      {/* linhas de itens — vindos do dados_calculo (espelha tabela editável) */}
+                      {comItensDisplay.map((item, i) => (
+                        <div key={item.nome} style={{ display: 'grid', gridTemplateColumns: '2fr 0.6fr 1fr 1fr 0.7fr', padding: '7px 18px', gap: 8, borderBottom: '1px solid rgba(255,255,255,0.05)', background: i % 2 === 0 ? 'rgba(255,255,255,0.025)' : 'transparent' }}>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.7rem', color: 'rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', gap: 7 }}>
+                            <span style={{ width: 3, height: 10, borderRadius: 2, background: C.mint, flexShrink: 0 }} />{item.nome}
+                          </span>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.7rem', color: 'rgba(255,255,255,0.45)', textAlign: 'right' }}>
+                            {item.qtyReal ?? item.qty ?? 1}×
+                          </span>
+                          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '0.7rem', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>
+                            {item.unit != null ? R$(item.unit) : '—'}
+                          </span>
+                          <span style={{ fontFamily: 'Fraunces, serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.9)', textAlign: 'right', fontWeight: 600 }}>
+                            {R$(item.total)}
+                          </span>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.63rem', color: 'rgba(255,255,255,0.35)', textAlign: 'right' }}>
+                            {sumDisplay > 0 ? `${((item.total / sumDisplay) * 100).toFixed(1)}%` : '—'}
+                          </span>
+                        </div>
+                      ))}
+                      <div style={{ padding: '8px 18px', background: 'rgba(11,31,68,0.5)' }}>
+                        <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', color: 'rgba(255,255,255,0.25)', lineHeight: 1.5 }}>
+                          * Simulação com base no memorial descritivo Kairós. Valores referenciais sujeitos a atualização na aquisição.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* versão mobile — cards empilhados em vez de grid de 5 colunas */}
+                    <div className="pv-table-mobile" style={{ flexDirection: 'column', gap: 8 }}>
+                      <div style={{ borderRadius: 14, padding: '12px 16px', background: 'rgba(118,243,205,0.08)', border: '1px solid rgba(118,243,205,0.18)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.78rem', color: C.white }}>TOTAL ESTIMADO</span>
+                        <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '0.9rem', color: C.mint }}>{R$(sumDisplay)}</span>
+                      </div>
+                      {comItensDisplay.map((item, i) => (
+                        <div key={item.nome} style={{ borderRadius: 12, padding: '10px 14px', background: i % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4, gap: 8 }}>
+                            <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <span style={{ width: 3, height: 10, borderRadius: 2, background: C.mint, flexShrink: 0 }} />{item.nome}
+                            </span>
+                            <span style={{ fontFamily: 'Fraunces, serif', fontSize: '0.78rem', color: C.white, fontWeight: 600, whiteSpace: 'nowrap' }}>{R$(item.total)}</span>
+                          </div>
+                          <div style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: 'rgba(255,255,255,0.4)' }}>
+                            {item.qtyReal ?? item.qty ?? 1}× de {item.unit != null ? R$(item.unit) : '—'} · {sumDisplay > 0 ? `${((item.total / sumDisplay) * 100).toFixed(1)}%` : '—'}
+                          </div>
+                        </div>
+                      ))}
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: 'rgba(255,255,255,0.25)', lineHeight: 1.5 }}>
+                        * Simulação com base no memorial descritivo Kairós. Valores referenciais sujeitos a atualização na aquisição.
+                      </p>
+                    </div>
+                  </Reveal>
+                </div>
+              ) : (
+                <div className="pv-media" style={{ width: 'clamp(260px,36%,460px)', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                  <img src="/proposta/proposta4.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(11,31,68,0.85) 0%, rgba(11,31,68,0.25) 40%, transparent 70%)' }} />
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════
+            COMODATO — sections 5 (div2), 6, 7, 8
+        ══════════════════════════════════════════════════════════════ */}
+        {hasComodato && (
+          <>
+            {/* 5 · DIVISOR PARTE 2 */}
+            <section ref={sec(5)} className="pv-section" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.royal, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative', textAlign: 'center', padding: 'var(--section-py) var(--gutter)' }}>
+              <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg,${C.royalD},${C.navy})` }} />
+              <Glow color="rgba(118,243,205,0.18)" size={600} style={{ top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+              <Aurora color1="rgba(118,243,205,0.1)" color2="rgba(76,138,222,0.08)" style={{ top: -200, right: -200 }} />
+              <div style={{ position: 'relative', zIndex: 2, maxWidth: 680 }}>
+                <Reveal>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: C.mint, marginBottom: 20 }}>
+                    Parte 2
+                  </p>
+                  <h2 style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 300, fontSize: 'var(--text-5xl)', color: C.white, lineHeight: 1.1, letterSpacing: '-0.025em', marginBottom: 24 }}>
+                    Modelos de Implantação do Espaço Maker
+                  </h2>
+                  <div style={{ width: 60, height: 2, background: C.mint, margin: '0 auto 24px', borderRadius: 1 }} />
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto' }}>
+                    A Kairós apresenta duas possibilidades de implantação dos recursos necessários à operação da disciplina maker na sua escola.
+                  </p>
+                </Reveal>
+              </div>
+            </section>
+
+            {/* 6 · ESPAÇO MAKER INTRO — tony navy, dois modelos */}
+            <section ref={sec(6)} className="pv-section pv-row" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.navy, display: 'flex', alignItems: 'stretch', overflow: 'hidden', position: 'relative' }}>
+              {/* imagem de fundo com pouca opacidade */}
+              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(/proposta/proposta1.png)', backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.18 }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(11,31,68,0.92) 0%, rgba(11,31,68,0.7) 50%, rgba(11,31,68,0.85) 100%)' }} />
+              <Glow color="rgba(118,243,205,0.16)" size={620} style={{ top: -180, left: -100 }} />
+              <Glow color="rgba(76,138,222,0.22)" size={520} style={{ bottom: -140, right: -120 }} />
+
+              {/* coluna conteúdo — esquerda, scroll natural */}
+              <div className="pv-stack-gap" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: 'clamp(36px,5vh,56px) var(--gutter)', position: 'relative', zIndex: 2, overflowY: 'auto' }}>
+                <div style={{ maxWidth: 660 }}>
+
+                  <Reveal>
+                    <Eyebrow>Infraestrutura</Eyebrow>
+                    <h2 className="text-gradient-cinematic" style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 300, fontSize: 'var(--text-4xl)', lineHeight: 1.05, marginBottom: 14, letterSpacing: '-0.025em' }}>
+                      Espaço Maker Kairós
+                    </h2>
+                    <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.95rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 14 }}>
+                      Para apoiar a escola na organização de um espaço adequado ao desenvolvimento da Educação Tecnológica e Maker, a Kairós apresenta duas possibilidades de implantação dos recursos necessários à operação da disciplina.
+                    </p>
+                  </Reveal>
+
+                  {/* tags de recursos */}
+                  <Reveal delay={50}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 18 }}>
+                      {['Máquinas Digitais', 'Robótica & Eletrônica', 'Computadores', 'Ferramentas', 'Mídias', 'Organização & Segurança'].map(tag => (
+                        <span key={tag} style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: C.mint, background: 'rgba(118,243,205,0.08)', border: '1px solid rgba(118,243,205,0.2)', borderRadius: 99, padding: '4px 12px' }}>{tag}</span>
+                      ))}
+                    </div>
+                  </Reveal>
+
+                  {/* divisor */}
+                  <Reveal delay={80}>
+                    <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', marginBottom: 18 }} />
+                  </Reveal>
+
+                  {/* Modelo 1 */}
+                  <Reveal delay={100}>
+                    <div style={{ display: 'flex', gap: 14, marginBottom: 18 }}>
+                      <div style={{ flexShrink: 0, paddingTop: 3 }}>
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.royal, background: 'rgba(76,138,222,0.15)', border: '1px solid rgba(76,138,222,0.3)', borderRadius: 999, padding: '4px 11px', whiteSpace: 'nowrap' }}>Modelo 1</span>
+                      </div>
+                      <div>
+                        <h3 style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: '1.1rem', color: C.white, marginBottom: 6, lineHeight: 1.25 }}>Investimento Patrimonial da Escola</h3>
+                        <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.86rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                          A própria instituição realiza a aquisição dos recursos reutilizáveis, máquinas, ferramentas, equipamentos e demais itens necessários para a composição do espaço maker. Os bens adquiridos passam a integrar o patrimônio da escola e podem ser utilizados em outras atividades pedagógicas, projetos interdisciplinares, formações docentes e experiências educativas desenvolvidas pela própria instituição.
+                        </p>
+                      </div>
+                    </div>
+                  </Reveal>
+
+                  {/* divisor */}
+                  <Reveal delay={130}>
+                    <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 18 }} />
+                  </Reveal>
+
+                  {/* Modelo 2 */}
+                  <Reveal delay={160}>
+                    <div style={{ display: 'flex', gap: 14, marginBottom: 18 }}>
+                      <div style={{ flexShrink: 0, paddingTop: 3 }}>
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: C.mint, background: 'rgba(118,243,205,0.12)', border: '1px solid rgba(118,243,205,0.3)', borderRadius: 999, padding: '4px 11px', whiteSpace: 'nowrap' }}>Modelo 2</span>
+                      </div>
+                      <div>
+                        <h3 style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: '1.1rem', color: C.white, marginBottom: 6, lineHeight: 1.25 }}>Cessão de Uso com Transferência Final</h3>
+                        <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.86rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                          A Kairós disponibiliza à escola, durante o período do contrato, os recursos reutilizáveis necessários ao desenvolvimento das aulas previstas na proposta pedagógica. Ao final da vigência contratual, desde que cumpridas integralmente as condições estabelecidas, esses recursos poderão ser transferidos definitivamente à escola, passando a compor seu patrimônio.
+                        </p>
+                        <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.86rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, marginTop: 8 }}>
+                          Esse modelo permite que a escola reduza o investimento inicial necessário para a implantação do espaço maker, sem abrir mão da possibilidade de, ao final da parceria, consolidar uma estrutura própria para a continuidade da Educação Tecnológica e Maker.
+                        </p>
+                      </div>
+                    </div>
+                  </Reveal>
+
+                  {/* nota rodapé */}
+                  <Reveal delay={200}>
+                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 12 }}>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.65 }}>
+                        É importante destacar que os modelos apresentados dizem respeito aos recursos reutilizáveis do espaço maker. Não estão incluídos adequações estruturais do ambiente, reformas, instalações elétricas ou lógicas, climatização, marcenaria, mobiliário planejado, bancadas fixas, armários sob medida, nem os materiais consumíveis utilizados nas aulas.
+                      </p>
+                    </div>
+                  </Reveal>
+
+                </div>
+              </div>
+
+              {/* coluna fotos — direita */}
+              <div className="pv-media pv-media-multi" style={{ width: 'clamp(220px,30%,380px)', flexShrink: 0, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 2 }}>
+                {['proposta3.png', 'proposta4.png', 'proposta5.png'].map((src) => (
+                  <div key={src} style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+                    <img src={`/proposta/${src}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to left, rgba(11,31,68,0.6) 0%, transparent 55%)' }} />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* 7 · MODELO 1 — Investimento Patrimonial (tabela de custos) */}
+            <section ref={sec(7)} className="pv-section pv-row" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.ivory, display: 'flex', alignItems: 'stretch', overflow: 'hidden', position: 'relative' }}>
+              <Glow color="rgba(76,138,222,0.06)" size={480} style={{ top: -80, right: -80 }} />
+              <Glow color="rgba(118,243,205,0.04)" size={360} style={{ bottom: -60, left: -80 }} />
+
+              {/* coluna conteúdo — esquerda */}
+              <div className="pv-stack-gap" style={{ flex: 1, position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: 'var(--section-py) var(--gutter)', overflowY: 'auto' }}><div style={{ maxWidth: 700, width: '100%' }}>
+                <Reveal>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: C.royal, background: 'rgba(76,138,222,0.1)', border: `1px solid ${C.royal}`, borderRadius: 999, padding: '3px 12px' }}>Modelo 1</span>
+                  </div>
+                  <h2 style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: C.navy, marginBottom: 8, letterSpacing: '-0.02em', lineHeight: 1.05 }}>
+                    Investimento Patrimonial da Escola
+                  </h2>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.75, maxWidth: 680, marginBottom: 6 }}>
+                    Neste modelo, a escola realiza a aquisição dos recursos necessários para a implantação do espaço maker, conforme memorial descritivo e relação de referência apresentados pela Kairós. Os equipamentos, ferramentas, máquinas e demais recursos passam a pertencer à escola, tornando-se parte de sua infraestrutura pedagógica permanente.
+                  </p>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.75, maxWidth: 680, marginBottom: 24 }}>
+                    Este modelo é indicado para instituições que desejam fortalecer seu patrimônio próprio e utilizar o espaço maker de maneira ampla, tanto nas aulas da Kairós quanto em outras iniciativas pedagógicas da escola.
+                  </p>
+                </Reveal>
+
+                {/* Tabela de custos */}
+                <Reveal delay={100}>
+                  <div className="surface-glass-ivory" style={{ borderRadius: 16, overflow: 'hidden' }}>
+                    {/* cabeçalho */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: C.navy, padding: '12px 24px', gap: 12 }}>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)' }}>Relação de Custos</span>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>Total</span>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>%</span>
+                    </div>
+
+                    {/* linha TOTAL */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', padding: '14px 24px', gap: 12, background: `rgba(11,31,68,0.06)`, borderBottom: `2px solid rgba(11,31,68,0.12)` }}>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: 'var(--text-base)', color: C.navy }}>TOTAL</span>
+                      <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-base)', color: C.royal, textAlign: 'right' }}>{R$(sumEquip)}</span>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: C.navy, textAlign: 'right', fontWeight: 600 }}>100%</span>
+                    </div>
+
+                    {/* linhas de itens — vindas do dados_calculo */}
+                    {comItens.map((item, i) => (
+                      <TableRow
+                        key={item.nome}
+                        row={{ req: item.nome, spec: R$(item.total), status: '' }}
+                        delay={i * 40}
+                        catColor={C.royal}
+                        pct={sumEquip > 0 ? `${((item.total / sumEquip) * 100).toFixed(2)}%` : '—'}
+                      />
+                    ))}
+
+                    {/* rodapé */}
+                    <div style={{ padding: '10px 24px', background: 'rgba(11,31,68,0.03)', borderTop: '1px solid rgba(11,31,68,0.06)' }}>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: '#94a3b8', lineHeight: 1.6 }}>
+                        * Relação de referência conforme memorial descritivo Kairós. Valores finais sujeitos a atualização no momento da aquisição.
+                      </p>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.65, marginTop: 6 }}>
+                        É importante destacar que os modelos apresentados dizem respeito aos recursos reutilizáveis do espaço maker. Não estão incluídos adequações estruturais do ambiente, reformas, instalações elétricas ou lógicas, climatização, marcenaria, mobiliário planejado, bancadas fixas, armários sob medida, nem os materiais consumíveis utilizados nas aulas.
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              </div></div>
+
+              {/* coluna imagem — direita */}
+              <div className="pv-media" style={{ width: 'clamp(240px,32%,400px)', flexShrink: 0, position: 'relative', zIndex: 2, overflow: 'hidden' }}>
+                <img src="/proposta/proposta3.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(248,250,252,0.9) 0%, rgba(248,250,252,0.3) 30%, transparent 60%)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(11,31,68,0.06)' }} />
+              </div>
+            </section>
+
+            {/* 8 · MODELO 2 (COMODATO) — tone: royal */}
+            <section ref={sec(8)} className="pv-section pv-row" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.royalD, display: 'flex', alignItems: 'stretch', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg,${C.royal},${C.royalD})` }} />
+              <Glow color="rgba(118,243,205,0.18)" size={460} style={{ top: -80, right: -80 }} />
+              <Aurora color1="rgba(118,243,205,0.1)" color2="rgba(11,31,68,0.15)" style={{ bottom: -200, left: -160 }} />
+
+              {/* coluna imagem — esquerda */}
+              <div className="pv-media" style={{ width: 'clamp(260px,36%,460px)', flexShrink: 0, position: 'relative', zIndex: 2, overflow: 'hidden' }}>
+                <img src="/proposta/proposta4.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to left, rgba(42,105,186,0.85) 0%, rgba(76,138,222,0.25) 35%, transparent 65%)' }} />
+              </div>
+
+              {/* coluna conteúdo — direita */}
+              <div className="pv-stack-gap" style={{ flex: 1, position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: 'var(--section-py) clamp(20px,3vw,48px)', overflowY: 'auto' }}><div style={{ maxWidth: 700, width: '100%' }}>
+                <Reveal>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: C.mint, background: 'rgba(118,243,205,0.12)', border: '1px solid rgba(118,243,205,0.3)', borderRadius: 999, padding: '3px 12px' }}>Modelo 2</span>
+                  </div>
+                  <h2 style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: C.white, marginBottom: 8, letterSpacing: '-0.02em', lineHeight: 1.05 }}>
+                    Implantação com Transferência Patrimonial
+                  </h2>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.65)', lineHeight: 1.75, maxWidth: 660, marginBottom: 6 }}>
+                    Neste modelo, a Kairós disponibiliza à escola, durante a vigência contratual, os recursos reutilizáveis necessários à execução da proposta pedagógica contratada, incluindo máquinas digitais, manuais, ferramentas, recursos de robótica e eletrônica, computadores, mídias, itens de organização e segurança.
+                  </p>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.65)', lineHeight: 1.75, maxWidth: 660, marginBottom: 6 }}>
+                    Durante o período contratual, os bens deverão ser utilizados exclusivamente para os fins educacionais previstos na parceria, observadas as orientações de uso, conservação e armazenamento fornecidas pela Kairós.
+                  </p>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.65)', lineHeight: 1.75, maxWidth: 660, marginBottom: 24 }}>
+                    Ao final da vigência contratual, desde que cumpridas integralmente as obrigações previstas, os recursos reutilizáveis disponibilizados à escola poderão ser transferidos definitivamente à instituição, passando a integrar seu patrimônio.
+                  </p>
+                </Reveal>
+
+                {/* Tabela de recursos cedidos */}
+                <Reveal delay={100}>
+                  <div style={{ borderRadius: 16, overflow: 'hidden', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', marginBottom: 16 }}>
+                    {/* cabeçalho */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: 'rgba(11,31,68,0.5)', padding: '12px 24px', gap: 12 }}>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)' }}>Relação de Recursos</span>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>Valor</span>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>%</span>
+                    </div>
+                    {/* linha TOTAL */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', padding: '14px 24px', gap: 12, background: 'rgba(118,243,205,0.08)', borderBottom: '2px solid rgba(118,243,205,0.2)' }}>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: 'var(--text-base)', color: C.white }}>TOTAL</span>
+                      <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-base)', color: C.mint, textAlign: 'right' }}>{R$(sumEquip)}</span>
+                      <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: C.white, textAlign: 'right', fontWeight: 600 }}>100%</span>
+                    </div>
+                    {/* linhas de itens — vindas do dados_calculo (desktop: grid 3 col) */}
+                    <div className="pv-table-desktop" style={{ flexDirection: 'column' }}>
+                      {comItens.map((item) => (
+                        <div key={item.nome} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', padding: '10px 24px', gap: 12, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', fontWeight: 500, color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ width: 3, height: 12, borderRadius: 2, background: C.mint, display: 'inline-block', flexShrink: 0 }} />
+                            {item.nome}
+                          </span>
+                          <span style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-sm)', fontWeight: 600, color: C.mint, textAlign: 'right' }}>{R$(item.total)}</span>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.45)', textAlign: 'right' }}>{sumEquip > 0 ? `${((item.total / sumEquip) * 100).toFixed(2)}%` : '—'}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* versão mobile — item + valor numa linha, % embaixo */}
+                    <div className="pv-table-mobile" style={{ flexDirection: 'column' }}>
+                      {comItens.map((item) => (
+                        <div key={item.nome} style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: '10px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', fontWeight: 500, color: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <span style={{ width: 3, height: 12, borderRadius: 2, background: C.mint, display: 'inline-block', flexShrink: 0 }} />
+                              {item.nome}
+                            </span>
+                            <span style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-sm)', fontWeight: 600, color: C.mint, whiteSpace: 'nowrap' }}>{R$(item.total)}</span>
+                          </div>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', color: 'rgba(255,255,255,0.45)', paddingLeft: 11 }}>{sumEquip > 0 ? `${((item.total / sumEquip) * 100).toFixed(2)}%` : '—'}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* rodapé */}
+                    <div style={{ padding: '10px 24px', background: 'rgba(11,31,68,0.3)', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: 'rgba(255,255,255,0.35)', lineHeight: 1.6 }}>
+                        * Relação de referência conforme memorial descritivo Kairós. Recursos disponibilizados em comodato durante a vigência contratual e transferidos ao final do período, cumpridas as condições estabelecidas.
+                      </p>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.65, marginTop: 6 }}>
+                        É importante destacar que os modelos apresentados dizem respeito aos recursos reutilizáveis do espaço maker. Não estão incluídos adequações estruturais do ambiente, reformas, instalações elétricas ou lógicas, climatização, marcenaria, mobiliário planejado, bancadas fixas, armários sob medida, nem os materiais consumíveis utilizados nas aulas.
+                      </p>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.65, marginTop: 6 }}>
+                        Em caso de eventual problema nos equipamentos fornecidos em comodato, a Kairós é responsável pela substituição, exceto quando o problema decorrer de mau uso.
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={320}>
+                  <div style={{ marginTop: 24 }}>
+                    <p style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.45)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ width: 18, height: 1.5, background: 'rgba(255,255,255,0.3)', display: 'inline-block' }} />
+                      Investimento — Currículo + Comodato
+                    </p>
+                    <div style={{ borderRadius: 16, padding: '20px 28px', background: 'rgba(11,31,68,0.45)', border: '1px solid rgba(255,255,255,0.18)' }}>
+                    {/* só o valor do comodato aqui — o comparativo com "Somente Currículo" fica na seção de Investimento, mais abaixo */}
+                    <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap', marginBottom: 16 }}>
+                      <div>
+                        <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Por aluno / ano — Currículo + Comodato</p>
+                        <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-3xl)', color: C.mint, lineHeight: 1 }}>{R$(valorAlunoAnoComodato)}</p>
+                      </div>
+                      <div>
+                        <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Por aluno / mês</p>
+                        <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-3xl)', color: C.white, lineHeight: 1 }}>{R$(valorAlunoAnoComodato / (p.num_parcelas || 12))}</p>
+                      </div>
+                    </div>
+                    <div style={{ height: 1, background: 'rgba(255,255,255,0.15)', marginBottom: 16 }} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap' }}>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, flex: '1 1 260px' }}>
+                        Parcelamento fixo em {p.num_parcelas}x mensais.
+                      </p>
+                      <div style={{ height: 44, width: 1, background: 'rgba(255,255,255,0.15)' }} />
+                      <div>
+                        <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Duração</p>
+                        <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.white, lineHeight: 1 }}>{p.duracao_meses} meses</p>
+                      </div>
+                      <div style={{ height: 44, width: 1, background: 'rgba(255,255,255,0.15)' }} />
+                      <div>
+                        <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Condições</p>
+                        <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-lg)', color: C.white, lineHeight: 1 }}>Boleto · Dia 7</p>
+                        <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>Reajuste anual IPCA</p>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </Reveal>
+              </div></div>
+            </section>
+
+          </>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════
+            RECURSOS CONSUMÍVEIS — tone: ivory
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={hasComodato ? sec(9) : sec(6)} className="pv-section" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.ivory, display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'flex-start', overflow: 'hidden', position: 'relative' }}>
+          <Glow color="rgba(76,138,222,0.08)" size={520} style={{ top: -160, left: -100 }} />
+          <Glow color="rgba(118,243,205,0.08)" size={420} style={{ bottom: -140, right: -100 }} />
+
+          <div style={{ width: '100%', position: 'relative', zIndex: 2, padding: 'var(--section-py) clamp(24px,8vw,120px)', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}><div style={{ maxWidth: 860, width: '100%', margin: '0 auto' }}>
+
+            <Reveal>
+              <Eyebrow>Implantação</Eyebrow>
+              <h2 style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: C.navy, marginBottom: 16, letterSpacing: '-0.02em', lineHeight: 1.05 }}>
+                Recursos Consumíveis
+              </h2>
+              <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: '#475569', lineHeight: 1.75, marginBottom: 22 }}>
+                Os valores abaixo são referentes aos recursos consumíveis de uma sala maker dimensionada para a <strong style={{ color: C.navy }}>{p.escola_nome}</strong> — {p.num_alunos} alunos, com 25 alunos em média por turma, levando-se em conta {faixaSeriesTexto(p)}. Estes recursos duram mais de um ano; será necessário repor apenas os itens faltantes anualmente, o que resultará em um custo bem menor para os anos subsequentes, embora esse valor específico não possa ser previsto com precisão.
+              </p>
+            </Reveal>
+
+            {/* Destaques — custo inicial e vida útil, mesmo padrão de KV visual usado no Investimento */}
+            <Reveal delay={40}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginBottom: 28 }}>
+                <div className="surface-glass-ivory" style={{ borderRadius: 14, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.royal}` }}>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>Custo inicial de referência</p>
+                  <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.navy, lineHeight: 1 }}>{R$(RECURSOS_CONSUMIVEIS_TOTAL)}</p>
+                </div>
+                <div className="surface-glass-ivory" style={{ borderRadius: 14, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.mintD}` }}>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>Vida útil dos recursos</p>
+                  <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.navy, lineHeight: 1 }}>+ de 1 ano</p>
+                </div>
+                <div className="surface-glass-ivory" style={{ borderRadius: 14, padding: '16px 22px', flex: '1 1 220px', borderLeft: `3px solid ${C.amber}` }}>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>Reposição anual</p>
+                  <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.navy, lineHeight: 1 }}>Só o que faltar</p>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={80}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                <span style={{ width: 18, height: 1.5, background: C.royal, display: 'inline-block' }} />
+                <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: C.royal }}>Relação de Custos</span>
+              </div>
+              <div className="surface-glass-ivory" style={{ borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 28px rgba(11,31,68,0.08)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', background: C.navy, padding: '12px 24px', gap: 12 }}>
+                  <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)' }}>Item</span>
+                  <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>Valor</span>
+                  <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.55)', textAlign: 'right' }}>%</span>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', padding: '14px 24px', gap: 12, background: 'rgba(76,138,222,0.1)', borderBottom: '2px solid rgba(11,31,68,0.12)' }}>
+                  <span style={{ fontFamily: 'Geist, sans-serif', fontWeight: 700, fontSize: 'var(--text-base)', color: C.navy }}>TOTAL</span>
+                  <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-base)', color: C.royal, textAlign: 'right' }}>{R$(RECURSOS_CONSUMIVEIS_TOTAL)}</span>
+                  <span style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: C.navy, textAlign: 'right', fontWeight: 600 }}>100%</span>
+                </div>
+
+                {RECURSOS_CONSUMIVEIS.map((item, i) => (
+                  <TableRow
+                    key={item.nome}
+                    row={{ req: item.nome, spec: R$(item.valor), status: '' }}
+                    delay={i * 40}
+                    catColor={C.royal}
+                    pct={`${((item.valor / RECURSOS_CONSUMIVEIS_TOTAL) * 100).toFixed(2)}%`}
+                  />
+                ))}
+
+                <div style={{ padding: '10px 24px', background: 'rgba(11,31,68,0.03)', borderTop: '1px solid rgba(11,31,68,0.06)' }}>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: '#94a3b8', lineHeight: 1.65 }}>
+                    Estes valores são apenas de referências, consultados em janeiro de 2026, com o objetivo de fornecer um parâmetro para implantação de um espaço maker. A listagem completa com descrição dos recursos necessários será feita após fechamento de contrato.
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+
+          </div></div>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════
+            INVESTIMENTO — narrativa: valores revelados por último
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={hasComodato ? sec(10) : sec(7)} className="pv-section" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.navy, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
+          <Glow color="rgba(118,243,205,0.12)" size={700} style={{ top: -200, right: -100 }} />
+          <Glow color="rgba(76,138,222,0.18)" size={600} style={{ bottom: -160, left: -100 }} />
+          <Aurora color1="rgba(76,138,222,0.08)" color2="rgba(118,243,205,0.06)" style={{ top: -200, left: -100 }} />
+
+          {/* conteúdo centralizado */}
+          <div style={{ width: '100%', position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'var(--section-py) clamp(24px,8vw,120px)', overflowY: 'auto', height: '100%' }}><div style={{ maxWidth: 860, width: '100%', margin: '0 auto' }}>
+
+            <Reveal>
+              <Eyebrow>Financeiro</Eyebrow>
+              <h2 className="text-gradient-cinematic" style={{ fontFamily: 'Fraunces, serif', fontWeight: 300, fontStyle: 'italic', fontSize: 'var(--text-5xl)', marginBottom: 20, letterSpacing: '-0.03em', lineHeight: 1 }}>
+                Investimento da Parceria
+              </h2>
+            </Reveal>
+
+            {hasComodato ? (
+              <>
+                <Reveal delay={60}>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, marginBottom: 20, maxWidth: 560 }}>
+                    Esta proposta apresenta dois modelos de parceria. Escolha o que melhor se adapta à realidade da sua escola.
+                  </p>
+                </Reveal>
+                <Reveal delay={100}>
+                  <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 18 }}>
+                    <div className="surface-glass" style={{ borderRadius: 20, padding: '22px 24px', borderColor: 'rgba(76,138,222,0.25)' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(76,138,222,0.15)', border: '1px solid rgba(76,138,222,0.35)', borderRadius: 99, padding: '3px 12px', marginBottom: 12 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.royal }} />
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: C.royal }}>Modelo 1</span>
+                      </div>
+                      <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-lg)', color: C.white, marginBottom: 4, lineHeight: 1.2 }}>Somente Currículo</p>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.5, marginBottom: 18 }}>
+                        A escola adquire os equipamentos da Sala Maker com recursos próprios.
+                      </p>
+                      <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', marginBottom: 16 }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Por aluno / ano</span>
+                          <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-xl)', color: C.royal }}>{R$(p.valor_aluno_ano)}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Por aluno / mês</span>
+                          <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-base)', color: 'rgba(255,255,255,0.75)' }}>{R$(p.valor_aluno_ano / numParcelasCurriculo)}</span>
+                        </div>
+                        <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: 'rgba(255,255,255,0.32)', lineHeight: 1.6 }}>
+                          Parcelamento em até {numParcelasCurriculo}x — periodicidade e condições definidas diretamente com a escola.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="surface-glass" style={{ borderRadius: 20, padding: '22px 24px', borderColor: 'rgba(118,243,205,0.3)', boxShadow: '0 0 40px rgba(118,243,205,0.08)' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(118,243,205,0.12)', border: '1px solid rgba(118,243,205,0.35)', borderRadius: 99, padding: '3px 12px', marginBottom: 12 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: C.mint }} />
+                        <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: C.mint }}>Modelo 2</span>
+                      </div>
+                      <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-lg)', color: C.white, marginBottom: 4, lineHeight: 1.2 }}>Currículo + Sala Maker Equipada</p>
+                      <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.5, marginBottom: 18 }}>
+                        Equipamentos disponibilizados pela Kairós — investimento diluído no contrato.
+                      </p>
+                      <div style={{ height: 1, background: 'rgba(118,243,205,0.12)', marginBottom: 16 }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Por aluno / ano</span>
+                          <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-xl)', color: C.mint }}>{R$(valorAlunoAnoComodato)}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                          <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>Por aluno / mês</span>
+                          <span style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 'var(--text-base)', color: 'rgba(255,255,255,0.75)' }}>{R$(valorAlunoAnoComodato / (p.num_parcelas || 12))}</span>
+                        </div>
+                        <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: 'rgba(255,255,255,0.32)', lineHeight: 1.6 }}>
+                          Parcelamento fixo em {p.num_parcelas}x mensais — reajuste anual pelo IPCA.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Reveal>
+              </>
+            ) : (
+              <>
+                <Reveal delay={80}>
+                  <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 0, alignItems: 'center', marginBottom: 20 }}>
+                    <div>
+                      <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 10 }}>Valor por aluno / ano</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                        <span style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontSize: 'var(--text-base)', color: 'rgba(255,255,255,0.28)', textDecoration: 'line-through' }}>R$ 420,00</span>
+                        <span style={{ background: 'rgba(255,204,0,0.15)', color: C.amber, fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', fontWeight: 700, padding: '3px 10px', borderRadius: 99, letterSpacing: '0.08em', border: '1px solid rgba(255,204,0,0.25)' }}>
+                          {descPct}% OFF
+                        </span>
+                      </div>
+                      <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-display)', color: C.white, lineHeight: 0.9, letterSpacing: '-0.04em' }}>
+                        {R$(p.valor_aluno_ano)}
+                      </div>
+                      <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginTop: 10, letterSpacing: '0.02em' }}>
+                        Valor negociado exclusivo para esta proposta
+                      </p>
+                      {valorAno2 != null && (
+                        <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', color: 'rgba(255,255,255,0.45)', marginTop: 6, letterSpacing: '0.02em' }}>
+                          2º ano: <strong style={{ color: 'rgba(255,255,255,0.7)' }}>{R$(valorAno2)}</strong> <span style={{ color: 'rgba(255,255,255,0.3)' }}>+ IPCA</span>
+                        </p>
+                      )}
+                    </div>
+                    <div style={{ width: 1, alignSelf: 'stretch', background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.12) 30%, rgba(255,255,255,0.12) 70%, transparent)', margin: '0 clamp(20px,4vw,48px)' }} />
+                    <div>
+                      <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 10 }}>Taxa de Implantação</p>
+                      {p.duracao_meses >= 48 && (
+                        <p style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontSize: 'var(--text-base)', color: 'rgba(255,255,255,0.28)', textDecoration: 'line-through', marginBottom: 8 }}>R$ 5.000,00</p>
+                      )}
+                      <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', color: p.duracao_meses >= 48 ? C.mint : C.white, lineHeight: 1, letterSpacing: '-0.03em' }}>
+                        {p.duracao_meses >= 48 ? 'ISENTA' : R$(5000)}
+                      </div>
+                      {p.duracao_meses >= 48 && (
+                        <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.65rem', color: C.mint, marginTop: 10, letterSpacing: '0.04em' }}>Contratos ≥ 48 meses</p>
+                      )}
+                    </div>
+                  </div>
+                </Reveal>
+                <Reveal delay={140}>
+                  <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.1) 80%, transparent)', marginBottom: 18 }} />
+                </Reveal>
+                <Reveal delay={180}>
+                  <div style={{ borderLeft: `2px solid ${C.mint}`, padding: '10px 18px', marginBottom: 20 }}>
+                    <p style={{ textAlign: 'justify', fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 300, fontSize: 'var(--text-base)', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
+                      Esta referência facilita a leitura gerencial. O investimento contempla currículo, formação, acompanhamento e implantação.
+                    </p>
+                  </div>
+                </Reveal>
+                <Reveal delay={240}>
+                  <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 18 }}>
+                    Parcelamento em até {p.num_parcelas}x — periodicidade e condições definidas diretamente com a escola.
+                  </p>
+                </Reveal>
+              </>
+            )}
+
+            <Reveal delay={320}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {[
+                  `${descPct}% de desconto aplicado`, 'Boleto bancário', 'Vencimento dia 7',
+                  'Reajuste anual IPCA', `Validade: ${fmtDate(p.validade)}`,
+                ].map(t => (
+                  <div key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 14px', borderRadius: 99, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', color: 'rgba(255,255,255,0.45)', letterSpacing: '0.02em' }}>
+                    <div style={{ width: 4, height: 4, borderRadius: '50%', background: C.mint, flexShrink: 0 }} />{t}
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+          </div></div>
+        </section>
+
+        {hasComodato && (
+          <section ref={sec(11)} className="pv-section" style={{ scrollSnapAlign: 'start', height: '100dvh', background: C.navy, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: 'var(--section-py) var(--gutter)', overflow: 'hidden', position: 'relative' }}>
+            <Glow color="rgba(255,204,0,0.1)" size={440} style={{ top: -80, right: -80 }} />
+            <Glow color="rgba(76,138,222,0.18)" size={380} style={{ bottom: -80, left: -80 }} />
+
+            <div style={{ position: 'relative', zIndex: 2, maxWidth: 920, width: '100%', margin: '0 auto' }}>
+              <Reveal>
+                <Eyebrow>Resumo Final</Eyebrow>
+                <h2 className="text-gradient-cinematic" style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-4xl)', marginBottom: 12, letterSpacing: '-0.02em', lineHeight: 1.05 }}>
+                  Comparativo dos Modelos
+                </h2>
+                <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, maxWidth: 820, marginBottom: 8 }}>
+                  Em ambos os modelos, a implantação do espaço maker considera recursos que apoiam aulas de engenharia, fabricação digital, programação, robótica educacional, eletrônica, cidadania digital e projetos criativos.
+                </p>
+              </Reveal>
+
+              <Reveal delay={80}>
+                <div className="pv-comparativo-scroll" style={{ borderRadius: 16, overflow: 'auto', marginBottom: 18, border: '1px solid rgba(255,255,255,0.08)', maxHeight: 'calc(100dvh - 220px)' }}>
+                  {(() => {
+                    const rows = [
+                      {
+                        criterio: 'Formato de implantação',
+                        m1: 'A escola realiza diretamente a aquisição dos recursos reutilizáveis necessários à implantação do espaço maker.',
+                        m2: 'A Kairós disponibiliza os recursos reutilizáveis durante a vigência contratual, com possibilidade de transferência definitiva à escola ao final do contrato.',
+                      },
+                      {
+                        criterio: 'Propriedade dos recursos durante o contrato',
+                        m1: 'Os recursos pertencem à escola desde a aquisição.',
+                        m2: 'Os recursos permanecem vinculados à Kairós durante a vigência contratual. Ao final, cumpridas integralmente as condições contratuais, os recursos reutilizáveis poderão ser transferidos definitivamente à escola.',
+                      },
+                      {
+                        criterio: 'Investimento inicial em recursos reutilizáveis',
+                        m1: R$(sumEquip),
+                        m2: '—',
+                      },
+                      {
+                        criterio: 'Investimento por aluno',
+                        m1: `${R$(p.valor_aluno_ano)} por aluno/ano · ${R$(p.valor_aluno_ano / numParcelasCurriculo)} por aluno/mês`,
+                        m2: `${R$(valorAlunoAnoComodato)} por aluno/ano · ${R$(valorAlunoAnoComodato / (p.num_parcelas || 12))} por aluno/mês`,
+                      },
+                      {
+                        criterio: 'Vantagem principal',
+                        m1: 'A escola fortalece imediatamente seu patrimônio próprio e tem maior autonomia sobre os recursos adquiridos.',
+                        m2: 'A escola reduz o desembolso inicial, implanta o espaço maker com recursos disponibilizados pela Kairós e pode incorporar esses bens ao seu patrimônio ao final da vigência.',
+                      },
+                      {
+                        criterio: 'Indicado para',
+                        m1: 'Escolas que desejam investir diretamente em infraestrutura própria desde o início da parceria.',
+                        m2: 'Escolas que desejam diluir o investimento nos recursos reutilizáveis ao longo do contrato, preservando a possibilidade de incorporação patrimonial futura.',
+                      },
+                      {
+                        criterio: 'Validade da Proposta',
+                        m1: fmtDate(p.validade),
+                        m2: fmtDate(p.validade),
+                      },
+                    ]
+                    return (
+                      <>
+                        {/* desktop — grid de 3 colunas */}
+                        <div className="pv-table-desktop" style={{ flexDirection: 'column' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr', background: '#0e2450', padding: '12px 20px', gap: 16, borderBottom: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px -4px rgba(0,0,0,0.4)', position: 'sticky', top: 0, zIndex: 1 }}>
+                            <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)' }}>Critério</span>
+                            <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.royal }}>Modelo 1 — Investimento Patrimonial da Escola</span>
+                            <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: C.mint }}>Modelo 2 — Cessão de Uso com Transferência Final</span>
+                          </div>
+                          {rows.map((row, i) => (
+                            <div key={row.criterio} style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr', padding: '14px 20px', gap: 16, borderBottom: '1px solid rgba(255,255,255,0.05)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)', alignItems: 'start' }}>
+                              <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>{row.criterio}</span>
+                              <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.55, textAlign: 'justify', display: 'block' }}>{row.m1}</span>
+                              <span style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.8rem', color: C.mint, lineHeight: 1.55, textAlign: 'justify', display: 'block' }}>{row.m2}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {/* mobile — card por critério, Modelo 1/2 rotulados e empilhados */}
+                        <div className="pv-table-mobile" style={{ flexDirection: 'column', gap: 10, padding: 12 }}>
+                          {rows.map(row => (
+                            <div key={row.criterio} style={{ borderRadius: 12, padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                              <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.68rem', fontWeight: 700, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{row.criterio}</p>
+                              <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.66rem', fontWeight: 700, color: C.royal, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>Modelo 1</p>
+                              <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.78rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5, marginBottom: 10 }}>{row.m1}</p>
+                              <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.66rem', fontWeight: 700, color: C.mint, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>Modelo 2</p>
+                              <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', fontSize: '0.78rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5 }}>{row.m2}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )
+                  })()}
+                </div>
+              </Reveal>
+            </div>
+          </section>
+        )}
+
+        {/* ══════════════════════════════════════════════════════════════
+            CONTATO — tone: navy (footer do site)
+        ══════════════════════════════════════════════════════════════ */}
+        <section ref={sec(sections.length - 1)} className="pv-section" style={{ scrollSnapAlign: 'start', minHeight: '100dvh', background: C.navy, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 'clamp(40px,6vh,64px) var(--gutter)', overflow: 'hidden', textAlign: 'center', position: 'relative' }}>
+          <Glow color="rgba(76,138,222,0.2)" size={600} style={{ top: -150, left: '50%', transform: 'translateX(-50%)' }} />
+          <Glow color="rgba(118,243,205,0.12)" size={440} style={{ bottom: -120, left: '50%', transform: 'translateX(-50%)' }} />
+          <Aurora color1="rgba(118,243,205,0.08)" color2="rgba(76,138,222,0.1)" style={{ top: -200, right: -200 }} />
+
+          <div style={{ position: 'relative', zIndex: 2, maxWidth: 580, width: '100%' }}>
+            <Reveal>
+              <img src="/proposta/logo-white.png" alt="Kairós" style={{ height: 44, marginBottom: 40, objectFit: 'contain' }} />
+              <h2 style={{ fontFamily: 'Fraunces, serif', fontStyle: 'italic', fontWeight: 300, fontSize: 'var(--text-5xl)', color: C.white, lineHeight: 1.1, marginBottom: 14, letterSpacing: '-0.025em' }}>
+                Quer conversar conosco?
+              </h2>
+              <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', color: 'rgba(255,255,255,0.5)', fontSize: 'var(--text-base)', lineHeight: 1.75, marginBottom: 32 }}>
+                Estamos prontos para transformar a educação de <strong style={{ color: C.white }}>{p.escola_nome}</strong>.
+              </p>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 28 }}>
+                {[
+                  { icon: I.insta(C.mint), label: 'Instagram', val: '@wemake.tec' },
+                  { icon: I.mail(C.mint),  label: 'E-mail',    val: 'contato@kairos.com.br' },
+                  { icon: I.phone(C.mint), label: 'WhatsApp',  val: '(83) 98230-1530' },
+                  { icon: I.globe(C.mint), label: 'Site',      val: 'kairos.com.br' },
+                ].map(c => (
+                  <div key={c.label} className="surface-glass card-lift" style={{ borderRadius: 14, padding: '14px 16px', textAlign: 'left' }}>
+                    <div style={{ marginBottom: 8 }}>{c.icon}</div>
+                    <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 2 }}>{c.label}</p>
+                    <p style={{ fontFamily: 'Geist, sans-serif', fontSize: 'var(--text-sm)', color: C.white, fontWeight: 500, lineHeight: 1.35 }}>{c.val}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            <Reveal delay={260}>
+              <a href="https://wa.me/5583982301530" target="_blank" rel="noopener noreferrer" className="btn-primary">
+                {I.phone('#0b1f44')} Falar com a equipe Kairós
+              </a>
+              <div style={{ marginTop: 24, background: 'rgba(255,204,0,0.08)', border: '1px solid rgba(255,204,0,0.28)', borderRadius: 14, padding: '14px 20px' }}>
+                <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', color: 'rgba(255,204,0,0.5)', marginBottom: 8, textAlign: 'center' }}>
+                  {countdown?.expired ? 'Proposta expirada' : 'Esta proposta expira em'}
+                </p>
+                {countdown?.expired ? (
+                  <p style={{ fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 'var(--text-xl)', color: '#f87171', textAlign: 'center' }}>Expirada em {fmtDate(p.validade)}</p>
+                ) : (
+                  <>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 6 }}>
+                      {([
+                        { v: countdown?.days,    label: 'dias' },
+                        { v: countdown?.hours,   label: 'horas' },
+                        { v: countdown?.minutes, label: 'min' },
+                        { v: countdown?.seconds, label: 'seg' },
+                      ] as { v: number | undefined; label: string }[]).map(({ v, label }) => (
+                        <div key={label} style={{ textAlign: 'center' }}>
+                          <p style={{ fontFamily: 'Geist Mono, monospace', fontWeight: 700, fontSize: 'var(--text-2xl)', color: C.amber, lineHeight: 1, marginBottom: 2 }}>
+                            {v !== undefined ? String(v).padStart(2, '0') : '--'}
+                          </p>
+                          <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.52rem', color: 'rgba(255,204,0,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.6rem', color: 'rgba(255,204,0,0.4)', textAlign: 'center' }}>até {fmtDate(p.validade)}</p>
+                  </>
+                )}
+              </div>
+              <p style={{ textAlign: 'justify', marginTop: 20, fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: 'rgba(255,255,255,0.18)', lineHeight: 1.6 }}>
+                © Kairós Tecnologia Educacional · Proposta Confidencial
+              </p>
+            </Reveal>
+          </div>
+        </section>
+
+      </div>
+    </div>
+    </PrintModeContext.Provider>
+  )
+}

@@ -1,0 +1,1602 @@
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { calcPotencial, calcProbabilidade, calcClassificacao } from '@/types/database'
+import type { StageNegociacao } from '@/types/database'
+
+// ─── Tipos de retorno das actions (para uso em Client Components) ─────────────
+
+export interface ActionResult {
+  success: boolean
+  error?: string
+  id?: string
+}
+
+// ─── Auth ──────────────────────────────────────────────────────────────────────
+
+export async function signOut() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/login')
+}
+
+// ─── Audit Log Helper ─────────────────────────────────────────────────────────
+
+async function createAuditLog(action: 'INSERT' | 'UPDATE' | 'DELETE', tableName: string, recordId: string | null, newData: any = null, oldData: any = null) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  await supabase.from('audit_log').insert({
+    user_id: user.id,
+    user_email: user.email,
+    action,
+    table_name: tableName,
+    record_id: recordId,
+    new_data: newData,
+    old_data: oldData,
+  })
+}
+
+// ─── Escola ────────────────────────────────────────────────────────────────────
+
+export async function upsertEscola(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const id = formData.get('id') as string | null
+
+  const payload = {
+    nome:               formData.get('nome') as string,
+    cnpj:               formData.get('cnpj') as string || null,
+    perfil_pedagogico:  formData.get('perfil_pedagogico') as string || 'convencional',
+    escola_paideia:     formData.get('escola_paideia') === 'true',
+    rua:                formData.get('rua') as string || null,
+    numero:             formData.get('numero') as string || null,
+    complemento:        formData.get('complemento') as string || null,
+    bairro:             formData.get('bairro') as string || null,
+    cidade:             formData.get('cidade') as string || null,
+    estado:             (formData.get('estado') as string || '').toUpperCase() || null,
+    cep:                formData.get('cep') as string || null,
+    telefone:           formData.get('telefone') as string || null,
+    email:              formData.get('email') as string || null,
+    site:               formData.get('site') as string || null,
+    contato_nome:       formData.get('contato_nome') as string || null,
+    contato_cargo:      formData.get('contato_cargo') as string || null,
+    diretor_nome:       formData.get('diretor_nome') as string || null,
+    qtd_infantil2: parseInt(formData.get('qtd_infantil2') as string) || 0,
+    qtd_infantil3: parseInt(formData.get('qtd_infantil3') as string) || 0,
+    qtd_infantil4: parseInt(formData.get('qtd_infantil4') as string) || 0,
+    qtd_infantil5: parseInt(formData.get('qtd_infantil5') as string) || 0,
+
+    qtd_fund1_ano1: parseInt(formData.get('qtd_fund1_ano1') as string) || 0,
+    qtd_fund1_ano2: parseInt(formData.get('qtd_fund1_ano2') as string) || 0,
+    qtd_fund1_ano3: parseInt(formData.get('qtd_fund1_ano3') as string) || 0,
+    qtd_fund1_ano4: parseInt(formData.get('qtd_fund1_ano4') as string) || 0,
+    qtd_fund1_ano5: parseInt(formData.get('qtd_fund1_ano5') as string) || 0,
+
+    qtd_fund2_ano6: parseInt(formData.get('qtd_fund2_ano6') as string) || 0,
+    qtd_fund2_ano7: parseInt(formData.get('qtd_fund2_ano7') as string) || 0,
+    qtd_fund2_ano8: parseInt(formData.get('qtd_fund2_ano8') as string) || 0,
+    qtd_fund2_ano9: parseInt(formData.get('qtd_fund2_ano9') as string) || 0,
+
+    qtd_medio_1s: parseInt(formData.get('qtd_medio_1s') as string) || 0,
+    qtd_medio_2s: parseInt(formData.get('qtd_medio_2s') as string) || 0,
+    qtd_medio_3s: parseInt(formData.get('qtd_medio_3s') as string) || 0,
+
+    // Totais por segmento: usa valor direto (formulário simplificado) ou soma das turmas
+    get qtd_infantil() {
+      const direto = parseInt(formData.get('qtd_infantil') as string) || 0
+      const soma   = (parseInt(formData.get('qtd_infantil2') as string) || 0)
+                   + (parseInt(formData.get('qtd_infantil3') as string) || 0)
+                   + (parseInt(formData.get('qtd_infantil4') as string) || 0)
+                   + (parseInt(formData.get('qtd_infantil5') as string) || 0)
+      return soma > 0 ? soma : direto
+    },
+    get qtd_fund1() {
+      const direto = parseInt(formData.get('qtd_fund1') as string) || 0
+      const soma   = (parseInt(formData.get('qtd_fund1_ano1') as string) || 0)
+                   + (parseInt(formData.get('qtd_fund1_ano2') as string) || 0)
+                   + (parseInt(formData.get('qtd_fund1_ano3') as string) || 0)
+                   + (parseInt(formData.get('qtd_fund1_ano4') as string) || 0)
+                   + (parseInt(formData.get('qtd_fund1_ano5') as string) || 0)
+      return soma > 0 ? soma : direto
+    },
+    get qtd_fund2() {
+      const direto = parseInt(formData.get('qtd_fund2') as string) || 0
+      const soma   = (parseInt(formData.get('qtd_fund2_ano6') as string) || 0)
+                   + (parseInt(formData.get('qtd_fund2_ano7') as string) || 0)
+                   + (parseInt(formData.get('qtd_fund2_ano8') as string) || 0)
+                   + (parseInt(formData.get('qtd_fund2_ano9') as string) || 0)
+      return soma > 0 ? soma : direto
+    },
+    get qtd_medio() {
+      const direto = parseInt(formData.get('qtd_medio') as string) || 0
+      const soma   = (parseInt(formData.get('qtd_medio_1s') as string) || 0)
+                   + (parseInt(formData.get('qtd_medio_2s') as string) || 0)
+                   + (parseInt(formData.get('qtd_medio_3s') as string) || 0)
+      return soma > 0 ? soma : direto
+    },
+    // Apenas valores válidos no enum PostgreSQL — fallback para null se inválido
+    origem_lead: (() => {
+      const v = formData.get('origem_lead') as string
+      const VALIDOS = ['feira','instagram','network','site','whatsapp','email','telefone','visita','evento','parceiro','outro']
+      return v && VALIDOS.includes(v) ? v : null
+    })(),
+    maior_sala:         parseInt(formData.get('maior_sala') as string) || 0,
+    responsavel_id:     formData.get('responsavel_id') as string || null,
+    observacoes:        formData.get('observacoes') as string || null,
+    updated_by:         user.id,
+  }
+
+  if (id) {
+    // EDIÇÃO: atualiza escola existente
+    const { error } = await supabase.from('escolas').update(payload).eq('id', id)
+    if (error) throw new Error(error.message)
+
+    await createAuditLog('UPDATE', 'escolas', id, payload)
+
+    revalidatePath(`/comercial/escolas/${id}`, 'layout')
+    revalidatePath('/comercial/escolas', 'layout')
+    redirect(`/comercial/escolas/${id}?t=${Date.now()}`)
+  } else {
+    // NOVO CADASTRO: insere nova escola no CRM (tabela escolas)
+    const { data, error } = await supabase
+      .from('escolas')
+      .insert({ ...payload, created_by: user.id, ativa: true })
+      .select('id')
+      .single()
+    if (error) throw new Error(error.message)
+
+    const newId = data.id
+
+    await createAuditLog('INSERT', 'escolas', newId, payload)
+
+    // Espelha automaticamente no banco de leads (leads_universal) — mesmo padrão do formulário público
+    try {
+      const admin = createAdminClient()
+      const qtdTotal = payload.qtd_infantil + payload.qtd_fund1 + payload.qtd_fund2 + payload.qtd_medio
+      await admin.from('leads_universal').insert({
+        fonte: 'crm',
+        nome: payload.contato_nome,
+        email: payload.email,
+        tel_celular: payload.telefone,
+        cidade: payload.cidade,
+        uf: payload.estado,
+        endereco: payload.rua,
+        bairro: payload.bairro,
+        cep: payload.cep,
+        escola_nome: payload.nome,
+        escola_cnpj: payload.cnpj,
+        tipo_inscricao: payload.contato_cargo,
+        qtd_infantil: payload.qtd_infantil || null,
+        qtd_fund1: payload.qtd_fund1 || null,
+        qtd_fund2: payload.qtd_fund2 || null,
+        qtd_medio: payload.qtd_medio || null,
+        qtd_alunos_total: qtdTotal || null,
+        data_inscricao: new Date().toISOString(),
+        importado_por: user.id,
+        dados_extras: { escola_id: newId, origem_lead: payload.origem_lead },
+      })
+    } catch (leadErr) {
+      console.error('[upsertEscola] Falha ao espelhar no banco de leads:', leadErr)
+    }
+
+    // Garante que a escola seja visível imediatamente (força refresh)
+    revalidatePath('/comercial/escolas', 'layout')
+    revalidatePath('/comercial', 'layout')
+    revalidatePath('/', 'layout')
+
+    redirect(`/comercial/escolas/${newId}?t=${Date.now()}`)
+  }
+}
+
+// ─── Deletar Escola ────────────────────────────────────────────────────────────
+
+export async function deletarEscola(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  try {
+    // Soft delete: marca como inativa em vez de deletar (preserva histórico)
+    const { error } = await supabase
+      .from('escolas')
+      .update({ ativa: false, updated_by: user.id })
+      .eq('id', id)
+
+    if (error) return { success: false, error: error.message }
+
+    await createAuditLog('DELETE', 'escolas', id, { ativa: false })
+
+    // Revalida múltiplos paths para garantir dados frescos
+    revalidatePath('/comercial/escolas', 'layout')
+    revalidatePath('/comercial/escolas/[id]', 'layout')
+    revalidatePath('/comercial/pipeline', 'layout')
+    revalidatePath('/comercial/leads', 'layout')
+    revalidatePath('/comercial', 'layout')
+
+    return { success: true, id }
+  } catch (err: any) {
+    return { success: false, error: err.message ?? 'Erro ao excluir escola' }
+  }
+}
+
+// ─── Registro ──────────────────────────────────────────────────────────────────
+
+export async function upsertRegistro(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const id         = formData.get('id') as string | null
+  const escola_id  = formData.get('escola_id') as string
+  const enc        = formData.getAll('encaminhamentos') as string[]
+  
+  // Granulares
+  const q_i2 = parseInt(formData.get('qtd_infantil2') as string) || 0
+  const q_i3 = parseInt(formData.get('qtd_infantil3') as string) || 0
+  const q_i4 = parseInt(formData.get('qtd_infantil4') as string) || 0
+  const q_i5 = parseInt(formData.get('qtd_infantil5') as string) || 0
+  const q_f1_a1 = parseInt(formData.get('qtd_fund1_ano1') as string) || 0
+  const q_f1_a2 = parseInt(formData.get('qtd_fund1_ano2') as string) || 0
+  const q_f1_a3 = parseInt(formData.get('qtd_fund1_ano3') as string) || 0
+  const q_f1_a4 = parseInt(formData.get('qtd_fund1_ano4') as string) || 0
+  const q_f1_a5 = parseInt(formData.get('qtd_fund1_ano5') as string) || 0
+
+  const qtd_inf    = q_i2 + q_i3 + q_i4 + q_i5
+  const qtd_f1     = q_f1_a1 + q_f1_a2 + q_f1_a3 + q_f1_a4 + q_f1_a5
+  const qtd_f2     = parseInt(formData.get('qtd_fund2') as string) || 0
+  const qtd_med    = parseInt(formData.get('qtd_medio') as string) || 0
+  
+  const interesse  = formData.get('interesse') as string || 'medio'
+  const prontidao  = formData.get('prontidao') as string || 'esperando_retorno'
+  const abertura   = formData.get('abertura') as string || 'media'
+
+  const pot  = calcPotencial(qtd_inf, qtd_f1, qtd_f2, qtd_med)
+  const prob = calcProbabilidade(interesse, prontidao, abertura, enc)
+  const cls  = calcClassificacao(prob, pot)
+
+  const payload = {
+    escola_id,
+    negociacao_id:        formData.get('negociacao_id') as string || null,
+    data_contato:         formData.get('data_contato') as string,
+    hora_contato:         formData.get('hora_contato') as string || null,
+    meio_contato:         formData.get('meio_contato') as string || 'whatsapp',
+    resumo:               formData.get('resumo') as string,
+    responsavel_id:       formData.get('responsavel_id') as string || user.id,
+    contato_nome:         formData.get('contato_nome') as string || null,
+    contato_cargo:        formData.get('contato_cargo') as string || null,
+    interesse,
+    prontidao,
+    abertura,
+    encaminhamentos:      enc,
+    qtd_infantil:         qtd_inf,
+    qtd_fund1:            qtd_f1,
+    qtd_fund2:            qtd_f2,
+    qtd_medio:            qtd_med,
+    potencial_financeiro: pot,
+    probabilidade:        prob,
+    classificacao:        cls,
+    proximo_contato:      formData.get('proximo_contato') as string || null,
+    notas_internas:       formData.get('notas_internas') as string || null,
+  }
+
+  // 1. Salvar o registro
+  let registroId = id
+  if (id) {
+    const { error } = await supabase.from('registros').update(payload).eq('id', id)
+    if (error) throw new Error(error.message)
+  } else {
+    const { data, error } = await supabase
+      .from('registros')
+      .insert({ ...payload, created_by: user.id })
+      .select('id')
+      .single()
+    if (error) throw new Error(error.message)
+    registroId = data.id
+  }
+
+  // 2. Atualizar a escola com os novos dados (se houver alteração significativa ou for novo registro)
+  // Sincronizamos os granulares também para manter a integridade
+  if (qtd_inf > 0 || qtd_f1 > 0 || qtd_f2 > 0 || qtd_med > 0) {
+    await supabase.from('escolas').update({
+      qtd_infantil:   qtd_inf,
+      qtd_infantil2:  q_i2,
+      qtd_infantil3:  q_i3,
+      qtd_infantil4:  q_i4,
+      qtd_infantil5:  q_i5,
+      qtd_fund1:      qtd_f1,
+      qtd_fund1_ano1: q_f1_a1,
+      qtd_fund1_ano2: q_f1_a2,
+      qtd_fund1_ano3: q_f1_a3,
+      qtd_fund1_ano4: q_f1_a4,
+      qtd_fund1_ano5: q_f1_a5,
+      qtd_fund2:      qtd_f2,
+      qtd_medio:      qtd_med,
+    }).eq('id', escola_id)
+  }
+
+  await createAuditLog(id ? 'UPDATE' : 'INSERT', 'registros', registroId, payload)
+
+  // Revalida todos os paths que usam registros
+  revalidatePath(`/comercial/escolas/${escola_id}`, 'layout')
+  revalidatePath(`/comercial/escolas/${escola_id}/editar`, 'layout')
+  revalidatePath('/comercial', 'layout')
+  revalidatePath('/comercial/jornada', 'layout')
+  revalidatePath('/comercial/jornada-visual', 'layout')
+  revalidatePath('/comercial/registros', 'layout')
+  revalidatePath('/comercial/registros/novo', 'layout')
+  revalidatePath('/comercial/leads', 'layout')
+  revalidatePath('/comercial/tabela', 'layout')
+  revalidatePath('/comercial/pipeline', 'layout')
+
+  redirect(`/comercial/escolas/${escola_id}?t=${Date.now()}`)
+}
+
+/**
+ * Deleta um registro individual.
+ * Apenas o criador ou supervisores podem deletar (verificado via RLS).
+ * Retorna ActionResult para uso em Client Components (sem redirect).
+ */
+export async function deleteRegistro(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  // Busca o escola_id antes de deletar para revalidar o path correto
+  const { data: registro, error: fetchError } = await supabase
+    .from('registros')
+    .select('id, escola_id')
+    .eq('id', id)
+    .single()
+
+  if (fetchError || !registro) {
+    return { success: false, error: 'Registro não encontrado' }
+  }
+
+  // RLS Policy no banco valida a permissão
+  const { error: deleteError } = await supabase.from('registros').delete().eq('id', id)
+  if (deleteError) return { success: false, error: deleteError.message }
+
+  await createAuditLog('DELETE', 'registros', id, null, registro)
+
+  // Revalida todos os paths que usam registros
+  revalidatePath(`/comercial/escolas/${registro.escola_id}`, 'layout')
+  revalidatePath(`/comercial/escolas/${registro.escola_id}/editar`, 'layout')
+  revalidatePath('/comercial', 'layout')
+  revalidatePath('/comercial/registros', 'layout')
+  revalidatePath('/comercial/jornada', 'layout')
+  revalidatePath('/comercial/jornada-visual', 'layout')
+  revalidatePath('/comercial/leads', 'layout')
+  revalidatePath('/comercial/tabela', 'layout')
+  revalidatePath('/comercial/pipeline', 'layout')
+
+  return { success: true, id }
+}
+
+// ─── Negociação ────────────────────────────────────────────────────────────────
+
+/**
+ * Cria ou edita uma negociação (upsert).
+ *
+ * Se `formData` contém `id`, faz UPDATE; caso contrário, INSERT.
+ * Após salvar, redireciona para a escola vinculada.
+ */
+export async function upsertNegociacao(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const id        = formData.get('id') as string | null
+  const escola_id = formData.get('escola_id') as string
+
+  if (!escola_id) throw new Error('escola_id é obrigatório')
+
+  const valorRaw = parseFloat(formData.get('valor_estimado') as string)
+  const probRaw  = parseInt(formData.get('probabilidade') as string)
+
+  const payload = {
+    escola_id,
+    titulo:              formData.get('titulo') as string || null,
+    stage:               (formData.get('stage') as StageNegociacao) || 'prospeccao',
+    responsavel_id:      formData.get('responsavel_id') as string || user.id,
+    valor_estimado:      isNaN(valorRaw) ? null : valorRaw,
+    probabilidade:       isNaN(probRaw) ? 0 : Math.min(100, Math.max(0, probRaw)),
+    previsao_fechamento: formData.get('previsao_fechamento') as string || null,
+    motivo_perda:        formData.get('motivo_perda') as string || null,
+    ativa:               formData.get('ativa') !== 'false',
+    observacoes:         formData.get('observacoes') as string || null,
+  }
+
+  if (id) {
+    const { error } = await supabase
+      .from('negociacoes')
+      .update(payload)
+      .eq('id', id)
+    if (error) throw new Error(error.message)
+  } else {
+    const { error } = await supabase
+      .from('negociacoes')
+      .insert({ ...payload, created_by: user.id })
+    if (error) throw new Error(error.message)
+  }
+
+  revalidatePath(`/comercial/escolas/${escola_id}`, 'layout')
+  revalidatePath('/comercial/pipeline', 'layout')
+  revalidatePath('/comercial', 'layout')
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  redirect(`/comercial/funil-contratacao?escola=${escola_id}&t=${Date.now()}`)
+}
+
+/**
+ * Atualiza o stage de uma negociação.
+ * Pensado para drag-and-drop no Kanban ou botões de stage rápidos.
+ * Não redireciona — retorna ActionResult.
+ */
+export async function updateStageNegociacao(
+  id: string,
+  stage: StageNegociacao,
+  options?: { motivo_perda?: string }
+): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  // negociacoes não tem policy de SELECT para authenticated — lê/grava via service role
+  // depois de confirmar a sessão acima (mesmo padrão de getFilaPriorizacao em priorizacao.ts).
+  const admin = createAdminClient()
+
+  const updatePayload: Record<string, unknown> = { stage }
+
+  // Se fechando como perdido, registra o motivo
+  if (stage === 'perdido' && options?.motivo_perda) {
+    updatePayload.motivo_perda = options.motivo_perda
+  }
+
+  // Ao marcar ganho ou perdido, desativa a negociação do pipeline ativo
+  if (stage === 'ganho' || stage === 'perdido') {
+    updatePayload.ativa = false
+  }
+
+  const { data: negociacao, error: fetchError } = await admin
+    .from('negociacoes')
+    .select('id, escola_id')
+    .eq('id', id)
+    .single()
+
+  if (fetchError || !negociacao) {
+    return { success: false, error: 'Negociação não encontrada' }
+  }
+
+  const { error } = await admin
+    .from('negociacoes')
+    .update(updatePayload)
+    .eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath(`/comercial/escolas/${negociacao.escola_id}`)
+  revalidatePath('/comercial/pipeline')
+  revalidatePath('/comercial')
+
+  return { success: true, id }
+}
+
+/**
+ * Define o estágio comercial de uma escola direto pela Fila de Priorização —
+ * cria a negociação se a escola ainda não tiver uma, ou atualiza a existente.
+ * Não redireciona. Pensada para o seletor rápido de estágio na tabela do ranking.
+ */
+export async function definirEstagioFila(
+  escolaId: string,
+  negociacaoId: string | null,
+  stage: StageNegociacao
+): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  if (negociacaoId) {
+    const result = await updateStageNegociacao(negociacaoId, stage)
+    if (!result.success) return result
+    revalidatePath('/comercial/priorizacao')
+    return result
+  }
+
+  // negociacoes não tem policy de SELECT para authenticated — o .select() após o insert
+  // (leitura da linha recém-criada) falharia com o client normal. Usa service role.
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('negociacoes')
+    .insert({
+      escola_id: escolaId,
+      stage,
+      responsavel_id: user.id,
+      probabilidade: 0,
+      ativa: stage !== 'ganho' && stage !== 'perdido',
+      created_by: user.id,
+    })
+    .select('id')
+    .single()
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/priorizacao')
+  revalidatePath(`/comercial/escolas/${escolaId}`)
+  revalidatePath('/comercial/pipeline')
+
+  return { success: true, id: data.id }
+}
+
+// Marca/desmarca uma escola como parceira (contrato assinado) direto da fila de
+// priorização, sem precisar preencher o restante dos dados financeiros do contrato —
+// esses campos ficam com valor 0 e podem ser completados depois em /comercial/contratos.
+export async function marcarComoParceira(escolaId: string, parceira: boolean): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  // contratos não tem policy de SELECT para authenticated — usa service role.
+  const admin = createAdminClient()
+  const { data: existing } = await admin
+    .from('contratos')
+    .select('id')
+    .eq('escola_id', escolaId)
+    .maybeSingle()
+
+  const { error } = existing
+    ? await admin.from('contratos').update({ contrato_assinado: parceira }).eq('id', existing.id)
+    : await admin.from('contratos').insert({
+        escola_id: escolaId,
+        contrato_assinado: parceira,
+        formulario_enviado: false, formulario_recebido: false,
+        minuta_enviada: false, retorno_minuta: false, minuta_atualizada: false,
+        contrato_enviado: false, contrato_arquivado: false,
+        infantil2_qtd: 0, infantil2_valor: 0, infantil3_qtd: 0, infantil3_valor: 0,
+        infantil4_qtd: 0, infantil4_valor: 0, infantil5_qtd: 0, infantil5_valor: 0,
+        fund1_ano1_qtd: 0, fund1_ano1_valor: 0, fund1_ano2_qtd: 0, fund1_ano2_valor: 0,
+        fund1_ano3_qtd: 0, fund1_ano3_valor: 0, fund1_ano4_qtd: 0, fund1_ano4_valor: 0,
+        fund1_ano5_qtd: 0, fund1_ano5_valor: 0,
+        fund2_ano6_qtd: 0, fund2_ano6_valor: 0, fund2_ano7_qtd: 0, fund2_ano7_valor: 0,
+        fund2_ano8_qtd: 0, fund2_ano8_valor: 0, fund2_ano9_qtd: 0, fund2_ano9_valor: 0,
+        medio_1s_qtd: 0, medio_1s_valor: 0, medio_2s_qtd: 0, medio_2s_valor: 0,
+        medio_3s_qtd: 0, medio_3s_valor: 0,
+        tempo_contrato: 1,
+        created_by: user.id,
+      })
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/priorizacao')
+  revalidatePath(`/comercial/escolas/${escolaId}`)
+  revalidatePath('/comercial/contratos')
+
+  return { success: true, id: escolaId }
+}
+
+/**
+ * Deleta uma negociação (apenas gerente/supervisor ou dono).
+ * Retorna ActionResult.
+ */
+export async function deleteNegociacao(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  const { data: negociacao, error: fetchError } = await supabase
+    .from('negociacoes')
+    .select('id, escola_id')
+    .eq('id', id)
+    .single()
+
+  if (fetchError || !negociacao) {
+    return { success: false, error: 'Negociação não encontrada' }
+  }
+
+  // RLS Policy no banco valida a permissão
+  const { error } = await supabase.from('negociacoes').delete().eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath(`/comercial/escolas/${negociacao.escola_id}`)
+  revalidatePath('/comercial/pipeline')
+  revalidatePath('/comercial')
+
+  return { success: true, id }
+}
+
+// ─── Tarefa ────────────────────────────────────────────────────────────────────
+
+export async function criarTarefa(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const escola_id = formData.get('escola_id') as string
+
+  const { error } = await supabase.from('tarefas').insert({
+    escola_id,
+    negociacao_id:  formData.get('negociacao_id') as string || null,
+    titulo:         formData.get('titulo') as string,
+    descricao:      formData.get('descricao') as string || null,
+    responsavel_id: formData.get('responsavel_id') as string || user.id,
+    vencimento:     formData.get('vencimento') as string || null,
+    prioridade:     formData.get('prioridade') as string || 'media',
+    created_by:     user.id,
+  })
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath(`/comercial/escolas/${escola_id}`)
+  revalidatePath('/comercial')
+}
+
+/**
+ * Conclui uma tarefa pendente.
+ * Já existia — mantida com tratamento de erro melhorado.
+ */
+export async function concluirTarefa(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  // Busca escola_id para revalidar o path correto
+  const { data: tarefa } = await supabase
+    .from('tarefas')
+    .select('id, escola_id, status')
+    .eq('id', id)
+    .single()
+
+  if (!tarefa) return { success: false, error: 'Tarefa não encontrada' }
+  if (tarefa.status === 'concluida') return { success: true, id } // idempotente
+
+  const { error } = await supabase
+    .from('tarefas')
+    .update({ status: 'concluida', concluida_em: new Date().toISOString() })
+    .eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath(`/comercial/escolas/${tarefa.escola_id}`)
+  revalidatePath('/comercial')
+
+  return { success: true, id }
+}
+
+/**
+ * Cancela uma tarefa (sem excluir — mantém histórico).
+ */
+export async function cancelarTarefa(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  const { data: tarefa } = await supabase
+    .from('tarefas')
+    .select('id, escola_id')
+    .eq('id', id)
+    .single()
+
+  if (!tarefa) return { success: false, error: 'Tarefa não encontrada' }
+
+  const { error } = await supabase
+    .from('tarefas')
+    .update({ status: 'cancelada' })
+    .eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath(`/comercial/escolas/${tarefa.escola_id}`)
+  revalidatePath('/comercial')
+
+  return { success: true, id }
+}
+
+// ─── Nota ──────────────────────────────────────────────────────────────────────
+
+export async function criarNota(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const escola_id = formData.get('escola_id') as string
+
+  const { error } = await supabase.from('notas_escola').insert({
+    escola_id,
+    texto:      formData.get('texto') as string,
+    fixada:     formData.get('fixada') === 'true',
+    created_by: user.id,
+  })
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath(`/comercial/escolas/${escola_id}`)
+}
+
+export async function deletarNota(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  const { data: nota } = await supabase
+    .from('notas_escola')
+    .select('id, escola_id, created_by')
+    .eq('id', id)
+    .single()
+
+  if (!nota) return { success: false, error: 'Nota não encontrada' }
+
+  // Apenas o criador pode deletar notas
+  if (nota.created_by !== user.id) {
+    const { data: profile } = await supabase
+      .from('usuarios')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role !== 'gerente') {
+      return { success: false, error: 'Sem permissão para deletar esta nota' }
+    }
+  }
+
+  const { error } = await supabase.from('notas_escola').delete().eq('id', id)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath(`/comercial/escolas/${nota.escola_id}`)
+  return { success: true, id }
+}
+
+// ─── Contrato ──────────────────────────────────────────────────────────────────
+
+export async function upsertContrato(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const escola_id = formData.get('escola_id') as string
+
+  const toNum = (k: string) => parseFloat(formData.get(k) as string) || 0
+
+  const payload = {
+    escola_id,
+    formulario_enviado:   formData.get('formulario_enviado') === 'true',
+    formulario_recebido:  formData.get('formulario_recebido') === 'true',
+    minuta_enviada:       formData.get('minuta_enviada') === 'true',
+    retorno_minuta:       formData.get('retorno_minuta') === 'true',
+    observacao_minuta:    formData.get('observacao_minuta') as string || null,
+    minuta_atualizada:    formData.get('minuta_atualizada') === 'true',
+    contrato_enviado:     formData.get('contrato_enviado') === 'true',
+    contrato_assinado:    formData.get('contrato_assinado') === 'true',
+    contrato_arquivado:   formData.get('contrato_arquivado') === 'true',
+    encaminhamento_final: formData.get('encaminhamento_final') as string || null,
+    infantil2_qtd:    toNum('infantil2_qtd'),
+    infantil2_valor:  toNum('infantil2_valor'),
+    infantil3_qtd:    toNum('infantil3_qtd'),
+    infantil3_valor:  toNum('infantil3_valor'),
+    infantil4_qtd:    toNum('infantil4_qtd'),
+    infantil4_valor:  toNum('infantil4_valor'),
+    infantil5_qtd:    toNum('infantil5_qtd'),
+    infantil5_valor:  toNum('infantil5_valor'),
+    fund1_ano1_qtd:   toNum('fund1_ano1_qtd'),
+    fund1_ano1_valor: toNum('fund1_ano1_valor'),
+    fund1_ano2_qtd:   toNum('fund1_ano2_qtd'),
+    fund1_ano2_valor: toNum('fund1_ano2_valor'),
+    fund1_ano3_qtd:   toNum('fund1_ano3_qtd'),
+    fund1_ano3_valor: toNum('fund1_ano3_valor'),
+    fund1_ano4_qtd:   toNum('fund1_ano4_qtd'),
+    fund1_ano4_valor: toNum('fund1_ano4_valor'),
+    fund1_ano5_qtd:   toNum('fund1_ano5_qtd'),
+    fund1_ano5_valor: toNum('fund1_ano5_valor'),
+    fund2_ano6_qtd:   toNum('fund2_ano6_qtd'),
+    fund2_ano6_valor: toNum('fund2_ano6_valor'),
+    fund2_ano7_qtd:   toNum('fund2_ano7_qtd'),
+    fund2_ano7_valor: toNum('fund2_ano7_valor'),
+    fund2_ano8_qtd:   toNum('fund2_ano8_qtd'),
+    fund2_ano8_valor: toNum('fund2_ano8_valor'),
+    fund2_ano9_qtd:   toNum('fund2_ano9_qtd'),
+    fund2_ano9_valor: toNum('fund2_ano9_valor'),
+    medio_1s_qtd:     toNum('medio_1s_qtd'),
+    medio_1s_valor:   toNum('medio_1s_valor'),
+    medio_2s_qtd:     toNum('medio_2s_qtd'),
+    medio_2s_valor:   toNum('medio_2s_valor'),
+    medio_3s_qtd:     toNum('medio_3s_qtd'),
+    medio_3s_valor:   toNum('medio_3s_valor'),
+    tempo_contrato:   parseInt(formData.get('tempo_contrato') as string) || 1,
+    created_by: user.id,
+  } as Record<string, unknown>
+
+  // UPSERT por escola_id — busca também o estado anterior de arquivamento/implantação
+  // para decidir se a fase de implantação deve ser iniciada automaticamente.
+  const { data: existing } = await supabase
+    .from('contratos')
+    .select('id, contrato_arquivado, implantacao_status')
+    .eq('escola_id', escola_id)
+    .single()
+
+  const contratoArquivadoAgora = payload.contrato_arquivado === true
+  const implantacaoStatusForm = (formData.get('implantacao_status') as string) || null
+
+  if (implantacaoStatusForm) {
+    payload.implantacao_status = implantacaoStatusForm
+    if (implantacaoStatusForm === 'concluida' && existing?.implantacao_status !== 'concluida') {
+      payload.implantacao_concluida_em = new Date().toISOString()
+    }
+  } else if (contratoArquivadoAgora && !existing?.contrato_arquivado) {
+    // Contrato acabou de ser arquivado nesta submissão — inicia a fase de implantação
+    // automaticamente (regra de negócio: arquivar = começar a implantar).
+    payload.implantacao_status = 'em_andamento'
+    payload.implantacao_iniciada_em = new Date().toISOString()
+  }
+
+  const { error } = existing
+    ? await supabase.from('contratos').update(payload).eq('id', existing.id)
+    : await supabase.from('contratos').insert(payload)
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/comercial/contratos')
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  redirect(`/comercial/contratos?escola=${escola_id}`)
+}
+
+/**
+ * Atualiza só o responsável de uma escola (usado no editor inline da tabela
+ * do Funil de Contratação) — não mexe em mais nenhum campo.
+ */
+export async function atualizarResponsavelEscola(escolaId: string, responsavelId: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  const { error } = await supabase
+    .from('escolas')
+    .update({ responsavel_id: responsavelId || null, updated_by: user.id })
+    .eq('id', escolaId)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  revalidatePath('/comercial/escolas', 'layout')
+  revalidatePath('/comercial', 'layout')
+  return { success: true }
+}
+
+/**
+ * Adiciona uma anotação rápida de contato comercial direto do Funil de
+ * Contratação — mesma tabela notas_escola já usada na ficha da escola e no
+ * Follow-up, atribuída automaticamente a quem estiver logado ao adicionar
+ * (não precisa de um campo separado pra "quem fez o contato").
+ */
+export async function adicionarNotaContatoFunil(escolaId: string, texto: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+  if (!escolaId) return { success: false, error: 'escola_id é obrigatório' }
+  const textoLimpo = texto.trim()
+  if (!textoLimpo) return { success: false, error: 'Escreva uma anotação' }
+
+  // notas_escola não tem policy de INSERT liberada pro client comum
+  // (confirmado: 42501 row-level security policy) — usa admin, mesmo padrão
+  // já aplicado nas leituras cross-escola desta tabela.
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('notas_escola')
+    .insert({ escola_id: escolaId, texto: textoLimpo, fixada: false, created_by: user.id, categoria: 'contato' })
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  revalidatePath('/comercial/followup', 'layout')
+  revalidatePath('/comercial/escolas', 'layout')
+  return { success: true }
+}
+
+/**
+ * Comentário sobre o processo de negociação do contrato (painel de
+ * Minuta/Contrato no Funil de Contratação) — mesma tabela notas_escola,
+ * categoria separada da anotação rápida de contato pra não misturar as
+ * duas listas.
+ */
+export async function adicionarNotaContrato(escolaId: string, texto: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+  if (!escolaId) return { success: false, error: 'escola_id é obrigatório' }
+  const textoLimpo = texto.trim()
+  if (!textoLimpo) return { success: false, error: 'Escreva um comentário' }
+
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('notas_escola')
+    .insert({ escola_id: escolaId, texto: textoLimpo, fixada: false, created_by: user.id, categoria: 'contrato' })
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  revalidatePath('/comercial/contratos', 'layout')
+  return { success: true }
+}
+
+/**
+ * Registra um novo número de alunos no histórico da escola (append-only —
+ * nunca sobrescreve o valor anterior, só acrescenta uma linha nova). Usado
+ * quando o número muda durante a negociação; o valor original do
+ * pré-cadastro continua preservado na primeira linha (populada pelo
+ * backfill de add_alunos_historico.sql).
+ */
+export async function adicionarAlunosHistorico(
+  escolaId: string,
+  valor: number,
+  opts?: { negociacaoId?: string | null; observacao?: string | null }
+): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+  if (!escolaId) return { success: false, error: 'escola_id é obrigatório' }
+  if (!Number.isFinite(valor) || valor < 0) return { success: false, error: 'Número de alunos inválido' }
+
+  // Mesmo padrão defensivo de adicionarNotaContatoFunil: usa admin pra não
+  // depender de a policy de INSERT estar 100% alinhada em produção.
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('alunos_historico')
+    .insert({
+      escola_id: escolaId,
+      negociacao_id: opts?.negociacaoId ?? null,
+      valor: Math.round(valor),
+      origem: 'manual',
+      observacao: opts?.observacao?.trim() || null,
+      created_by: user.id,
+    })
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/escolas', 'layout')
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  return { success: true }
+}
+
+/**
+ * Atualiza telefone/e-mail de contato da escola direto de um popover inline
+ * (Funil de Contratação) — versão restrita de upsertEscola, sem exigir o
+ * formulário completo. Só grava o que veio preenchido; não apaga o outro
+ * campo se ele já tinha valor e o campo vier vazio no formulário.
+ */
+export async function atualizarContatoEscolaInline(escolaId: string, telefone: string, email: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+  if (!escolaId) return { success: false, error: 'escola_id é obrigatório' }
+
+  const { error } = await supabase
+    .from('escolas')
+    .update({ telefone: telefone || null, email: email || null, updated_by: user.id })
+    .eq('id', escolaId)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  revalidatePath('/comercial/followup', 'layout')
+  revalidatePath('/comercial/tabela', 'layout')
+  revalidatePath('/comercial/escolas', 'layout')
+  revalidatePath('/comercial', 'layout')
+  return { success: true }
+}
+
+/**
+ * Atualiza a ordem de prioridade manual da escola (popover inline no Funil de
+ * Contratação) — menor número = mais prioritário; null remove a prioridade.
+ *
+ * `escolaIdsQuadro` (opcional): ids de todas as escolas do mesmo quadro
+ * (incluindo a própria). Quando informado, a prioridade passa a se comportar
+ * como reordenar uma lista — inserir/mover pra posição N empurra pra baixo
+ * (+1) quem já estava nela em diante, e fecha o buraco (-1) de quem ficava
+ * depois da posição antiga — ninguém do quadro precisa ser reeditado à mão.
+ * Sem a lista (chamada antiga/externa), só grava o valor puro, sem reordenar.
+ */
+export async function atualizarPrioridadeEscola(
+  escolaId: string,
+  prioridade: number | null,
+  escolaIdsQuadro?: string[],
+): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+  if (!escolaId) return { success: false, error: 'escola_id é obrigatório' }
+
+  const outrosIds = (escolaIdsQuadro ?? []).filter(id => id !== escolaId)
+
+  if (outrosIds.length > 0) {
+    const [{ data: outras, error: erroBusca }, { data: atual, error: erroAtual }] = await Promise.all([
+      supabase.from('escolas').select('id, prioridade_manual').in('id', outrosIds),
+      supabase.from('escolas').select('prioridade_manual').eq('id', escolaId).single(),
+    ])
+    if (erroBusca) return { success: false, error: erroBusca.message }
+    if (erroAtual) return { success: false, error: erroAtual.message }
+
+    const prioridadeAntiga = atual?.prioridade_manual ?? null
+
+    for (const o of outras ?? []) {
+      if (o.prioridade_manual == null) continue
+      let novo = o.prioridade_manual
+      if (prioridadeAntiga != null && novo > prioridadeAntiga) novo -= 1
+      if (prioridade != null && novo >= prioridade) novo += 1
+      if (novo === o.prioridade_manual) continue
+      const { error } = await supabase.from('escolas').update({ prioridade_manual: novo }).eq('id', o.id)
+      if (error) return { success: false, error: error.message }
+    }
+  }
+
+  const { error } = await supabase
+    .from('escolas')
+    .update({ prioridade_manual: prioridade, updated_by: user.id })
+    .eq('id', escolaId)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  revalidatePath('/comercial/escolas', 'layout')
+  revalidatePath('/comercial', 'layout')
+  return { success: true }
+}
+
+/**
+ * Atualiza só o checklist de progresso do contrato (usado no editor inline
+ * "Fase" da tabela do Funil de Contratação) — versão restrita de
+ * upsertContrato que NÃO toca nos 32 campos de qtd/valor por segmento, para
+ * não zerar preços já salvos quando o popover só envia o checklist.
+ */
+export async function atualizarChecklistContratoInline(formData: FormData): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  const escola_id = formData.get('escola_id') as string
+  if (!escola_id) return { success: false, error: 'escola_id é obrigatório' }
+
+  const payload: Record<string, unknown> = {
+    formulario_enviado:  formData.get('formulario_enviado') === 'true',
+    formulario_recebido: formData.get('formulario_recebido') === 'true',
+    proposta_enviada:    formData.get('proposta_enviada') === 'true',
+    minuta_enviada:      formData.get('minuta_enviada') === 'true',
+    retorno_minuta:      formData.get('retorno_minuta') === 'true',
+    minuta_atualizada:   formData.get('minuta_atualizada') === 'true',
+    contrato_enviado:    formData.get('contrato_enviado') === 'true',
+    contrato_assinado:   formData.get('contrato_assinado') === 'true',
+    contrato_arquivado:  formData.get('contrato_arquivado') === 'true',
+    declinou:            formData.get('declinou') === 'true',
+  }
+
+  const { data: existing } = await supabase
+    .from('contratos')
+    .select('id, contrato_arquivado, implantacao_status')
+    .eq('escola_id', escola_id)
+    .maybeSingle()
+
+  const contratoArquivadoAgora = payload.contrato_arquivado === true
+  const implantacaoStatusForm = (formData.get('implantacao_status') as string) || null
+
+  if (implantacaoStatusForm) {
+    payload.implantacao_status = implantacaoStatusForm
+    if (implantacaoStatusForm === 'concluida' && existing?.implantacao_status !== 'concluida') {
+      payload.implantacao_concluida_em = new Date().toISOString()
+    }
+  } else if (contratoArquivadoAgora && !existing?.contrato_arquivado) {
+    payload.implantacao_status = 'em_andamento'
+    payload.implantacao_iniciada_em = new Date().toISOString()
+  }
+
+  const { error } = existing
+    ? await supabase.from('contratos').update(payload).eq('id', existing.id)
+    : await supabase.from('contratos').insert({ ...payload, escola_id, created_by: user.id })
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/comercial/funil-contratacao', 'layout')
+  revalidatePath('/comercial/contratos', 'layout')
+  revalidatePath(`/comercial/escolas/${escola_id}`, 'layout')
+  revalidatePath('/comercial/metas', 'layout')
+  revalidatePath('/comercial', 'layout')
+  return { success: true }
+}
+
+// ─── Formulário público Kairós (sem auth) ────────────────────────────────────
+
+/**
+ * Envia formulário de pré-cadastro de escolas para Kairós
+ * Salva na tabela form_precadastro_wemake
+ */
+export async function enviarFormularioPublico(formData: FormData): Promise<ActionResult> {
+  try {
+    // Server-side action — usa service_role para gravar com seguranca
+    // (bypassa RLS). Como roda no servidor, a chave nunca é exposta.
+    const supabase = createAdminClient()
+    console.log('[enviarFormularioPublico] using admin client (service_role)')
+
+    const toNum = (k: string) => parseInt(formData.get(k) as string) || 0
+
+    // Dados da seção 1: Responsável
+    const resp_email = formData.get('resp_email') as string
+
+    // Dados da seção 2: Escola
+    const cnpj = formData.get('cnpj') as string || null
+    const razao_social = formData.get('razao_social') as string
+    const nome_fantasia = formData.get('nome_fantasia') as string
+    const rua = formData.get('rua') as string
+    const numero = formData.get('numero') as string
+    const bairro = formData.get('bairro') as string
+    const cep = formData.get('cep') as string || null
+    const cidade = formData.get('cidade') as string
+    const estado = formData.get('estado') as string
+    const email_institucional = formData.get('email_institucional') as string
+    const site = formData.get('site') as string || null
+    const telefone_institucional = formData.get('telefone_institucional') as string || null
+
+    // Endereço de entrega do material didático — só relevante se diferente do
+    // endereço da escola (Anexo III do contrato usa o da escola quando "mesmo").
+    const entrega_mesmo_endereco = formData.get('entrega_mesmo_endereco') !== 'false'
+    const entrega_rua           = entrega_mesmo_endereco ? null : (formData.get('entrega_rua') as string || null)
+    const entrega_numero        = entrega_mesmo_endereco ? null : (formData.get('entrega_numero') as string || null)
+    const entrega_complemento   = entrega_mesmo_endereco ? null : (formData.get('entrega_complemento') as string || null)
+    const entrega_bairro        = entrega_mesmo_endereco ? null : (formData.get('entrega_bairro') as string || null)
+    const entrega_cep           = entrega_mesmo_endereco ? null : (formData.get('entrega_cep') as string || null)
+    const entrega_cidade        = entrega_mesmo_endereco ? null : (formData.get('entrega_cidade') as string || null)
+    const entrega_estado        = entrega_mesmo_endereco ? null : (formData.get('entrega_estado') as string || null)
+
+    // Dados da seção 3: Segmentos
+    const seg_infantil = formData.get('seg_infantil') === 'on'
+    const seg_fundamental_1 = formData.get('seg_fundamental_1') === 'on'
+    const seg_fundamental_2 = formData.get('seg_fundamental_2') === 'on'
+    const seg_ensino_medio = formData.get('seg_ensino_medio') === 'on'
+
+    // Séries granulares (Anexo II — quantidade mínima de alunos por série)
+    const infantil4_qtd  = toNum('infantil4_qtd')
+    const infantil5_qtd  = toNum('infantil5_qtd')
+    const fund1_ano1_qtd = toNum('fund1_ano1_qtd')
+    const fund1_ano2_qtd = toNum('fund1_ano2_qtd')
+    const fund1_ano3_qtd = toNum('fund1_ano3_qtd')
+    const fund1_ano4_qtd = toNum('fund1_ano4_qtd')
+    const fund1_ano5_qtd = toNum('fund1_ano5_qtd')
+    const fund2_ano6_qtd = toNum('fund2_ano6_qtd')
+    const fund2_ano7_qtd = toNum('fund2_ano7_qtd')
+    const fund2_ano8_qtd = toNum('fund2_ano8_qtd')
+    const fund2_ano9_qtd = toNum('fund2_ano9_qtd')
+    const medio_1s_qtd   = toNum('medio_1s_qtd')
+    const medio_2s_qtd   = toNum('medio_2s_qtd')
+    const medio_3s_qtd   = toNum('medio_3s_qtd')
+
+    // Quantidade de alunos — agregados calculados a partir das séries (a
+    // digitação passou a ser por série, não mais um total único por segmento)
+    const alunos_infantil = infantil4_qtd + infantil5_qtd
+    const alunos_fundamental_1 = fund1_ano1_qtd + fund1_ano2_qtd + fund1_ano3_qtd + fund1_ano4_qtd + fund1_ano5_qtd
+    const alunos_fundamental_2 = fund2_ano6_qtd + fund2_ano7_qtd + fund2_ano8_qtd + fund2_ano9_qtd
+    const alunos_ensino_medio = medio_1s_qtd + medio_2s_qtd + medio_3s_qtd
+    const maior_sala = toNum('maior_sala')
+
+    // Datas e formato
+    const data_inicio_letivo = formData.get('data_inicio_letivo') as string || null
+    const data_fim_letivo = formData.get('data_fim_letivo') as string || null
+    const formato_ano_letivo = formData.get('formato_ano_letivo') as string || null
+    const observacoes = formData.get('observacoes') as string || null
+
+    // Dados da seção 4: Representante Legal
+    const legal_nome = formData.get('legal_nome') as string
+    const legal_cpf = formData.get('legal_cpf') as string || null
+    const legal_email = formData.get('legal_email') as string
+    const legal_whatsapp = formData.get('legal_whatsapp') as string || null
+    const legal_rua = formData.get('legal_rua') as string
+    const legal_numero = formData.get('legal_numero') as string
+    const legal_complemento = formData.get('legal_complemento') as string || null
+    const legal_bairro = formData.get('legal_bairro') as string
+    const legal_cidade = formData.get('legal_cidade') as string
+    const legal_estado = formData.get('legal_estado') as string
+    const legal_cep = formData.get('legal_cep') as string || null
+
+    // Dados da seção 5: Financeiro
+    const fin_email_cobranca = formData.get('fin_email_cobranca') as string
+    const ticket_medio = formData.get('ticket_medio') as string || null
+
+    const payload = {
+      resp_email,
+      cnpj,
+      razao_social,
+      nome_fantasia,
+      rua,
+      numero,
+      bairro,
+      cep,
+      cidade,
+      estado,
+      email_institucional,
+      site,
+      telefone_institucional,
+      entrega_mesmo_endereco,
+      entrega_rua,
+      entrega_numero,
+      entrega_complemento,
+      entrega_bairro,
+      entrega_cep,
+      entrega_cidade,
+      entrega_estado,
+      seg_infantil,
+      seg_fundamental_1,
+      seg_fundamental_2,
+      seg_ensino_medio,
+      infantil4_qtd,
+      infantil5_qtd,
+      fund1_ano1_qtd,
+      fund1_ano2_qtd,
+      fund1_ano3_qtd,
+      fund1_ano4_qtd,
+      fund1_ano5_qtd,
+      fund2_ano6_qtd,
+      fund2_ano7_qtd,
+      fund2_ano8_qtd,
+      fund2_ano9_qtd,
+      medio_1s_qtd,
+      medio_2s_qtd,
+      medio_3s_qtd,
+      alunos_infantil,
+      alunos_fundamental_1,
+      alunos_fundamental_2,
+      alunos_ensino_medio,
+      maior_sala,
+      data_inicio_letivo,
+      data_fim_letivo,
+      formato_ano_letivo,
+      observacoes,
+      legal_nome,
+      legal_cpf,
+      legal_email,
+      legal_whatsapp,
+      legal_rua,
+      legal_numero,
+      legal_complemento,
+      legal_bairro,
+      legal_cidade,
+      legal_estado,
+      legal_cep,
+      fin_email_cobranca,
+      ticket_medio,
+      status: 'pendente',
+    }
+
+    // Bloquear reenvio: mesma escola (CNPJ) já submeteu o formulário
+    if (cnpj) {
+      const { count } = await supabase
+        .from('form_precadastro_wemake')
+        .select('id', { count: 'exact', head: true })
+        .eq('cnpj', cnpj)
+      if ((count ?? 0) > 0) {
+        return { success: false, error: 'Sua escola já realizou o pré-cadastro. Nossa equipe comercial entrará em contato em breve.' }
+      }
+    }
+
+    const { data: inserted, error } = await supabase
+      .from('form_precadastro_wemake')
+      .insert(payload)
+      .select('id')
+      .single()
+
+    if (error) {
+      console.error('[enviarFormularioPublico] INSERT failed:', error)
+      return { success: false, error: `Erro ao salvar: ${error.message}` }
+    }
+    if (!inserted?.id) {
+      console.error('[enviarFormularioPublico] INSERT returned no id')
+      return { success: false, error: 'Não foi possível confirmar o registro no banco.' }
+    }
+
+    // Espelha automaticamente no banco de leads (leads_universal)
+    const qtdTotal = alunos_infantil + alunos_fundamental_1 + alunos_fundamental_2 + alunos_ensino_medio
+    await supabase.from('leads_universal').insert({
+      fonte: 'formulario_wemake',
+      nome: legal_nome,
+      email: legal_email || email_institucional || null,
+      tel_celular: legal_whatsapp || null,
+      cidade,
+      uf: estado,
+      endereco: rua || null,
+      bairro: bairro || null,
+      cep: cep || null,
+      escola_nome: nome_fantasia || razao_social,
+      escola_cnpj: cnpj || null,
+      qtd_infantil: alunos_infantil || null,
+      qtd_fund1: alunos_fundamental_1 || null,
+      qtd_fund2: alunos_fundamental_2 || null,
+      qtd_medio: alunos_ensino_medio || null,
+      qtd_alunos_total: qtdTotal || null,
+      data_inscricao: new Date().toISOString(),
+      dados_extras: {
+        razao_social,
+        email_institucional,
+        ticket_medio: ticket_medio || null,
+        fin_email_cobranca: fin_email_cobranca || null,
+        legal_cpf: legal_cpf || null,
+        formato_ano_letivo: formato_ano_letivo || null,
+        data_inicio_letivo: data_inicio_letivo || null,
+        data_fim_letivo: data_fim_letivo || null,
+        precadastro_id: inserted.id,
+      },
+    })
+
+    return { success: true, id: String(inserted.id) }
+  } catch (err: any) {
+    console.error('[enviarFormularioPublico] Exception:', err)
+    return { success: false, error: err?.message ?? 'Erro ao enviar formulário' }
+  }
+}
+
+// ─── Usuários (gerente only) ─────────────────────────────────────────────────
+
+/**
+ * Cria um novo usuário no Supabase Auth + perfil no banco.
+ * Usa a service role (admin client) para criar a conta.
+ */
+export async function criarUsuario(formData: FormData): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  // Schema Kairós: tabela é `usuarios` (não `profiles`). Lê com admin pra escapar de RLS no próprio perfil.
+  const { createAdminClient } = await import('@/lib/supabase/admin')
+  const admin = createAdminClient()
+
+  const { data: me } = await admin.from('usuarios').select('role').eq('id', user.id).single()
+  if (me?.role !== 'gerente') return { success: false, error: 'Apenas gerentes podem criar usuários' }
+
+  const email    = (formData.get('email') as string || '').trim().toLowerCase()
+  const fullName = (formData.get('full_name') as string || '').trim()
+  const role     = (formData.get('role') as string) || 'consultor'
+  const isActive = formData.get('is_active') !== 'false'
+  const phone    = (formData.get('phone') as string) || null
+  const password = (formData.get('password') as string) || 'Senha@2026'
+
+  if (!email || !fullName) return { success: false, error: 'Nome completo e e-mail são obrigatórios' }
+
+  // 1. Verifica se já existe no Auth
+  const { data: lista } = await admin.auth.admin.listUsers()
+  const jaExiste = lista?.users?.find(u => u.email === email)
+
+  let userId: string
+
+  if (jaExiste) {
+    userId = jaExiste.id
+    await admin.auth.admin.updateUserById(userId, {
+      user_metadata: { nome: fullName },
+    })
+  } else {
+    const { data: authData, error: authErr } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { nome: fullName },
+    })
+    if (authErr) return { success: false, error: authErr.message }
+    userId = authData.user.id
+  }
+
+  // 2. Upsert na tabela `usuarios` (telefone vira cargo se não houver coluna phone)
+  const { error: profileErr } = await admin.from('usuarios').upsert({
+    id:             userId,
+    email,
+    nome_completo:  fullName,
+    role,
+    ativo:          isActive,
+    cargo:          phone ? `Tel: ${phone}` : null,
+  }, { onConflict: 'id' })
+
+  if (profileErr) return { success: false, error: profileErr.message }
+
+  revalidatePath('/adminpanel')
+  return { success: true, id: userId }
+}
+
+/**
+ * Atualiza perfil de usuário existente na tabela `usuarios`.
+ */
+export async function upsertProfile(formData: FormData): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  const { createAdminClient } = await import('@/lib/supabase/admin')
+  const admin = createAdminClient()
+
+  const { data: me } = await admin.from('usuarios').select('role').eq('id', user.id).single()
+  if (me?.role !== 'gerente') return { success: false, error: 'Sem permissão' }
+
+  const email    = (formData.get('email') as string || '').trim().toLowerCase()
+  const fullName = (formData.get('full_name') as string || '').trim()
+  const role     = formData.get('role') as string
+  const isActive = formData.get('is_active') === 'true'
+  const phone    = (formData.get('phone') as string) || null
+
+  const { data: existing } = await admin.from('usuarios').select('id').eq('email', email).single()
+
+  if (!existing) {
+    return { success: false, error: `Usuário com e-mail "${email}" não existe. Use "Criar Novo Usuário".` }
+  }
+
+  const { error } = await admin
+    .from('usuarios')
+    .update({
+      nome_completo: fullName,
+      role,
+      ativo:         isActive,
+      cargo:         phone ? `Tel: ${phone}` : null,
+    })
+    .eq('email', email)
+
+  if (error) return { success: false, error: error.message }
+  revalidatePath('/adminpanel')
+  return { success: true }
+}
+
+/**
+ * Exclui usuário (perfil + conta de auth).
+ */
+export async function excluirUsuario(userId: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+  if (user.id === userId) return { success: false, error: 'Você não pode excluir a própria conta' }
+
+  const { createAdminClient } = await import('@/lib/supabase/admin')
+  const admin = createAdminClient()
+
+  const { data: me } = await admin.from('usuarios').select('role').eq('id', user.id).single()
+  if (me?.role !== 'gerente') return { success: false, error: 'Sem permissão' }
+
+  // Remove perfil primeiro pra evitar trigger ressuscitar
+  await admin.from('usuarios').delete().eq('id', userId)
+  const { error } = await admin.auth.admin.deleteUser(userId)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/adminpanel')
+  return { success: true }
+}
+
+/**
+ * Reseta a senha do usuário para uma nova senha definida pelo gerente.
+ */
+export async function resetarSenhaUsuario(userId: string, novaSenha: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  if (!novaSenha || novaSenha.length < 6) {
+    return { success: false, error: 'A senha deve ter pelo menos 6 caracteres' }
+  }
+
+  const { createAdminClient } = await import('@/lib/supabase/admin')
+  const admin = createAdminClient()
+
+  const { data: me } = await admin.from('usuarios').select('role').eq('id', user.id).single()
+  if (me?.role !== 'gerente') return { success: false, error: 'Sem permissão' }
+
+  const { error } = await admin.auth.admin.updateUserById(userId, { password: novaSenha })
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/adminpanel')
+  return { success: true }
+}
+
+// ─── Proposta ──────────────────────────────────────────────────────────────────
+
+export async function atualizarProposta(formData: FormData): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  const id = formData.get('id') as string
+  if (!id) return { success: false, error: 'id é obrigatório' }
+
+  const toNum = (k: string) => parseFloat((formData.get(k) as string)?.replace(',', '.')) || 0
+  const tipo = formData.get('tipo') as string
+
+  const payload = {
+    escola_nome:              formData.get('escola_nome') as string,
+    escola_email:             (formData.get('escola_email') as string) || null,
+    tipo,
+    validade:                 formData.get('validade') as string,
+    valor_aluno_ano:          toNum('valor_aluno_ano'),
+    valor_aluno_ano_comodato: tipo === 'curriculo_comodato' ? toNum('valor_aluno_ano_comodato') : null,
+    num_parcelas:             parseInt(formData.get('num_parcelas') as string) || 5,
+    num_parcelas_curriculo:   tipo === 'curriculo_comodato' ? (parseInt(formData.get('num_parcelas_curriculo') as string) || 5) : null,
+    duracao_meses:            parseInt(formData.get('duracao_meses') as string) || 48,
+    texto_personalizado:      (formData.get('texto_personalizado') as string) || null,
+    status:                   formData.get('status') as string,
+  }
+
+  try {
+    // Update via admin (service_role): a policy de UPDATE de propostas é
+    // restritiva (ex.: só quem criou), então um edit feito por outra pessoa
+    // da equipe silenciosamente não alterava nenhuma linha — sem erro
+    // nenhum, já que RLS filtra a linha antes do UPDATE rodar. Fica preso
+    // atrás do check de auth acima, então só usuário logado chega aqui.
+    const admin = createAdminClient()
+    const { error, data } = await admin.from('propostas').update(payload).eq('id', id).select('id')
+    if (error) return { success: false, error: error.message }
+    if (!data || data.length === 0) return { success: false, error: 'Proposta não encontrada' }
+
+    await createAuditLog('UPDATE', 'propostas', id, payload)
+    revalidatePath('/comercial/propostas')
+    revalidatePath(`/comercial/propostas/${id}/editar`)
+    revalidatePath('/proposta/[token]', 'page')
+
+    return { success: true, id }
+  } catch (err: any) {
+    return { success: false, error: err.message ?? 'Erro ao salvar proposta' }
+  }
+}
+
+export async function arquivarProposta(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  try {
+    const arquivada_em = new Date().toISOString()
+    const admin = createAdminClient()
+    const { error } = await admin.from('propostas').update({ arquivada_em }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+
+    await createAuditLog('DELETE', 'propostas', id, { arquivada_em })
+    revalidatePath('/comercial/propostas')
+
+    return { success: true, id }
+  } catch (err: any) {
+    return { success: false, error: err.message ?? 'Erro ao arquivar proposta' }
+  }
+}
+
+export async function desarquivarProposta(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  try {
+    const admin = createAdminClient()
+    const { error } = await admin.from('propostas').update({ arquivada_em: null }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+
+    await createAuditLog('UPDATE', 'propostas', id, { arquivada_em: null })
+    revalidatePath('/comercial/propostas')
+
+    return { success: true, id }
+  } catch (err: any) {
+    return { success: false, error: err.message ?? 'Erro ao restaurar proposta' }
+  }
+}
+
+export async function renovarValidadeProposta(id: string, novaValidade: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'Não autenticado' }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(novaValidade)) {
+    return { success: false, error: 'Data inválida' }
+  }
+
+  try {
+    const admin = createAdminClient()
+    const { error } = await admin.from('propostas').update({ validade: novaValidade }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+
+    await createAuditLog('UPDATE', 'propostas', id, { validade: novaValidade })
+    revalidatePath('/comercial/propostas')
+    revalidatePath(`/comercial/propostas/${id}/editar`)
+    revalidatePath('/proposta/[token]', 'page')
+
+    return { success: true, id }
+  } catch (err: any) {
+    return { success: false, error: err.message ?? 'Erro ao renovar validade da proposta' }
+  }
+}
