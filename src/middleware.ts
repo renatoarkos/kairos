@@ -27,6 +27,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request })
   }
 
+  // Sem projeto Supabase configurado ainda (ex.: rodando local antes do
+  // primeiro deploy real) — createServerClient lança na hora se URL/key
+  // vierem vazios, derrubando toda rota protegida com 500. Trata como "não
+  // autenticado" em vez de quebrar, pra dar pra navegar/visualizar a UI.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (pathname === '/login') return NextResponse.next({ request })
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
