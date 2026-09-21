@@ -1,5 +1,6 @@
-# Claude worktrees (auto-generated, never commit)
+# Claude Code local settings/worktrees (personal, never commit)
 .claude/worktrees/
+.claude/settings.local.json
 
 # Python
 __pycache__/
