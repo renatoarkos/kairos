@@ -13,7 +13,7 @@ import {
   Package, FlaskConical, BarChart2, Download,
   Bot, DollarSign, Table2, Info, FileSignature, ClipboardList,
   ExternalLink, GitBranch, Target, CalendarDays, FileAudio,
-  Upload, Database, BookOpen, Crosshair, Milestone
+  Upload, Database, BookOpen, Crosshair, Milestone, Library
 } from 'lucide-react'
 
 interface SidebarProps { profile: Profile | null }
@@ -36,6 +36,7 @@ const NAV_CRM: NavItemDef[] = [
   { href: '/comercial/funil-contratacao', label: 'Funil de Contratação', icon: Milestone, badge: 'Novo' },
   { href: '/comercial/metas',          label: 'Metas',         icon: Target          },
   { href: '/comercial/quantidade-alunos', label: 'Quantidade de Alunos', icon: Users, badge: 'Novo' },
+  { href: '/comercial/produtos',       label: 'Produtos',      icon: Library, badge: 'Novo' },
   { href: '/calculadora',              label: 'Calculadora',   icon: Calculator      },
   { href: '/comercial/pre-cadastros',  label: 'Dados Proposta Comercial', icon: ClipboardList   },
   { href: '/comercial/propostas',      label: 'Propostas',         icon: FileText      },
