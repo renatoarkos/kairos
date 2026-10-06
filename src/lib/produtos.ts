@@ -32,12 +32,20 @@ export interface Produto {
   valor_pagina: number | null
   valor_capa: number | null
   valor_shrink: number | null
-  valor_unitario: number | null
+  valor_unitario: number | null // custo de gráfica unitário (orçamento da gráfica)
+  valor_venda: number | null     // custo de venda unitário (preço da Kairós)
   peso_liquido_unitario: number | null
   valor_total: number | null
   observacoes: string | null
   ativo: boolean
 }
+
+// Ano base = tiragem da planilha (editável). Os demais anos herdam os produtos
+// do ano base e recebem a quantidade dos Registros (view produtos_livros_demanda).
+export const ANO_BASE = 2026
+export const ANOS = [2026, 2027]
+
+export interface Demanda { alunos: number; escolas: number }
 
 export type CampoProduto = {
   campo: string
@@ -95,13 +103,14 @@ export const GRUPOS_PRODUTO: { titulo: string; campos: CampoProduto[] }[] = [
   {
     titulo: 'Tiragem e valores',
     campos: [
-      { campo: 'tiragem', label: 'Tiragem', tipo: 'int' },
-      { campo: 'tiragem_atualizada', label: 'Tiragem atualizada', tipo: 'int' },
+      { campo: 'tiragem', label: 'Tiragem 2026', tipo: 'int' },
+      { campo: 'tiragem_atualizada', label: 'Tiragem 2026 atualizada', tipo: 'int' },
       { campo: 'valor_manuseio', label: 'Valor manuseio (R$)', tipo: 'money' },
       { campo: 'valor_pagina', label: 'Valor página (R$)', tipo: 'money' },
       { campo: 'valor_capa', label: 'Valor capa (R$)', tipo: 'money' },
       { campo: 'valor_shrink', label: 'Valor shrink (R$)', tipo: 'money' },
-      { campo: 'valor_unitario', label: 'Valor unitário (R$)', tipo: 'money' },
+      { campo: 'valor_unitario', label: 'Custo de gráfica unitário (R$)', tipo: 'money' },
+      { campo: 'valor_venda', label: 'Custo de venda unitário (R$)', tipo: 'money' },
       { campo: 'peso_liquido_unitario', label: 'Peso líquido unitário', tipo: 'money' },
     ],
   },
