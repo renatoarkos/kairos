@@ -405,7 +405,7 @@ export default function ContratoLoginPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
                 {[
-                  { icon: <Mail size={14} />, label: 'contato@kairos.com.br', href: 'mailto:contato@kairos.com.br' },
+                  { icon: <Mail size={14} />, label: 'contato@editorakairos.com.br', href: 'mailto:contato@editorakairos.com.br' },
                   { icon: <Phone size={14} />, label: '(83) 99654-1530', href: 'tel:+5583996541530' },
                   { icon: <MessageCircle size={14} />, label: 'WhatsApp', href: 'https://wa.me/5583996541530' },
                   { icon: <span style={{fontSize:'14px'}}>📷</span>, label: '@wemake', href: 'https://instagram.com/wemake' },
@@ -460,7 +460,7 @@ export default function ContratoLoginPage() {
                 Links Úteis
               </div>
               {[
-                { label: 'Kairós', href: 'https://kairos.com.br/' },
+                { label: 'Kairós', href: 'https://editorakairos.com.br/' },
                 { label: 'Hub de Plataformas', href: '/' },
                 { label: 'Gestão Comercial', href: '/login' },
                 { label: 'FICV Faculdade', href: 'https://ficv.edu.br/' },

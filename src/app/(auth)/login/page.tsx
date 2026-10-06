@@ -59,8 +59,8 @@ export default function LoginPage() {
           setMobileMenuOpen={setMobileMenuOpen}
           menuItems={[
             { label: 'Início', href: '/' },
-            { label: 'Sobre Kairós', href: 'https://kairos.com.br' },
-            { label: 'Contato', href: 'mailto:contato@kairos.com.br' },
+            { label: 'Sobre Kairós', href: 'https://editorakairos.com.br' },
+            { label: 'Contato', href: 'mailto:contato@editorakairos.com.br' },
           ]}
           cta={{ label: 'Formulário da Escola', href: '/formulario' }}
         />
@@ -535,10 +535,10 @@ export default function LoginPage() {
               {/* Contatos */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
                 {[
-                  { icon: <Mail size={14} />, label: 'contato@kairos.com.br', href: 'mailto:contato@kairos.com.br' },
+                  { icon: <Mail size={14} />, label: 'contato@editorakairos.com.br', href: 'mailto:contato@editorakairos.com.br' },
                   { icon: <Phone size={14} />, label: '(83) 99654-1530', href: 'tel:+5583996541530' },
                   { icon: <MessageCircle size={14} />, label: 'WhatsApp Comercial', href: 'https://wa.me/5583996541530' },
-                  { icon: <span style={{fontSize:'14px'}}>📷</span>, label: '@wemakebr', href: 'https://instagram.com/wemakebr' },
+                  { icon: <span style={{fontSize:'14px'}}>📷</span>, label: '[COMPLETAR: @instagram]', href: '#' },
                 ].map(item => (
                   <a key={item.label} href={item.href} target="_blank" rel="noopener noreferrer" style={{
                     display: 'flex', alignItems: 'center', gap: '.5rem',
@@ -593,7 +593,7 @@ export default function LoginPage() {
                 Links Úteis
               </div>
               {[
-                { label: 'Kairós', href: 'https://kairos.com.br/' },
+                { label: 'Kairós', href: 'https://editorakairos.com.br/' },
                 { label: 'Gestão Comercial', href: '/' },
                 { label: 'Gestão de Contratos', href: '/' },
                 { label: 'Formulário de Pré-Cadastro', href: '/formulario' },

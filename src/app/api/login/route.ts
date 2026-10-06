@@ -14,6 +14,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Usuário ou senha inválidos.' })
   }
 
+  // Atalho de login (usuário sem "@") completa com o domínio das contas reais
+  // no Supabase Auth hoje (renato/hugo/leticia@kairos.com.br) — não confundir
+  // com editorakairos.com.br, que é só o site/domínio de marca.
   const email = String(rawEmail).includes('@') ? rawEmail : `${rawEmail}@kairos.com.br`
 
   const response = NextResponse.json({ error: null })
