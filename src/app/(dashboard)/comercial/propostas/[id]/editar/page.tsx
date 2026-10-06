@@ -88,7 +88,7 @@ export default async function PropostaEditar({ params, searchParams }: Props) {
 
 Como combinamos, aqui está a proposta personalizada para vocês:
 
-🔗 Link: https://comercial.kairos.com.br/proposta/${p.token}
+🔗 Link: https://comercial.editorakairos.com.br/proposta/${p.token}
 🔑 PIN de acesso: ${p.escola_pin}
 
 Essa foi a proposta oficial que enviamos para a escola.`

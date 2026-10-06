@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { PropostaEstilos } from '@/components/comercial/PropostaEstilos'
 
-const SITE_URL = 'https://comercial.kairos.com.br'
+const SITE_URL = 'https://comercial.editorakairos.com.br'
 const OG_IMAGE = `${SITE_URL}/proposta/foto_propostacomercial.png`
 
 export const metadata: Metadata = {

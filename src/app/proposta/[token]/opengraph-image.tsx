@@ -5,7 +5,7 @@ export const alt = 'Proposta de Parceria Kairós'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-const SITE_URL = 'https://comercial.kairos.com.br'
+const SITE_URL = 'https://comercial.editorakairos.com.br'
 const C = { navy: '#0b1f44', royal: '#4c8ade', royalD: '#2a69ba', mint: '#76f3cd', amber: '#ffcc00' }
 
 interface PropostaCapa {
@@ -113,7 +113,7 @@ export default async function Image({ params }: { params: Promise<{ token: strin
             display: 'flex', position: 'absolute', left: 44, right: 44, bottom: 32,
             alignItems: 'flex-end', justifyContent: 'space-between',
           }}>
-            <div style={{ display: 'flex', fontSize: 26, fontWeight: 700, color: '#fff', letterSpacing: 1 }}>we<span style={{ color: C.mint }}>make</span></div>
+            <div style={{ display: 'flex', fontSize: 26, fontWeight: 700, color: '#fff', letterSpacing: 1 }}>Kair<span style={{ color: C.mint }}>ós</span></div>
             {validadeTexto && (
               <div style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'flex-end',

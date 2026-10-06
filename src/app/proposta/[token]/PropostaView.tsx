@@ -450,7 +450,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
       <p style={{ textAlign: 'justify', fontFamily: 'Geist, sans-serif', color: 'rgba(255,255,255,.45)', maxWidth: 380, lineHeight: 1.7 }}>
         Esta proposta não está mais disponível. Entre em contato para renovar.
       </p>
-      <a href="mailto:contato@kairos.com.br" className="btn-primary" style={{ marginTop: 8 }}>contato@kairos.com.br</a>
+      <a href="mailto:contato@editorakairos.com.br" className="btn-primary" style={{ marginTop: 8 }}>contato@editorakairos.com.br</a>
     </div>
   )
 
@@ -602,13 +602,13 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
               <div style={{ position: 'absolute', width: '36%', height: '36%', borderRadius: '50%', background: C.mint, top: '-8%', left: '-10%', opacity: 0.9 }} />
               {/* foto circular */}
               <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', overflow: 'hidden', boxShadow: '0 8px 40px rgba(11,31,68,0.15)' }}>
-                <img src="/proposta/denis_ceo.png" alt="Denis Júlio" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+                <img src="/proposta/ceo.png" alt="[COMPLETAR: nome do responsável Kairós]" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
               </div>
             </div>
             {/* nome colado abaixo da foto */}
             <div style={{ textAlign: 'center' }}>
-              <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.05rem', color: C.navy, fontWeight: 600, fontStyle: 'italic', lineHeight: 1.2, marginBottom: 4 }}>Denis Júlio</p>
-              <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: C.royal, letterSpacing: '0.12em', textTransform: 'uppercase' }}>CEO · Kairós</p>
+              <p style={{ fontFamily: 'Fraunces, serif', fontSize: '1.05rem', color: C.navy, fontWeight: 600, fontStyle: 'italic', lineHeight: 1.2, marginBottom: 4 }}>[COMPLETAR: nome]</p>
+              <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.62rem', color: C.royal, letterSpacing: '0.12em', textTransform: 'uppercase' }}>[COMPLETAR: cargo] · Kairós</p>
             </div>
           </div>
 
@@ -660,8 +660,8 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
                 <div style={{ width: 28, height: 2, background: C.royal, borderRadius: 1, opacity: 0.35 }} />
                 <div>
                   <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.58rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 3 }}>Com gratidão,</p>
-                  <p style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-2xl)', color: C.navy, fontWeight: 600, fontStyle: 'italic', lineHeight: 1.1, marginBottom: 2 }}>Denis Júlio</p>
-                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.7rem', color: C.royal }}>CEO — Kairós Tecnologia Educacional</p>
+                  <p style={{ fontFamily: 'Fraunces, serif', fontSize: 'var(--text-2xl)', color: C.navy, fontWeight: 600, fontStyle: 'italic', lineHeight: 1.1, marginBottom: 2 }}>[COMPLETAR: nome]</p>
+                  <p style={{ fontFamily: 'Geist, sans-serif', fontSize: '0.7rem', color: C.royal }}>[COMPLETAR: cargo] — Kairós Tecnologia Educacional</p>
                 </div>
               </div>
             </Reveal>
@@ -781,7 +781,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
             {(() => {
               const capas = getPropostaSegmentosList(p).map(l => CAPA_POR_SEGMENTO[l]).filter((src): src is string => !!src)
               if (capas.length === 0) {
-                return <img src="/proposta/livros-wemake.png" alt="Livros Kairós" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} style={{ width: '85%', maxHeight: '85%', objectFit: 'contain', objectPosition: 'center', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }} />
+                return <img src="/proposta/material-didatico.png" alt="Material didático Kairós" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} style={{ width: '85%', maxHeight: '85%', objectFit: 'contain', objectPosition: 'center', display: 'block', position: 'relative', zIndex: 1, filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }} />
               }
               const meio = (capas.length - 1) / 2
               return (
@@ -1671,9 +1671,9 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
               <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 28 }}>
                 {[
                   { icon: I.insta(C.mint), label: 'Instagram', val: '@wemake.tec' },
-                  { icon: I.mail(C.mint),  label: 'E-mail',    val: 'contato@kairos.com.br' },
+                  { icon: I.mail(C.mint),  label: 'E-mail',    val: 'contato@editorakairos.com.br' },
                   { icon: I.phone(C.mint), label: 'WhatsApp',  val: '(83) 98230-1530' },
-                  { icon: I.globe(C.mint), label: 'Site',      val: 'kairos.com.br' },
+                  { icon: I.globe(C.mint), label: 'Site',      val: 'editorakairos.com.br' },
                 ].map(c => (
                   <div key={c.label} className="surface-glass card-lift" style={{ borderRadius: 3, padding: '14px 16px', textAlign: 'left' }}>
                     <div style={{ marginBottom: 8 }}>{c.icon}</div>
