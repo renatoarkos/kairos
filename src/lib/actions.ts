@@ -7,6 +7,7 @@ import { createPublicClient } from '@/lib/supabase/public'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { calcPotencial, calcProbabilidade, calcClassificacao } from '@/types/database'
 import type { StageNegociacao } from '@/types/database'
+import { SERIES, SEGMENTOS, type Segmento } from '@/lib/series'
 
 // ─── Tipos de retorno das actions (para uso em Client Components) ─────────────
 
@@ -238,22 +239,24 @@ export async function upsertRegistro(formData: FormData) {
   const escola_id  = formData.get('escola_id') as string
   const enc        = formData.getAll('encaminhamentos') as string[]
   
-  // Granulares
-  const q_i2 = parseInt(formData.get('qtd_infantil2') as string) || 0
-  const q_i3 = parseInt(formData.get('qtd_infantil3') as string) || 0
-  const q_i4 = parseInt(formData.get('qtd_infantil4') as string) || 0
-  const q_i5 = parseInt(formData.get('qtd_infantil5') as string) || 0
-  const q_f1_a1 = parseInt(formData.get('qtd_fund1_ano1') as string) || 0
-  const q_f1_a2 = parseInt(formData.get('qtd_fund1_ano2') as string) || 0
-  const q_f1_a3 = parseInt(formData.get('qtd_fund1_ano3') as string) || 0
-  const q_f1_a4 = parseInt(formData.get('qtd_fund1_ano4') as string) || 0
-  const q_f1_a5 = parseInt(formData.get('qtd_fund1_ano5') as string) || 0
+  // Quantidade por série (Infantil 2 ao 3º ano do Médio) — ver src/lib/series.ts.
+  // O total do segmento é a soma das séries; se nenhuma série veio preenchida
+  // (registro antigo, anterior às séries), mantém o total que já existia.
+  const qtdSerie: Record<string, number> = {}
+  for (const serie of SERIES) {
+    qtdSerie[serie.codigo] = parseInt(formData.get(`qtd_${serie.codigo}`) as string) || 0
+  }
+  const totalSegmento = (seg: Segmento) => {
+    const soma = seg.series.reduce((acc, x) => acc + qtdSerie[x.codigo], 0)
+    return soma > 0 ? soma : (parseInt(formData.get(seg.totalCampo) as string) || 0)
+  }
+  const [segInfantil, segFund1, segFund2, segMedio] = SEGMENTOS
+  const qtd_inf = totalSegmento(segInfantil)
+  const qtd_f1  = totalSegmento(segFund1)
+  const qtd_f2  = totalSegmento(segFund2)
+  const qtd_med = totalSegmento(segMedio)
+  const colunasSerie = Object.fromEntries(SERIES.map(x => [`qtd_${x.codigo}`, qtdSerie[x.codigo]]))
 
-  const qtd_inf    = q_i2 + q_i3 + q_i4 + q_i5
-  const qtd_f1     = q_f1_a1 + q_f1_a2 + q_f1_a3 + q_f1_a4 + q_f1_a5
-  const qtd_f2     = parseInt(formData.get('qtd_fund2') as string) || 0
-  const qtd_med    = parseInt(formData.get('qtd_medio') as string) || 0
-  
   const interesse  = formData.get('interesse') as string || 'medio'
   const prontidao  = formData.get('prontidao') as string || 'esperando_retorno'
   const abertura   = formData.get('abertura') as string || 'media'
@@ -280,6 +283,7 @@ export async function upsertRegistro(formData: FormData) {
     qtd_fund1:            qtd_f1,
     qtd_fund2:            qtd_f2,
     qtd_medio:            qtd_med,
+    ...colunasSerie,
     potencial_financeiro: pot,
     probabilidade:        prob,
     classificacao:        cls,
@@ -306,20 +310,30 @@ export async function upsertRegistro(formData: FormData) {
   // Sincronizamos os granulares também para manter a integridade
   if (qtd_inf > 0 || qtd_f1 > 0 || qtd_f2 > 0 || qtd_med > 0) {
     await supabase.from('escolas').update({
-      qtd_infantil:   qtd_inf,
-      qtd_infantil2:  q_i2,
-      qtd_infantil3:  q_i3,
-      qtd_infantil4:  q_i4,
-      qtd_infantil5:  q_i5,
-      qtd_fund1:      qtd_f1,
-      qtd_fund1_ano1: q_f1_a1,
-      qtd_fund1_ano2: q_f1_a2,
-      qtd_fund1_ano3: q_f1_a3,
-      qtd_fund1_ano4: q_f1_a4,
-      qtd_fund1_ano5: q_f1_a5,
-      qtd_fund2:      qtd_f2,
-      qtd_medio:      qtd_med,
+      qtd_infantil: qtd_inf,
+      qtd_fund1:    qtd_f1,
+      qtd_fund2:    qtd_f2,
+      qtd_medio:    qtd_med,
+      ...colunasSerie,
     }).eq('id', escola_id)
+  }
+
+  // 3. Livros escolhidos por série (registro_serie_livros → produtos_livros).
+  // Reescreve o conjunto inteiro do registro. Não bloqueia o salvamento se a
+  // migration add_catalogo_livros_e_series.sql ainda não rodou.
+  if (registroId) {
+    const vinculos = SERIES.flatMap(serie =>
+      [...new Set(formData.getAll(`livros_${serie.codigo}`).map(String).filter(Boolean))]
+        .map(produto_id => ({ registro_id: registroId as string, serie: serie.codigo, produto_id })),
+    )
+    const admin = createAdminClient()
+    const { error: delErr } = await admin.from('registro_serie_livros').delete().eq('registro_id', registroId)
+    if (delErr) {
+      console.error('[registros] não foi possível limpar os livros por série:', delErr.message)
+    } else if (vinculos.length > 0) {
+      const { error: insErr } = await admin.from('registro_serie_livros').insert(vinculos)
+      if (insErr) console.error('[registros] não foi possível gravar os livros por série:', insErr.message)
+    }
   }
 
   await createAuditLog(id ? 'UPDATE' : 'INSERT', 'registros', registroId, payload)

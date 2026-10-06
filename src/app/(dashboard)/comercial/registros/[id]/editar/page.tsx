@@ -9,6 +9,8 @@ import {
   ABERTURA_OPTIONS, ENCAMINHAMENTOS_OPTIONS, CARGO_CONTATO_OPTIONS,
 } from '@/types/database'
 import { RegistroAnexoUpload } from '@/components/comercial/RegistroAnexoUpload'
+import { SeriesLivros, type ProdutoOpcao } from '@/components/comercial/SeriesLivros'
+import { SERIES, SEGMENTOS } from '@/lib/series'
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -49,10 +51,19 @@ export default async function RegistroEditar({ params }: Props) {
   const { data: { user } } = await supabase.auth.getUser()
   const admin = createAdminClient()
 
-  const [{ data: registro }, { data: profiles }] = await Promise.all([
+  const [{ data: registro }, { data: profiles }, { data: produtosRaw }, { data: vinculosRaw }] = await Promise.all([
     supabase.from('registros').select('*, escola:escolas(id,nome)').eq('id', id).single(),
     admin.from('usuarios').select('id, nome_completo').eq('ativo', true).order('nome_completo'),
+    // Catálogo e vínculos (produtos_livros / registro_serie_livros): se a
+    // migration ainda não rodou, as queries erram e as listas vêm vazias.
+    admin.from('produtos_livros').select('id, titulo, serie, publico').eq('ativo', true).order('titulo'),
+    admin.from('registro_serie_livros').select('serie, produto_id').eq('registro_id', id),
   ])
+  const produtos = (produtosRaw ?? []) as ProdutoOpcao[]
+  const livrosIniciais: Record<string, string[]> = {}
+  for (const v of (vinculosRaw ?? []) as { serie: string; produto_id: string }[]) {
+    ;(livrosIniciais[v.serie] ??= []).push(v.produto_id)
+  }
 
   if (!registro) notFound()
   const r = registro as any
@@ -209,15 +220,12 @@ export default async function RegistroEditar({ params }: Props) {
               <div style={secTitle}>Quantitativos de Alunos</div>
             </div>
             <div style={body}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.25rem 1.5rem', marginBottom: '1.25rem' }}>
-                {[['qtd_infantil','Infantil'],['qtd_fund1','Fund. I'],['qtd_fund2','Fund. II'],['qtd_medio','Médio']].map(([name, label]) => (
-                  <div key={name}>
-                    <label style={lbl}>{label}</label>
-                    <input name={name} type="number" min="0" defaultValue={(r as any)[name] ?? 0}
-                      style={{ ...inp, textAlign: 'center', fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.1rem', fontWeight: 700 }} />
-                  </div>
-                ))}
-              </div>
+              <SeriesLivros
+                produtos={produtos}
+                qtdInicial={Object.fromEntries(SERIES.map(x => [x.codigo, r[`qtd_${x.codigo}`] ?? 0]))}
+                livrosIniciais={livrosIniciais}
+                totaisLegados={Object.fromEntries(SEGMENTOS.map(seg => [seg.totalCampo, r[seg.totalCampo] ?? 0]))}
+              />
             </div>
           </div>
 

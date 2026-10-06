@@ -5,6 +5,7 @@ import PageHeader from '@/components/layout/PageHeader'
 import Link from 'next/link'
 import { buscarEscolasUnificadas } from '@/lib/escolas-unificadas'
 import { EscolaSelector } from '@/components/ui/EscolaSelector'
+import { SeriesLivros, type ProdutoOpcao } from '@/components/comercial/SeriesLivros'
 import {
   MEIO_OPTIONS, INTERESSE_OPTIONS, PRONTIDAO_OPTIONS,
   ABERTURA_OPTIONS, ENCAMINHAMENTOS_OPTIONS, CARGO_CONTATO_OPTIONS,
@@ -53,13 +54,17 @@ export default async function RegistroNovo({ searchParams }: Props) {
   const { data: { user } } = await supabase.auth.getUser()
   const admin = createAdminClient()
 
-  const [escolas, { data: profiles }, { data: negociacoes }] = await Promise.all([
+  const [escolas, { data: profiles }, { data: negociacoes }, { data: produtosRaw }] = await Promise.all([
     buscarEscolasUnificadas(),
     admin.from('usuarios').select('id, nome_completo').eq('ativo', true).order('nome_completo'),
     escolaId
       ? admin.from('negociacoes').select('id, titulo, stage').eq('escola_id', escolaId).eq('ativa', true)
       : Promise.resolve({ data: [] }),
+    // Catálogo de livros (produtos_livros). Se a migration ainda não rodou a
+    // query erra e a lista vem vazia — o formulário avisa em vez de quebrar.
+    admin.from('produtos_livros').select('id, titulo, serie, publico').eq('ativo', true).order('titulo'),
   ])
+  const produtos = (produtosRaw ?? []) as ProdutoOpcao[]
 
   const hoje = new Date().toISOString().split('T')[0]
 
@@ -255,59 +260,9 @@ export default async function RegistroNovo({ searchParams }: Props) {
               </div>
             </div>
             <div style={body}>
-              {/* Segmentos Granulares */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.25rem' }}>
-                
-                {/* Infantil */}
-                <div style={{ background: '#fff7ed', padding: '1rem', borderRadius: 3, border: '1px solid #fed7aa' }}>
-                  <label style={{ ...lbl, color: '#9a3412', marginBottom: '.75rem' }}>Educação Infantil</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '.5rem' }}>
-                    {[
-                      { n: 'qtd_infantil2', l: 'Inf 2' },
-                      { n: 'qtd_infantil3', l: 'Inf 3' },
-                      { n: 'qtd_infantil4', l: 'Inf 4' },
-                      { n: 'qtd_infantil5', l: 'Inf 5' },
-                    ].map(f => (
-                      <div key={f.n}>
-                        <div style={{ fontSize: '.6rem', fontWeight: 700, textAlign: 'center', color: '#ea580c' }}>{f.l}</div>
-                        <input name={f.n} type="number" min="0" defaultValue="0" style={{ ...inp, padding: '.4rem', textAlign: 'center' }} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Fund I */}
-                <div style={{ background: '#eff6ff', padding: '1rem', borderRadius: 3, border: '1px solid #bfdbfe' }}>
-                  <label style={{ ...lbl, color: '#1e40af', marginBottom: '.75rem' }}>Fundamental I</label>
-                  <div className="mp-registronovo-fundi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '.5rem' }}>
-                    {[
-                      { n: 'qtd_fund1_ano1', l: '1º A' },
-                      { n: 'qtd_fund1_ano2', l: '2º A' },
-                      { n: 'qtd_fund1_ano3', l: '3º A' },
-                      { n: 'qtd_fund1_ano4', l: '4º A' },
-                      { n: 'qtd_fund1_ano5', l: '5º A' },
-                    ].map(f => (
-                      <div key={f.n}>
-                        <div style={{ fontSize: '.6rem', fontWeight: 700, textAlign: 'center', color: '#2563eb' }}>{f.l}</div>
-                        <input name={f.n} type="number" min="0" defaultValue="0" style={{ ...inp, padding: '.4rem', textAlign: 'center' }} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Fund II e Médio */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.25rem 1.5rem', marginBottom: '1.25rem' }}>
-                {[
-                  ['qtd_fund2',    'Fundamental II'],
-                  ['qtd_medio',    'Ensino Médio'],
-                ].map(([name, label]) => (
-                  <div key={name} style={{ gridColumn: 'span 2' }}>
-                    <label style={lbl}>{label}</label>
-                    <input name={name} type="number" min="0" defaultValue="0"
-                      style={{ ...inp, textAlign: 'center', fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.1rem', fontWeight: 700 }} />
-                  </div>
-                ))}
+              {/* Todas as séries (Infantil 2 ao 3º ano do Médio) + livros por série */}
+              <div style={{ marginBottom: '1.25rem' }}>
+                <SeriesLivros produtos={produtos} />
               </div>
 
               {/* Cálculo automático exibido */}
