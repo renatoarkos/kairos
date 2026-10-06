@@ -28,7 +28,7 @@ export default function MobileFooter({ sections }: MobileFooterProps) {
     {
       title: 'Links Úteis',
       items: [
-        { label: 'Kairós', href: 'https://kairos.com.br' },
+        { label: 'Kairós', href: 'https://editorakairos.com.br' },
         { label: 'Plataforma', href: '/login' },
         { label: 'Formulário', href: '/formulario' },
         { label: 'Contato', href: '#contato' },
@@ -72,7 +72,7 @@ export default function MobileFooter({ sections }: MobileFooterProps) {
             Contatos
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <a href="mailto:contato@kairos.com.br" style={{
+            <a href="mailto:contato@editorakairos.com.br" style={{
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
@@ -86,7 +86,7 @@ export default function MobileFooter({ sections }: MobileFooterProps) {
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,.5)'}
             >
               <Mail size={16} style={{ flexShrink: 0, color: '#87cde8' }} />
-              contato@kairos.com.br
+              contato@editorakairos.com.br
             </a>
             <a href="tel:+5583996541530" style={{
               display: 'flex',

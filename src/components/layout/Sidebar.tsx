@@ -36,6 +36,9 @@ const NAV_CRM: NavItemDef[] = [
   { href: '/comercial/funil-contratacao', label: 'Funil de Contratação', icon: Milestone, badge: 'Novo' },
   { href: '/comercial/metas',          label: 'Metas',         icon: Target          },
   { href: '/comercial/quantidade-alunos', label: 'Quantidade de Alunos', icon: Users, badge: 'Novo' },
+  { href: '/calculadora',              label: 'Calculadora',   icon: Calculator      },
+  { href: '/comercial/pre-cadastros',  label: 'Dados Proposta Comercial', icon: ClipboardList   },
+  { href: '/comercial/propostas',      label: 'Propostas',         icon: FileText      },
   { href: '/formulario',               label: 'Formulário Escola', icon: ClipboardList, external: true },
 ]
 
@@ -44,6 +47,7 @@ const NAV_PROCESS = [
   { href: '/comercial/jornada',        label: 'Jornada Relac.',    icon: Activity    },
   { href: '/comercial/contratos',      label: 'Jornada Contrat.',  icon: FileSignature },
   { href: '/comercial/pipeline',         label: 'Pipeline CRM',        icon: Kanban      },
+  { href: '/comercial/pipeline-proposta', label: 'Pipeline Proposta',  icon: Kanban      },
   { href: '/comercial/tabela',         label: 'Tabela Geral',      icon: Table2      },
 ]
 
@@ -56,10 +60,6 @@ const NAV_TOOLS = [
 ]
 
 const NAV_WIP = [
-  { href: '/calculadora',                 label: 'Calculadora',              icon: Calculator },
-  { href: '/comercial/pre-cadastros',     label: 'Dados Proposta Comercial', icon: ClipboardList },
-  { href: '/comercial/propostas',         label: 'Propostas',                icon: FileText   },
-  { href: '/comercial/pipeline-proposta', label: 'Pipeline Proposta',        icon: Kanban     },
   { href: '/estoque',     label: 'Estoque',       icon: Package    },
   { href: '/amostras',    label: 'Amostras',      icon: FlaskConical },
   { href: '/dashboards',  label: 'BI / Analytics',icon: BarChart2  },
@@ -216,7 +216,7 @@ export default function Sidebar({ profile }: SidebarProps) {
 
   const isGerente = profile?.role === 'gerente'
   // Gestão de Usuários visível apenas para o administrador principal
-  const isAdmin = profile?.email === 'contato@kairos.com.br' || profile?.email === 'renato086@gmail.com'
+  const isAdmin = profile?.email === 'contato@editorakairos.com.br' || profile?.email === 'renato086@gmail.com'
 
   return (
     <>

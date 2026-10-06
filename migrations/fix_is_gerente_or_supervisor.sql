@@ -1,18 +1,6 @@
--- Corrige is_gerente_or_supervisor() para consultar `usuarios` (tabela viva)
--- em vez de `profiles` (tabela legada, hoje vazia). Sem essa correção, a
--- função sempre retorna false, e todas as RLS policies de escolas/registros/
--- negociacoes/contratos caem no ramo restrito (só vê escolas onde é
--- responsavel_id, ou sem responsável) para QUALQUER usuário, inclusive
--- gerentes — cortando o Funil de Contratação e a página de Metas para um
--- recorte pequeno em vez da visão completa da empresa.
-CREATE OR REPLACE FUNCTION public.is_gerente_or_supervisor()
-RETURNS boolean
-LANGUAGE sql
-SECURITY DEFINER
-STABLE
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM public.usuarios
-    WHERE id = auth.uid() AND role IN ('gerente','supervisor') AND ativo = true
-  );
-$$;
+-- A definição correta de is_gerente_or_supervisor() (consultando `usuarios`,
+-- não a `profiles` legada) foi movida para 000_schema_base.sql, pois a
+-- função precisa existir ANTES de qualquer CREATE POLICY no script —
+-- inclusive as de add_alunos_historico.sql, que roda logo após propostas.sql
+-- e muito antes de aplicar_rls.sql. Este arquivo fica só como marcador de
+-- histórico; nada a executar.

@@ -2,7 +2,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { buscarEscolasUnificadas } from '@/lib/escolas-unificadas'
 import { upsertNegociacao } from '@/lib/actions'
 import { getFunilContratacao, FASE_LABELS, FASE_FUNIL_ORDEM, type FaseFunil } from '@/lib/funil-contratacao'
-import { META_RECEITA } from '@/lib/metas'
+import { getMetas } from '@/lib/metas'
 import PageHeader from '@/components/layout/PageHeader'
 import Link from 'next/link'
 import { formatCurrency, formatDate } from '@/lib/utils'
@@ -114,7 +114,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
 
   const admin = createAdminClient()
 
-  const [{ linhas, kpis }, escolasSelect, { data: usuariosAtivos }, { data: usuariosTodos }, { data: notasContatoRaw }, { data: notasContratoRaw }, { data: anexosPropostaRaw }, { data: anexosContratoRaw }] = await Promise.all([
+  const [{ linhas, kpis }, escolasSelect, { data: usuariosAtivos }, { data: usuariosTodos }, { data: notasContatoRaw }, { data: notasContratoRaw }, { data: anexosPropostaRaw }, { data: anexosContratoRaw }, metas] = await Promise.all([
     getFunilContratacao(),
     buscarEscolasUnificadas(),
     admin.from('usuarios').select('id, nome_completo').eq('ativo', true).order('nome_completo'),
@@ -123,6 +123,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
     admin.from('notas_escola').select('escola_id, texto, created_by, created_at').eq('categoria', 'contrato').order('created_at', { ascending: false }),
     admin.from('contratos_arquivos').select('escola_id, path, created_at').eq('categoria', 'proposta').order('created_at', { ascending: false }),
     admin.from('contratos_arquivos').select('id, escola_id, nome, path, categoria, created_at').in('categoria', ['minuta', 'contrato_final', 'contrato_assinado']).order('created_at', { ascending: false }),
+    getMetas(),
   ])
 
   // Escolas sem proposta_id (não geradas pela Calculadora) podem ter o PDF da
@@ -189,7 +190,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
   }
   for (const l of linhasFiltradas) porQuadro[classificarQuadro(l)].push(l)
 
-  const pctReceita = Math.min(100, Math.round((kpis.valorContratadoTotal / META_RECEITA) * 100))
+  const pctReceita = Math.min(100, Math.round((kpis.valorContratadoTotal / metas.metaReceita) * 100))
 
   // Extraído do corpo da tabela pra ser reaproveitado nos 5 quadros sem
   // duplicar ~100 linhas de JSX por quadro — o conteúdo da linha é
@@ -198,7 +199,14 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
     return (
       <tr key={l.escola_id} style={{ borderBottom: '1px solid #f1f5f9', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
         <td style={{ padding: '.65rem .75rem', verticalAlign: 'middle' }}>
-          <PrioridadeInline escolaId={l.escola_id} prioridade={l.prioridade_manual} escolaIdsQuadro={escolaIdsQuadro} />
+          {/* Mostra a posição calculada (idx+1) dentro do quadro, não o valor
+              bruto salvo — assim o número exibido nunca repete nem pula,
+              mesmo quando uma escola muda de quadro sozinha (ex.: declinou
+              agora) e carrega um prioridade_manual antigo que colide com
+              outra já existente no quadro de chegada. quadroLinhas já vem
+              ordenado com prioridade_manual nulo sempre por último, então
+              idx+1 bate exatamente com a posição entre as rankeadas. */}
+          <PrioridadeInline escolaId={l.escola_id} prioridade={l.prioridade_manual != null ? idx + 1 : null} escolaIdsQuadro={escolaIdsQuadro} />
         </td>
         <td style={{ padding: '.65rem .75rem', verticalAlign: 'middle', width: 150, maxWidth: 150 }}>
           <div style={{ fontWeight: 700, fontSize: '.8rem', color: '#221d37', fontFamily: 'var(--font-montserrat,sans-serif)', lineHeight: 1.3 }}>
@@ -310,7 +318,7 @@ export default async function FunilContratacaoPage({ searchParams }: Props) {
             { label: 'Valor em Pipeline',  value: formatCurrency(kpis.valorPipelineTotal), sub: 'negociações abertas', cor: '#b45309', bg: '#fffbeb', border: '#fcd34d' },
             { label: 'Valor Contratado',   value: formatCurrency(kpis.valorContratadoTotal), sub: 'contratos assinados', cor: '#16a34a', bg: '#f0fdf4', border: '#86efac' },
             { label: 'Em Implantação',     value: kpis.emImplantacao, sub: 'pós-arquivamento', cor: '#7c3aed', bg: '#f5f3ff', border: '#c4b5fd' },
-            { label: 'Meta de Receita 2027', value: `${pctReceita}%`, sub: formatCurrency(META_RECEITA), cor: '#221d37', bg: '#f8fafc', border: '#e2e8f0' },
+            { label: 'Meta de Receita 2026', value: `${pctReceita}%`, sub: formatCurrency(metas.metaReceita), cor: '#221d37', bg: '#f8fafc', border: '#e2e8f0' },
           ].map(k => (
             <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderRadius: 3, padding: '1.1rem 1.25rem', borderTop: `3px solid ${k.cor}` }}>
               <div style={{ fontSize: '.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: k.cor, fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.35rem' }}>{k.label}</div>

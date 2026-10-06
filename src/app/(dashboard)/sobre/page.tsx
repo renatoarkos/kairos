@@ -484,7 +484,7 @@ export default function SobrePage() {
                 <div style={{ marginBottom: '.65rem' }}>
                   <div style={{ fontSize: '.6rem', fontWeight: 700, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.07em', fontFamily: 'var(--font-montserrat,sans-serif)', marginBottom: '.25rem' }}>📧 Login</div>
                   <div style={{ background: 'rgba(255,255,255,.06)', borderRadius: 2, padding: '.5rem .75rem', fontSize: '.72rem', color: '#fff', fontFamily: 'var(--font-inter,sans-serif)', letterSpacing: '.01em' }}>
-                    demonstracao@kairos.com.br [COMPLETAR: credencial real de demo]
+                    demonstracao@editorakairos.com.br [COMPLETAR: credencial real de demo]
                   </div>
                 </div>
 
@@ -550,7 +550,7 @@ Olá! Disponibilizamos um acesso demonstrativo ao nosso currículo para que voc�
 _(sempre entre como *professor*)_
 
 🔐 *Dados de acesso:*
-📧 Login: demonstracao@kairos.com.br [COMPLETAR: credencial real de demo]
+📧 Login: demonstracao@editorakairos.com.br [COMPLETAR: credencial real de demo]
 🔑 Senha: 12345678
 
 📌 *O que você encontrará na plataforma:*

@@ -374,17 +374,17 @@ export default function HubLanding() {
                 Transformando educação através da tecnologia e inovação comercial.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
-                <a href="mailto:contato@kairos.com.br" style={{
+                <a href="mailto:contato@editorakairos.com.br" style={{
                   color: 'rgba(255,255,255,.45)', textDecoration: 'none',
                   fontSize: '.85rem', fontFamily: 'var(--font-inter,sans-serif)',
                 }}>
-                  📧 contato@kairos.com.br
+                  📧 contato@editorakairos.com.br
                 </a>
-                <a href="https://kairos.com.br" target="_blank" rel="noopener noreferrer" style={{
+                <a href="https://editorakairos.com.br" target="_blank" rel="noopener noreferrer" style={{
                   color: 'rgba(255,255,255,.45)', textDecoration: 'none',
                   fontSize: '.85rem', fontFamily: 'var(--font-inter,sans-serif)',
                 }}>
-                  🌐 kairos.com.br
+                  🌐 editorakairos.com.br
                 </a>
               </div>
             </div>
@@ -417,7 +417,7 @@ export default function HubLanding() {
               }}>
                 Links
               </h4>
-              <a href="https://kairos.com.br" target="_blank" rel="noopener noreferrer" style={{
+              <a href="https://editorakairos.com.br" target="_blank" rel="noopener noreferrer" style={{
                 display: 'block', color: 'rgba(255,255,255,.4)', textDecoration: 'none',
                 fontSize: '.85rem', padding: '.2rem 0', fontFamily: 'var(--font-inter,sans-serif)',
               }}>

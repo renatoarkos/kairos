@@ -7,7 +7,7 @@ import { formatCurrency } from '@/lib/utils'
 import { EscolaSelector } from '@/components/ui/EscolaSelector'
 import { ContratoUpload } from '@/components/comercial/ContratoUpload'
 import { calcValorTotalContrato, calcTotalAlunosContrato } from '@/lib/contratos'
-import { META_ALUNOS, META_RECEITA } from '@/lib/metas'
+import { getMetas } from '@/lib/metas'
 
 export const dynamic = 'force-dynamic'
 
@@ -81,10 +81,11 @@ export default async function ContratosPage({ searchParams }: Props) {
   // dados reais gravados no banco.
   const admin     = createAdminClient()
 
-  const [escolas, { data: contratos_geral }] = await Promise.all([
+  const [escolas, { data: contratos_geral }, metas] = await Promise.all([
     buscarEscolasUnificadas(),
     admin.from('contratos').select('*, escola:escolas(nome, estado, cidade)')
       .order('updated_at', { ascending: false }),
+    getMetas(),
   ])
 
   let escola: any = null, contrato: any = null, ultimo_enc: string = ''
@@ -111,8 +112,8 @@ export default async function ContratosPage({ searchParams }: Props) {
     acc + calcTotalAlunosContrato(x), 0) ?? 0
   const total_receita = contratos_geral?.reduce((acc: number, x: any) =>
     acc + calcValorTotalContrato(x), 0) ?? 0
-  const pct_alunos   = Math.min(100, Math.round((total_alunos  / META_ALUNOS)  * 100))
-  const pct_receita  = Math.min(100, Math.round((total_receita / META_RECEITA) * 100))
+  const pct_alunos   = Math.min(100, Math.round((total_alunos  / metas.metaAlunos)  * 100))
+  const pct_receita  = Math.min(100, Math.round((total_receita / metas.metaReceita) * 100))
 
   const assinados = contratos_geral?.filter((x: any) => x.contrato_assinado)?.length ?? 0
   const enviados  = contratos_geral?.filter((x: any) => x.contrato_enviado && !x.contrato_assinado)?.length ?? 0
@@ -127,7 +128,7 @@ export default async function ContratosPage({ searchParams }: Props) {
           {[
             { label: 'Contratos Assinados', value: assinados, sub: 'concluídos', color: '#16a34a', bg: '#f0fdf4', border: '#86efac' },
             { label: 'Aguardando Assinatura', value: enviados, sub: 'enviados', color: '#36b6e8', bg: '#fffbeb', border: '#fcd34d' },
-            { label: 'Meta de Alunos', value: `${pct_alunos}%`, sub: `${total_alunos} / ${META_ALUNOS}`, color: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
+            { label: 'Meta de Alunos', value: `${pct_alunos}%`, sub: `${total_alunos} / ${metas.metaAlunos}`, color: '#2563eb', bg: '#eff6ff', border: '#93c5fd' },
             { label: 'Meta de Receita', value: `${pct_receita}%`, sub: formatCurrency(total_receita), color: '#7c3aed', bg: '#f5f3ff', border: '#c4b5fd' },
           ].map(k => (
             <div key={k.label} style={{ background: k.bg, border: `1.5px solid ${k.border}`, borderRadius: 3, padding: '1.1rem 1.25rem', borderTop: `3px solid ${k.color}` }}>
@@ -143,8 +144,8 @@ export default async function ContratosPage({ searchParams }: Props) {
           <div style={{ padding: '1.25rem 1.75rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               {[
-                { label: 'Meta de Alunos', pct: pct_alunos, atual: total_alunos, meta: META_ALUNOS, unit: '', cor: '#16a34a' },
-                { label: 'Meta de Receita', pct: pct_receita, atual: formatCurrency(total_receita), meta: formatCurrency(META_RECEITA), unit: '', cor: '#7c3aed' },
+                { label: 'Meta de Alunos', pct: pct_alunos, atual: total_alunos, meta: metas.metaAlunos, unit: '', cor: '#16a34a' },
+                { label: 'Meta de Receita', pct: pct_receita, atual: formatCurrency(total_receita), meta: formatCurrency(metas.metaReceita), unit: '', cor: '#7c3aed' },
               ].map(m => (
                 <div key={m.label}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '.5rem' }}>

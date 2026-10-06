@@ -14,6 +14,9 @@
 -- ============================================================
 
 -- ─── 1) FUNÇÃO HELPER ─────────────────────────────────────────────────
+-- Definida em 000_schema_base.sql (precisa existir antes de qualquer
+-- CREATE POLICY no script, inclusive as de add_alunos_historico.sql).
+-- Nada a fazer aqui além de garantir que está com a versão certa.
 CREATE OR REPLACE FUNCTION public.is_gerente_or_supervisor()
 RETURNS boolean
 LANGUAGE sql
@@ -21,8 +24,8 @@ SECURITY DEFINER
 STABLE
 AS $$
   SELECT EXISTS (
-    SELECT 1 FROM public.profiles
-    WHERE id = auth.uid() AND role IN ('gerente','supervisor')
+    SELECT 1 FROM public.usuarios
+    WHERE id = auth.uid() AND role IN ('gerente','supervisor') AND ativo = true
   );
 $$;
 
