@@ -56,7 +56,6 @@ export async function upsertEscola(formData: FormData) {
     nome:               formData.get('nome') as string,
     cnpj:               formData.get('cnpj') as string || null,
     perfil_pedagogico:  formData.get('perfil_pedagogico') as string || 'convencional',
-    escola_paideia:     formData.get('escola_paideia') === 'true',
     rua:                formData.get('rua') as string || null,
     numero:             formData.get('numero') as string || null,
     complemento:        formData.get('complemento') as string || null,

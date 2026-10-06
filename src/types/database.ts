@@ -47,7 +47,6 @@ export interface Escola {
   nome: string
   cnpj: string | null
   perfil_pedagogico: PerfilPedagogico
-  escola_paideia: boolean
   rua: string | null
   numero: string | null
   complemento: string | null
@@ -456,7 +455,7 @@ export const LABEL: Record<string, Record<string, string>> = {
 }
 
 // Helpers
-// Valores dos kits CVE Education
+// Valores dos kits
 export const KIT_INFANTIL = 1046.26
 export const KIT_FUND     = 1302.15
 

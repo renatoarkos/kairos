@@ -6,13 +6,13 @@ export default function EstoquePage() {
       title="Estoque e Logística"
       subtitle="Controle integrado de produtos e distribuição"
       tag="Em Breve"
-      headline="Visibilidade total do estoque Paideia, Oikos e Biblos"
+      headline="Visibilidade total do estoque Oikos e Biblos"
       description="Gerencie o inventário de materiais didáticos, controle entradas e saídas, monitore níveis de estoque por produto e região, e integre diretamente com a plataforma de pedidos das escolas parceiras."
       features={[
         {
           icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>,
           title: 'Controle de Inventário',
-          desc: 'Quantidade em estoque por produto (Paideia, Oikos, Biblos) com alertas de nível mínimo.',
+          desc: 'Quantidade em estoque por produto (Oikos, Biblos) com alertas de nível mínimo.',
         },
         {
           icon: <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,

@@ -96,7 +96,7 @@ function IlustrJornada() {
       {/* Events */}
       {[
         { y:40, cor:'#6366f1', label:'Primeiro Contato', sub:'WhatsApp · 15/01' },
-        { y:90, cor:'#36b6e8', label:'Apresentação Paideia', sub:'Videoconf · 28/01' },
+        { y:90, cor:'#36b6e8', label:'Apresentação', sub:'Videoconf · 28/01' },
         { y:140, cor:'#2563eb', label:'Envio de Proposta', sub:'E-mail · 05/02' },
         { y:190, cor:'#16a34a', label:'Contrato Assinado', sub:'Presencial · 14/02' },
       ].map((e,i) => (

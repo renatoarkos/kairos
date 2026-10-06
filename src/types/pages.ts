@@ -106,7 +106,6 @@ export interface EscolasPageSearchParams {
 export interface EscolaRow extends EscolaResumo {
   // Campos derivados para exibição
   localidade: string   // "Cidade, UF" ou apenas "Cidade"
-  tem_paideia: boolean
 }
 
 // ─── Detalhe da Escola (/comercial/escolas/[id]) ──────────────────────────────

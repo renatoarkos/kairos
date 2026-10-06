@@ -163,9 +163,6 @@ export default async function TabelaPage() {
                           <Link href={`/comercial/escolas/${r.id}`} style={{ fontWeight: 700, fontSize: '.82rem', color: '#221d37', textDecoration: 'none', fontFamily: 'var(--font-montserrat,sans-serif)', whiteSpace: 'nowrap', display: 'block', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {r.nome}
                           </Link>
-                          {r.escola_paideia && (
-                            <span style={{ fontSize: '.58rem', fontWeight: 700, background: '#ccfbf1', color: '#134e4a', padding: '.05rem .35rem', borderRadius: 99, fontFamily: 'var(--font-montserrat,sans-serif)', textTransform: 'uppercase' }}>Paideia</span>
-                          )}
                         </td>
 
                         {/* Localidade */}

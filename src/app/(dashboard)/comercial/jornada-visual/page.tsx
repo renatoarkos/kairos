@@ -16,7 +16,7 @@ const ETAPAS = [
   { id: 'cadastro',     label: 'Cadastro',       desc: 'Escola registrada',              cor: '#6366f1', num: 1  },
   { id: 'prospeccao',   label: 'Prospecção',      desc: 'Primeiro contato',               cor: '#8b5cf6', num: 2  },
   { id: 'qualificacao', label: 'Qualificação',    desc: 'Diagnóstico e perfil',           cor: '#36b6e8', num: 3  },
-  { id: 'apresentacao', label: 'Apresentação',    desc: 'Apresentação Paideia',           cor: '#f59e0b', num: 4  },
+  { id: 'apresentacao', label: 'Apresentação',    desc: 'Apresentação',                    cor: '#f59e0b', num: 4  },
   { id: 'proposta',     label: 'Proposta',        desc: 'Proposta enviada',               cor: '#10b981', num: 5  },
   { id: 'negociacao',   label: 'Negociação',      desc: 'Ajustes contratuais',            cor: '#14b8a6', num: 6  },
   { id: 'formulario',   label: 'Formulário',      desc: 'Pré-cadastro enviado',           cor: '#0ea5e9', num: 7  },

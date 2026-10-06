@@ -265,11 +265,6 @@ export default async function EscolasPage({ searchParams }: Props) {
 
                       {/* Badges de perfil */}
                       <div style={{ display: 'flex', gap: '.35rem', marginBottom: '.9rem', flexWrap: 'wrap' }}>
-                        {e.escola_paideia && (
-                          <span style={{ fontSize: '.6rem', fontWeight: 700, background: '#ccfbf1', color: '#134e4a', padding: '.15rem .5rem', borderRadius: 99, fontFamily: 'var(--font-montserrat,sans-serif)', textTransform: 'uppercase', letterSpacing: '.04em' }}>
-                            Paideia
-                          </span>
-                        )}
                         {e.perfil_pedagogico && (
                           <span style={{ fontSize: '.6rem', background: '#f1f5f9', color: '#475569', padding: '.15rem .5rem', borderRadius: 99, fontFamily: 'var(--font-inter,sans-serif)' }}>
                             {LABEL.perfil_pedagogico?.[e.perfil_pedagogico] ?? e.perfil_pedagogico}
@@ -362,11 +357,6 @@ export default async function EscolasPage({ searchParams }: Props) {
                               >
                                 {e.nome}
                               </Link>
-                              {e.escola_paideia && (
-                                <span style={{ fontSize: '.58rem', fontWeight: 700, background: '#ccfbf1', color: '#134e4a', padding: '.1rem .4rem', borderRadius: 99, width: 'fit-content', fontFamily: 'var(--font-montserrat,sans-serif)', textTransform: 'uppercase', letterSpacing: '.04em' }}>
-                                  Paideia
-                                </span>
-                              )}
                             </div>
                           </td>
 

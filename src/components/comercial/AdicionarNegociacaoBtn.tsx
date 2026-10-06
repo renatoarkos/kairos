@@ -196,7 +196,7 @@ export function AdicionarNegociacaoBtn({ escolas, userId, onSuccess }: Props) {
                 <div>
                   <label style={lbl}>Título (opcional)</label>
                   <input value={titulo} onChange={e => setTitulo(e.target.value)} style={inp}
-                    placeholder={escolaSel ? `${escolaSel.nome.slice(0,20)}...` : 'Ex: Apresentação Paideia'} />
+                    placeholder={escolaSel ? `${escolaSel.nome.slice(0,20)}...` : 'Ex: Apresentação comercial'} />
                 </div>
                 <div>
                   <label style={lbl}>Valor Estimado (R$)</label>

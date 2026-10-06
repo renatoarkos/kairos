@@ -110,7 +110,6 @@ export default async function EscolaEditar({ params }: Props) {
                     {PERFIL_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </select>
                 </div>
-                <input type="hidden" name="escola_paideia" value={e.escola_paideia ? 'true' : 'false'} />
               </div>
             </div>
           </div>

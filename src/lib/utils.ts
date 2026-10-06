@@ -26,7 +26,7 @@ export function getInitials(name: string) {
   return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()
 }
 
-// Valores dos kits CVE Education (atualizados)
+// Valores dos kits (atualizados)
 // Infantil: R$ 1.046,26 | Fundamental: R$ 1.302,15
 export const KIT_INFANTIL  = 1046.26
 export const KIT_FUND1     = 1302.15
