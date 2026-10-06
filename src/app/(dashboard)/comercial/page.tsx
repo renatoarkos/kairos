@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 import { getDashboardData } from '@/lib/dashboard'
 import { FASE_FUNIL_ORDEM, FASE_LABELS, type FaseFunil } from '@/lib/funil-contratacao'
-import { META_REUNIOES, META_PROPOSTAS, META_MINUTAS } from '@/lib/metas'
+import { getMetas } from '@/lib/metas'
 import { KpiCard, MiniBarChart } from '@/components/comercial/DashboardCharts'
 import { FunilVisual } from '@/components/comercial/FunilVisual'
 import { BrasilMapa } from '@/components/comercial/BrasilMapa'
@@ -64,10 +64,11 @@ export default async function ComercialDashboard({ searchParams }: Props) {
   const admin = createAdminClient()
   const dados = await getDashboardData({ estado: estadoAtivo || undefined, cidade: cidadeAtiva || undefined, bairro: bairroAtivo || undefined, fase: faseAtiva || undefined, periodo: periodoAtivo })
 
-  const [{ data: registrosRecentes }, { data: todasEscolas }, { data: escolasComRegistro }] = await Promise.all([
+  const [{ data: registrosRecentes }, { data: todasEscolas }, { data: escolasComRegistro }, metas] = await Promise.all([
     admin.from('registros').select('*, escola:escolas(nome,id,cidade,estado)').order('data_contato', { ascending: false }).limit(6),
     admin.from('escolas').select('id, nome, cidade, estado, created_at').eq('ativa', true).order('created_at', { ascending: false }),
     admin.from('registros').select('escola_id'),
+    getMetas(),
   ])
   const idsComRegistro = new Set((escolasComRegistro ?? []).map((r: any) => r.escola_id))
   const escolasSemNegociacao = (todasEscolas ?? []).filter((e: any) => !idsComRegistro.has(e.id)).slice(0, 8)
@@ -134,11 +135,11 @@ export default async function ComercialDashboard({ searchParams }: Props) {
 
         {/* ── Hero KPIs ──────────────────────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1rem' }}>
-          <KpiCard label="Reuniões com Escolas Únicas" valor={dados.kpis.reunioesUnicas} meta={!periodoAtivo && !faseAtiva && !estadoAtivo ? META_REUNIOES : undefined} cor="#2563eb" bg="#eff6ff" border="#bfdbfe" sub={periodoAtivo === '30d' ? 'últimos 30 dias' : 'histórico'} href="/comercial/registros"
+          <KpiCard label="Reuniões com Escolas Únicas" valor={dados.kpis.reunioesUnicas} meta={!periodoAtivo && !faseAtiva && !estadoAtivo ? metas.metaReunioes : undefined} cor="#2563eb" bg="#eff6ff" border="#bfdbfe" sub={periodoAtivo === '30d' ? 'últimos 30 dias' : 'histórico'} href="/comercial/registros"
             icon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>} />
-          <KpiCard label="Propostas Enviadas" valor={dados.kpis.propostasEnviadas} meta={!estadoAtivo && !faseAtiva ? META_PROPOSTAS : undefined} cor="#b45309" bg="#fffbeb" border="#fcd34d" sub={`${dados.kpis.alunosPipeline.toLocaleString('pt-BR')} alunos no pipeline`} href="/comercial/propostas"
+          <KpiCard label="Propostas Enviadas" valor={dados.kpis.propostasEnviadas} meta={!estadoAtivo && !faseAtiva ? metas.metaPropostas : undefined} cor="#b45309" bg="#fffbeb" border="#fcd34d" sub={`${dados.kpis.alunosPipeline.toLocaleString('pt-BR')} alunos no pipeline`} href="/comercial/propostas"
             icon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>} />
-          <KpiCard label="Minutas Enviadas" valor={dados.kpis.minutasEnviadas} meta={!estadoAtivo && !faseAtiva ? META_MINUTAS : undefined} cor="#7c3aed" bg="#f5f3ff" border="#c4b5fd" sub={`${dados.kpis.contratosAssinados} contratos assinados`} href="/comercial/contratos"
+          <KpiCard label="Minutas Enviadas" valor={dados.kpis.minutasEnviadas} meta={!estadoAtivo && !faseAtiva ? metas.metaMinutas : undefined} cor="#7c3aed" bg="#f5f3ff" border="#c4b5fd" sub={`${dados.kpis.contratosAssinados} contratos assinados`} href="/comercial/contratos"
             icon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>} />
           <KpiCard label="Ticket Médio (Pipeline)" valor={dados.kpis.ticketMedioPipeline ? dados.kpis.ticketMedioPipeline.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '—'} cor="#0d9488" bg="#f0fdfa" border="#99f6e4" sub="valor/aluno/ano nas propostas"
             icon={<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} />

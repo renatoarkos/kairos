@@ -1,12 +1,58 @@
-// Metas comerciais Kairós — sprint até 31/08/2026
-export const META_ALUNOS   = 4000
-export const META_RECEITA  = 5000000
-export const META_REUNIOES  = 40
-export const META_PROPOSTAS = 25
-export const META_MINUTAS   = 15
-export const METAS_PRAZO    = '31/08/2026'
+import { createAdminClient } from '@/lib/supabase/admin'
 
-// Total de alunos hoje — valor manual, atualizado pelo time comercial
-// (a soma automática via escolas/contratos não é confiável ainda: datas de
-// cadastro no banco não refletem quando cada parceria realmente começou).
-export const ALUNOS_ATUAIS = 1700
+export interface Metas {
+  metaAlunos: number
+  metaReceita: number
+  metaReunioes: number
+  metaPropostas: number
+  metaMinutas: number
+  metaEscolasNovas: number
+  prazo: string       // dd/mm/aaaa — pronto pra exibir
+  prazoISO: string    // aaaa-mm-dd — pro <input type="date">
+}
+
+// Usado só se a linha em `metas_comerciais` ainda não existir (banco não
+// migrado) — mesmos últimos números confirmados no briefing da Kairós
+// (2026-09-21/28, ver memória "kairos-briefing-real-negocio"): reuniões e
+// prazo de Hugo (Diretor Executivo), receita de Francieudes (Diretor
+// Financeiro); alunos/propostas/minutas ainda sem número oficial da Kairós.
+const METAS_PADRAO: Metas = {
+  metaAlunos: 4000,
+  metaReceita: 1000000,
+  metaReunioes: 50,
+  metaPropostas: 25,
+  metaMinutas: 15,
+  metaEscolasNovas: 100,
+  prazo: '31/12/2026',
+  prazoISO: '2026-12-31',
+}
+
+function formatarPrazoBR(prazoISO: string): string {
+  try {
+    return new Date(prazoISO + 'T00:00:00').toLocaleDateString('pt-BR')
+  } catch {
+    return prazoISO
+  }
+}
+
+// Metas comerciais — editáveis em /comercial/metas (ver MetasForm.tsx e
+// metas-actions.ts), gravadas na tabela singleton `metas_comerciais`
+// (migrations/add_metas_comerciais.sql). Antes eram constantes hardcoded
+// duplicadas aqui e num objeto local em comercial/metas/page.tsx.
+export async function getMetas(): Promise<Metas> {
+  const admin = createAdminClient()
+  const { data } = await admin.from('metas_comerciais').select('*').eq('id', 1).maybeSingle()
+
+  if (!data) return METAS_PADRAO
+
+  return {
+    metaAlunos: data.meta_alunos,
+    metaReceita: Number(data.meta_receita),
+    metaReunioes: data.meta_reunioes,
+    metaPropostas: data.meta_propostas,
+    metaMinutas: data.meta_minutas,
+    metaEscolasNovas: data.meta_escolas_novas,
+    prazo: formatarPrazoBR(data.prazo),
+    prazoISO: data.prazo,
+  }
+}

@@ -4,26 +4,11 @@ import Link from 'next/link'
 import { formatCurrency } from '@/lib/utils'
 import { ContadorRegressivo } from '@/components/metas/ContadorRegressivo'
 import { getFunilContratacao } from '@/lib/funil-contratacao'
+import { getMetas } from '@/lib/metas'
+import { MetasForm } from '@/components/comercial/MetasForm'
 import { BarraProgresso, KpiCard } from '@/components/comercial/DashboardCharts'
 
 export const dynamic = 'force-dynamic'
-
-// ══════════════════════════════════════════════════
-// METAS — sprint até 31/08/2026
-// ══════════════════════════════════════════════════
-const METAS = {
-  // Prospecção / funil — metas de curto prazo até o fim de agosto/2026
-  reunioes_meta:  40,
-  propostas_meta: 25,
-  minutas_meta:   15,
-  prazo:          '31/08/2026',
-
-  // Escolas
-  escolas_novas_meta: 26,    // novas parcerias a conquistar
-
-  // Alunos — meta única, sem detalhamento por segmento/turma
-  alunos_total_meta: 4000,
-}
 
 function FunilBarras({ etapas }: { etapas: { label: string; valor: number; cor: string }[] }) {
   const max = Math.max(...etapas.map(e => e.valor), 1)
@@ -64,7 +49,7 @@ export default async function MetasPage() {
   // isso a lista e a contagem de reuniões vinham vazias/zeradas.
   const admin = createAdminClient()
 
-  const [{ data: registrosRaw }, funil] = await Promise.all([
+  const [{ data: registrosRaw }, funil, metas] = await Promise.all([
     admin.from('registros')
       .select('escola_id, data_contato, classificacao, responsavel_id, escola:escolas(nome)')
       .order('data_contato', { ascending: false }),
@@ -73,6 +58,9 @@ export default async function MetasPage() {
     // agregação usada em /comercial/funil-contratacao, para as duas páginas
     // nunca divergirem entre si.
     getFunilContratacao(),
+
+    // Metas editáveis (tabela metas_comerciais) — ver MetasForm.tsx
+    getMetas(),
   ])
 
   // Nome do responsável vem de `usuarios` (tabela viva) — `profiles` fica
@@ -132,11 +120,11 @@ export default async function MetasPage() {
   const alunosAtivosHoje = escolasAssinadas.reduce((soma, l) => soma + (l.alunos_cadastro || 0), 0)
 
   // Percentuais
-  const pctReunioes  = Math.round((totalReunioes    / METAS.reunioes_meta)      * 100)
-  const pctPropostas = Math.round((propostasEnviadas / METAS.propostas_meta)    * 100)
-  const pctMinutas   = Math.round((minutasEnviadas  / METAS.minutas_meta)       * 100)
-  const pctEscolas   = Math.round((qtdEscolasNovas  / METAS.escolas_novas_meta) * 100)
-  const pctAlunos    = Math.round((alunosMeta       / METAS.alunos_total_meta)  * 100)
+  const pctReunioes  = Math.round((totalReunioes    / metas.metaReunioes)      * 100)
+  const pctPropostas = Math.round((propostasEnviadas / metas.metaPropostas)    * 100)
+  const pctMinutas   = Math.round((minutasEnviadas  / metas.metaMinutas)       * 100)
+  const pctEscolas   = Math.round((qtdEscolasNovas  / metas.metaEscolasNovas) * 100)
+  const pctAlunos    = Math.round((alunosMeta       / metas.metaAlunos)  * 100)
 
   // Registros recentes para timeline
   const registrosRecentes = registros?.slice(0, 8) ?? []
@@ -148,7 +136,7 @@ export default async function MetasPage() {
     <div>
       <PageHeader
         title="Metas Comerciais"
-        subtitle={`Sprint até ${METAS.prazo} — acompanhamento em tempo real`}
+        subtitle={`Sprint até ${metas.prazo} — acompanhamento em tempo real`}
       />
       <div style={{ padding: '2rem 2.5rem' }}>
 
@@ -166,14 +154,15 @@ export default async function MetasPage() {
               ✦ Sprint Comercial
             </div>
             <h2 style={{ fontFamily: 'var(--font-cormorant,serif)', fontSize: '1.8rem', fontWeight: 700, color: '#fff', lineHeight: 1.1, marginBottom: '.6rem' }}>
-              Metas até {METAS.prazo}
+              Metas até {metas.prazo}
             </h2>
             <p style={{ fontSize: '.85rem', color: 'rgba(255,255,255,.55)', fontFamily: 'var(--font-inter,sans-serif)', maxWidth: 580, lineHeight: 1.6 }}>
               Acompanhamento em tempo real das reuniões, propostas, minutas e alunos rumo à meta.
               Os contadores atualizam automaticamente conforme as operações são registradas.
             </p>
           </div>
-          <div style={{ minWidth: 200 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '.75rem', minWidth: 200 }}>
+            <MetasForm metas={metas} />
             <ContadorRegressivo />
           </div>
         </div>
@@ -194,7 +183,7 @@ export default async function MetasPage() {
                   {alunosMeta.toLocaleString('pt-BR')}
                 </span>
                 <span style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', fontFamily: 'var(--font-inter,sans-serif)' }}>
-                  / {METAS.alunos_total_meta.toLocaleString('pt-BR')} alunos
+                  / {metas.metaAlunos.toLocaleString('pt-BR')} alunos
                 </span>
               </div>
               <div style={{ fontSize: '.72rem', color: 'rgba(255,255,255,.45)', marginTop: '.4rem', fontFamily: 'var(--font-inter,sans-serif)' }}>
@@ -218,9 +207,9 @@ export default async function MetasPage() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '.5rem' }}>
               <span style={{ fontSize: '.68rem', color: 'rgba(255,255,255,.5)', fontFamily: 'var(--font-inter,sans-serif)' }}>
-                Faltam <strong style={{ color: '#86efac' }}>{Math.max(0, METAS.alunos_total_meta - alunosMeta).toLocaleString('pt-BR')}</strong> alunos para atingir a meta
+                Faltam <strong style={{ color: '#86efac' }}>{Math.max(0, metas.metaAlunos - alunosMeta).toLocaleString('pt-BR')}</strong> alunos para atingir a meta
               </span>
-              <span style={{ fontSize: '.68rem', color: 'rgba(255,255,255,.5)', fontFamily: 'var(--font-inter,sans-serif)' }}>Prazo: {METAS.prazo}</span>
+              <span style={{ fontSize: '.68rem', color: 'rgba(255,255,255,.5)', fontFamily: 'var(--font-inter,sans-serif)' }}>Prazo: {metas.prazo}</span>
             </div>
           </div>
         </div>
@@ -231,7 +220,7 @@ export default async function MetasPage() {
           <KpiCard
             label="Reuniões Registradas"
             valor={totalReunioes}
-            meta={`${METAS.reunioes_meta} até ${METAS.prazo}`}
+            meta={`${metas.metaReunioes} até ${metas.prazo}`}
             pct={pctReunioes}
             cor="#2563eb"
             bg="#eff6ff"
@@ -244,7 +233,7 @@ export default async function MetasPage() {
           <KpiCard
             label="Propostas Enviadas"
             valor={propostasEnviadas}
-            meta={`${METAS.propostas_meta} até ${METAS.prazo}`}
+            meta={`${metas.metaPropostas} até ${metas.prazo}`}
             pct={pctPropostas}
             cor="#b45309"
             bg="#fffbeb"
@@ -257,7 +246,7 @@ export default async function MetasPage() {
           <KpiCard
             label="Minutas Contratuais Enviadas"
             valor={minutasEnviadas}
-            meta={`${METAS.minutas_meta} até ${METAS.prazo}`}
+            meta={`${metas.metaMinutas} até ${metas.prazo}`}
             pct={pctMinutas}
             cor="#7c3aed"
             bg="#f5f3ff"
@@ -270,7 +259,7 @@ export default async function MetasPage() {
           <KpiCard
             label="Contratos Assinados"
             valor={qtdEscolasNovas}
-            meta={`${METAS.escolas_novas_meta} até ${METAS.prazo}`}
+            meta={`${metas.metaEscolasNovas} até ${metas.prazo}`}
             pct={pctEscolas}
             cor="#16a34a"
             bg="#f0fdf4"
@@ -306,7 +295,7 @@ export default async function MetasPage() {
           <KpiCard
             label="Novas Escolas Parceiras"
             valor={qtdEscolasNovas}
-            meta={`${METAS.escolas_novas_meta} novas`}
+            meta={`${metas.metaEscolasNovas} novas`}
             pct={pctEscolas}
             cor="#36b6e8"
             bg="#fffbeb"
@@ -346,7 +335,7 @@ export default async function MetasPage() {
                 <span style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.74rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#221d37' }}>Últimas Reuniões Registradas</span>
               </div>
               <span style={{ fontSize: '.65rem', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', padding: '.15rem .55rem', borderRadius: 99, fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
-                {totalReunioes} / {METAS.reunioes_meta}
+                {totalReunioes} / {metas.metaReunioes}
               </span>
             </div>
             <div style={{ padding: '1rem 1.4rem' }}>
@@ -391,7 +380,7 @@ export default async function MetasPage() {
                 <span style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.74rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#221d37' }}>Novas Escolas Captadas</span>
               </div>
               <span style={{ fontSize: '.65rem', background: '#fffbeb', color: '#36b6e8', border: '1px solid #fde68a', padding: '.15rem .55rem', borderRadius: 99, fontWeight: 700, fontFamily: 'var(--font-montserrat,sans-serif)' }}>
-                {qtdEscolasNovas} / {METAS.escolas_novas_meta}
+                {qtdEscolasNovas} / {metas.metaEscolasNovas}
               </span>
             </div>
             <div style={{ padding: '1rem 1.4rem' }}>
@@ -424,14 +413,14 @@ export default async function MetasPage() {
         {/* ── Resumo de progresso geral ────────────────────── */}
         <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 4, padding: '1.5rem 1.75rem', boxShadow: '0 1px 4px rgba(34,29,55,.06)' }}>
           <div style={{ fontFamily: 'var(--font-montserrat,sans-serif)', fontSize: '.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.07em', color: '#221d37', marginBottom: '1.25rem' }}>
-            Painel de Progresso Consolidado — Sprint até {METAS.prazo}
+            Painel de Progresso Consolidado — Sprint até {metas.prazo}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1rem' }}>
             {[
-              { label: 'Reuniões Únicas',      atual: totalReunioes,      meta: METAS.reunioes_meta,      cor: '#2563eb', unidade: 'reuniões', sub: '' },
-              { label: 'Propostas Enviadas',   atual: propostasEnviadas,  meta: METAS.propostas_meta,     cor: '#b45309', unidade: 'escolas',   sub: '' },
-              { label: 'Minutas Enviadas',     atual: minutasEnviadas,    meta: METAS.minutas_meta,       cor: '#7c3aed', unidade: 'escolas',   sub: '' },
-              { label: 'Contratos Assinados',  atual: qtdEscolasNovas,    meta: METAS.escolas_novas_meta, cor: '#16a34a', unidade: 'escolas',   sub: `${qtdEscolasMinuta} em minuta` },
+              { label: 'Reuniões Únicas',      atual: totalReunioes,      meta: metas.metaReunioes,      cor: '#2563eb', unidade: 'reuniões', sub: '' },
+              { label: 'Propostas Enviadas',   atual: propostasEnviadas,  meta: metas.metaPropostas,     cor: '#b45309', unidade: 'escolas',   sub: '' },
+              { label: 'Minutas Enviadas',     atual: minutasEnviadas,    meta: metas.metaMinutas,       cor: '#7c3aed', unidade: 'escolas',   sub: '' },
+              { label: 'Contratos Assinados',  atual: qtdEscolasNovas,    meta: metas.metaEscolasNovas, cor: '#16a34a', unidade: 'escolas',   sub: `${qtdEscolasMinuta} em minuta` },
             ].map(m => {
               const p = Math.min(100, Math.round((m.atual / m.meta) * 100))
               const falta = Math.max(0, m.meta - m.atual)

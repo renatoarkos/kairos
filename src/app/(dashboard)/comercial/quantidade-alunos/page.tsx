@@ -5,6 +5,19 @@ import { QuantidadeAlunosClient, type EscolaLinha } from './QuantidadeAlunosClie
 
 export const dynamic = 'force-dynamic'
 
+// Sinal de que a escola tem negócio real em andamento — mesma checagem
+// usada em classificarQuadro (funil-contratacao/page.tsx). Quando isso é
+// verdade, a escola é "Nova" mesmo que marcado_veterana ainda esteja true
+// (marcação antiga que não foi atualizada) — sem essa checagem, escolas com
+// proposta enviada de verdade ficavam presas na seção de veteranas mesmo
+// tendo negócio ativo, e o contador de "veteranas" divergia do quadro
+// "Escolas Atendidas" do Funil de Contratação.
+function temSinalFunilReal(c: any): boolean {
+  return !!(c.formulario_enviado || c.formulario_recebido || c.proposta_enviada ||
+    c.minuta_enviada || c.retorno_minuta || c.minuta_atualizada ||
+    c.contrato_enviado || c.contrato_assinado || c.contrato_arquivado)
+}
+
 const CAMPOS_SERIE = [
   'infantil2_qtd', 'infantil3_qtd', 'infantil4_qtd', 'infantil5_qtd',
   'fund1_ano1_qtd', 'fund1_ano2_qtd', 'fund1_ano3_qtd', 'fund1_ano4_qtd', 'fund1_ano5_qtd',
@@ -15,15 +28,23 @@ const CAMPOS_SERIE = [
 export default async function QuantidadeAlunosPage() {
   const admin = createAdminClient()
 
-  const [{ data: escolas }, { data: contratos }] = await Promise.all([
-    admin.from('escolas').select('id, nome, cidade, estado').order('nome'),
+  const [{ data: escolas }, { data: contratos }, { data: historico }] = await Promise.all([
+    admin.from('escolas').select('id, nome, cidade, estado, total_alunos').order('nome'),
     // select('*') em vez de listar colunas — evita quebrar a página inteira
     // caso `livro_impresso` ainda não exista no banco (migração pendente,
     // ver add_livro_impresso.sql). O campo some do resultado até rodar.
     admin.from('contratos').select('*'),
+    admin.from('alunos_historico').select('escola_id, valor, created_at').order('created_at', { ascending: false }),
   ])
 
   const contratosPorEscola = new Map((contratos ?? []).map(c => [c.escola_id, c]))
+  // Primeiro valor de cada escola_id nessa lista (já ordenada desc) é o mais
+  // recente — mesma fonte que a "Alunos & Potencial" da página da escola usa
+  // como penúltima prioridade, antes só do cadastro básico.
+  const historicoPorEscola = new Map<string, number>()
+  for (const h of historico ?? []) {
+    if (!historicoPorEscola.has(h.escola_id)) historicoPorEscola.set(h.escola_id, h.valor)
+  }
 
   // Base automática: só escolas com minuta enviada de verdade (sinal de que
   // a venda pro ano que vem está em andamento) — não contrato_enviado nem
@@ -42,13 +63,22 @@ export default async function QuantidadeAlunosPage() {
         cidade: e.cidade ?? null,
         uf: e.estado ?? null,
         livroImpresso: !!c.livro_impresso,
-        // Veterana = marcada manualmente (planilha do Dênis / adicionada nesta
-        // tela); Nova = chegou à lista progredindo de verdade pelo funil 2027.
-        // Fonte de verdade é o campo marcado_veterana (editável na UI), não
-        // uma inferência a partir de minuta/contrato — só pode ser removida
-        // da lista se estiver marcada como veterana.
-        veterana: !!c.marcado_veterana,
-        total: calcTotalAlunosContrato(c),
+        // Veterana = marcada manualmente E sem nenhum sinal real de negócio
+        // em andamento; Nova = chegou à lista progredindo de verdade pelo
+        // funil — um sinal real sempre tem prioridade sobre a marcação
+        // manual (que pode estar desatualizada).
+        veterana: !!c.marcado_veterana && !temSinalFunilReal(c),
+        // Prioridade: soma granular do contrato (a mais confiável, é o que
+        // essa própria grade edita) > último valor em alunos_historico >
+        // cadastro básico da escola. Sem isso, escolas que têm o total real
+        // registrado noutro lugar do sistema mas nunca tiveram o detalhamento
+        // por série preenchido apareciam zeradas aqui.
+        total: (() => {
+          const granular = calcTotalAlunosContrato(c)
+          if (granular > 0) return granular
+          return historicoPorEscola.get(e.id) ?? e.total_alunos ?? 0
+        })(),
+        totalSemDetalhe: calcTotalAlunosContrato(c) === 0,
         qtds: Object.fromEntries(CAMPOS_SERIE.map(campo => [campo, c[campo] ?? 0])),
         // Fallback pro valor do contrato quando livro_qtds ainda não tem essa
         // série salva (ex.: escola marcada com a tag Livro antes dessa
