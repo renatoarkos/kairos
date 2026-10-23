@@ -306,6 +306,17 @@ CREATE TABLE IF NOT EXISTS public.escolas (
     PRIMARY KEY (id)
 );
 
+-- Re-execução segura: se uma execução anterior deste script já trocou
+-- escolas_resumo por VIEW (ver add_view_escolas_resumo.sql, no fim), remove a
+-- view antes de recriar a tabela provisória abaixo. Sem isso, rodar o script
+-- uma segunda vez falha com 42809 ("not supported for views").
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+             WHERE n.nspname = 'public' AND c.relname = 'escolas_resumo' AND c.relkind = 'v') THEN
+    DROP VIEW public.escolas_resumo;
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS public.escolas_resumo (
     id uuid,
     nome text,
@@ -1007,9 +1018,7 @@ END $$;
 -- propostas.sql) e DEPOIS da tabela public.usuarios (functions LANGUAGE sql
 -- são resolvidas contra o schema já na criação, não só na primeira
 -- chamada — por isso não pode ficar antes das tabelas existirem).
-DROP FUNCTION IF EXISTS public.is_gerente_or_supervisor();
-
-CREATE FUNCTION public.is_gerente_or_supervisor()
+CREATE OR REPLACE FUNCTION public.is_gerente_or_supervisor()
 RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER

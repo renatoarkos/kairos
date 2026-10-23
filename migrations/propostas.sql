@@ -67,6 +67,7 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS trg_propostas_updated_at ON propostas;
 CREATE TRIGGER trg_propostas_updated_at
   BEFORE UPDATE ON propostas
   FOR EACH ROW
