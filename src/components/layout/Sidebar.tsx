@@ -13,7 +13,7 @@ import {
   Package, FlaskConical, BarChart2, Download,
   Bot, DollarSign, Table2, Info, FileSignature, ClipboardList,
   ExternalLink, GitBranch, Target, CalendarDays, FileAudio,
-  Upload, Database, BookOpen, Crosshair, Milestone, Library
+  Upload, Database, BookOpen, Crosshair, Milestone, Library, Map as MapaIcon
 } from 'lucide-react'
 
 interface SidebarProps { profile: Profile | null }
@@ -30,6 +30,7 @@ interface NavItemDef {
 
 const NAV_CRM: NavItemDef[] = [
   { href: '/comercial',                label: 'Dashboard',     icon: LayoutDashboard },
+  { href: '/comercial/panorama',       label: 'Panorama de Mercado', icon: MapaIcon, badge: 'Novo' },
   { href: '/comercial/escolas',        label: 'Escolas',       icon: School          },
   { href: '/comercial/registros',      label: 'Registros',     icon: FileText        },
   { href: '/comercial/priorizacao',    label: 'Gestão de Priorização', icon: Crosshair, badge: 'Novo' },
