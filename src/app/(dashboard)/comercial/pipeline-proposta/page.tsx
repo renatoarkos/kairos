@@ -20,7 +20,7 @@ export default async function PipelinePropostaPage() {
   const { data: leads } = await supabase
     .from('leads_universal')
     .select('id, dados_extras')
-    .eq('fonte', 'formulario_wemake')
+    .eq('fonte', 'formulario_precadastro')
 
   // Mapear precadastro_id -> dados_extras do pipeline
   const estadoMap: Record<string, any> = {}

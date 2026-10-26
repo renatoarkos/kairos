@@ -19,7 +19,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   let { data: existente } = await supabase
     .from('leads_universal')
     .select('id, dados_extras')
-    .eq('fonte', 'formulario_wemake')
+    .eq('fonte', 'formulario_precadastro')
     .contains('dados_extras', { precadastro_id })
     .maybeSingle()
 
@@ -32,7 +32,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       .from('leads_universal')
       .insert({
         escola_nome: escola_nome ?? precadastro_id,
-        fonte: 'formulario_wemake',
+        fonte: 'formulario_precadastro',
         status: 'ativo',
         dados_extras: { precadastro_id },
       })

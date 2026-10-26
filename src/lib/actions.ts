@@ -1309,7 +1309,7 @@ export async function enviarFormularioPublico(formData: FormData): Promise<Actio
     // Espelha automaticamente no banco de leads (leads_universal)
     const qtdTotal = alunos_infantil + alunos_fundamental_1 + alunos_fundamental_2 + alunos_ensino_medio
     await supabase.from('leads_universal').insert({
-      fonte: 'formulario_wemake',
+      fonte: 'formulario_precadastro',
       nome: legal_nome,
       email: legal_email || email_institucional || null,
       tel_celular: legal_whatsapp || null,

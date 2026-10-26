@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
-// GET — lista cards do pipeline proposta (leads com fonte formulario_wemake)
+// GET — lista cards do pipeline proposta (leads com fonte formulario_precadastro)
 export async function GET(_req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -12,7 +12,7 @@ export async function GET(_req: NextRequest) {
   const { data, error } = await supabase
     .from('leads_universal')
     .select('id, escola_nome, cidade, estado, dados_extras, created_at')
-    .eq('fonte', 'formulario_wemake')
+    .eq('fonte', 'formulario_precadastro')
     .order('created_at', { ascending: false })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })

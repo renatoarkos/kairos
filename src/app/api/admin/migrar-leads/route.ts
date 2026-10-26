@@ -25,7 +25,7 @@ export async function POST() {
   const { data: existing } = await supabase
     .from('leads_universal')
     .select('dados_extras')
-    .eq('fonte', 'formulario_wemake')
+    .eq('fonte', 'formulario_precadastro')
 
   const existingIds = new Set<string>(
     (existing ?? [])
@@ -47,7 +47,7 @@ export async function POST() {
       (r.alunos_ensino_medio ?? 0)
 
     const { error: insertErr } = await supabase.from('leads_universal').insert({
-      fonte: 'formulario_wemake',
+      fonte: 'formulario_precadastro',
       nome: r.legal_nome ?? r.resp_email ?? null,
       email: r.legal_email ?? r.email_institucional ?? null,
       tel_celular: r.legal_whatsapp ?? null,

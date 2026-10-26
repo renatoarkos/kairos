@@ -6,9 +6,9 @@ const FONTE_OPTS = [
   { value: '',                  label: 'Todos os eventos' },
   { value: 'ciecc_2025',        label: '1º CIECC 2025' },
   { value: 'ciecc_2026',        label: '2º CIECC 2026' },
-  { value: 'formulario_wemake', label: 'Formulário Kairós' },
+  { value: 'formulario_precadastro', label: 'Formulário Kairós' },
   { value: 'crm',               label: 'CRM Parceiros' },
-  { value: 'oikos',             label: 'Famílias Educadoras' },
+  { value: 'familias_educadoras',             label: 'Famílias Educadoras' },
   { value: 'outro',             label: 'Outro' },
 ]
 
