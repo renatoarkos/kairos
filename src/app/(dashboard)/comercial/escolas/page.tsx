@@ -38,7 +38,7 @@ export default async function EscolasPage({ searchParams }: Props) {
 
   // Query principal — busca diretamente da tabela escolas para garantir dados frescos
   let query = admin
-    .from('escolas')
+    .from('escolas_resumo')
     .select('*', { count: 'exact' })
     .eq('ativa', true)
     .range(from, to)
@@ -57,10 +57,10 @@ export default async function EscolasPage({ searchParams }: Props) {
     { count: nF },
     { data: estadosRaw },
   ] = await Promise.all([
-    admin.from('escolas').select('*', { count: 'exact', head: true }).eq('ativa', true).eq('classificacao_atual', 'quente'),
-    admin.from('escolas').select('*', { count: 'exact', head: true }).eq('ativa', true).eq('classificacao_atual', 'morno'),
-    admin.from('escolas').select('*', { count: 'exact', head: true }).eq('ativa', true).eq('classificacao_atual', 'frio'),
-    admin.from('escolas').select('estado').eq('ativa', true).not('estado', 'is', null),
+    admin.from('escolas_resumo').select('*', { count: 'exact', head: true }).eq('ativa', true).eq('classificacao_atual', 'quente'),
+    admin.from('escolas_resumo').select('*', { count: 'exact', head: true }).eq('ativa', true).eq('classificacao_atual', 'morno'),
+    admin.from('escolas_resumo').select('*', { count: 'exact', head: true }).eq('ativa', true).eq('classificacao_atual', 'frio'),
+    admin.from('escolas_resumo').select('estado').eq('ativa', true).not('estado', 'is', null),
   ])
 
   const estados   = [...new Set(estadosRaw?.map((e: any) => e.estado).filter(Boolean))].sort() as string[]

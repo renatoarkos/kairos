@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   // Search escolas table (CRM schools) — compute qtd_alunos from individual fields
   const { data: escolasRaw } = await supabase
-    .from('escolas')
+    .from('escolas_resumo')
     .select('id, nome, cidade, estado, cnpj, contato_nome, contato_cargo, qtd_infantil, qtd_fund1, qtd_fund2, qtd_medio, classificacao_atual')
     .or(`nome.ilike.${pattern},contato_nome.ilike.${pattern}`)
     .limit(10)

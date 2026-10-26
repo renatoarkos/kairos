@@ -2,6 +2,8 @@
 -- CORREÇÕES DO BANCO NOVO — rodar UMA vez no SQL Editor do Supabase.
 --   1) origem 'banco_leads' (botão Importar do Banco de Leads)
 --   2) agenda: recursão infinita nas regras de acesso (criar/listar eventos)
+--   3) colunas de lista (tags, encaminhamentos) criadas como texto
+--   4) propostas: colunas de segmentos que a Calculadora grava
 -- Pode rodar mais de uma vez.
 -- ============================================================
 
@@ -96,5 +98,66 @@ CREATE POLICY agenda_participantes_delete
     public.is_gerente_or_supervisor()
     OR public.usuario_criou_evento(evento_id)
   );
+
+NOTIFY pgrst, 'reload schema';
+
+
+-- ============================================================
+-- Colunas que o sistema trata como LISTA (array) mas foram criadas como texto:
+--   registros.encaminhamentos, negociacoes.tags, usuario_escolas_pipeline.tags
+-- Como texto, o pipeline quebra no navegador ("d.slice(...).map is not a
+-- function") e os encaminhamentos dos registros não aparecem. Converte o tipo
+-- preservando o que já estiver gravado (aceita '["a","b"]', '{a,b}' e vazio).
+-- Pode rodar mais de uma vez: só altera a coluna que ainda for texto.
+-- ============================================================
+
+CREATE OR REPLACE FUNCTION public._texto_para_lista(t text)
+RETURNS text[]
+LANGUAGE plpgsql IMMUTABLE
+AS $$
+BEGIN
+  IF t IS NULL OR btrim(t) IN ('', '[]', '{}') THEN
+    RETURN '{}'::text[];
+  END IF;
+  IF left(btrim(t), 1) = '[' THEN
+    RETURN ARRAY(SELECT json_array_elements_text(t::json));
+  END IF;
+  RETURN t::text[];
+END
+$$;
+
+DO $$
+DECLARE
+  alvo RECORD;
+BEGIN
+  FOR alvo IN
+    SELECT * FROM (VALUES
+      ('registros', 'encaminhamentos'),
+      ('negociacoes', 'tags'),
+      ('usuario_escolas_pipeline', 'tags')
+    ) AS v(tabela, coluna)
+  LOOP
+    IF (SELECT data_type FROM information_schema.columns
+        WHERE table_schema = 'public' AND table_name = alvo.tabela AND column_name = alvo.coluna) = 'text' THEN
+      EXECUTE format('ALTER TABLE public.%I ALTER COLUMN %I DROP DEFAULT', alvo.tabela, alvo.coluna);
+      EXECUTE format('ALTER TABLE public.%I ALTER COLUMN %I TYPE text[] USING public._texto_para_lista(%I)', alvo.tabela, alvo.coluna, alvo.coluna);
+      EXECUTE format('ALTER TABLE public.%I ALTER COLUMN %I SET DEFAULT ''{}''::text[]', alvo.tabela, alvo.coluna);
+    END IF;
+  END LOOP;
+END $$;
+
+NOTIFY pgrst, 'reload schema';
+
+
+-- ============================================================
+-- propostas: colunas de segmentos que a Calculadora grava ao gerar a proposta
+-- (sem elas: "Could not find the 'seg_ensino_medio' column of 'propostas'").
+-- Pode rodar mais de uma vez.
+-- ============================================================
+ALTER TABLE public.propostas
+  ADD COLUMN IF NOT EXISTS seg_infantil       boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS seg_fundamental_1  boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS seg_fundamental_2  boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS seg_ensino_medio   boolean NOT NULL DEFAULT false;
 
 NOTIFY pgrst, 'reload schema';

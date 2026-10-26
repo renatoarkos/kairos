@@ -33,7 +33,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       .insert({
         escola_nome: escola_nome ?? precadastro_id,
         fonte: 'formulario_precadastro',
-        status: 'ativo',
         dados_extras: { precadastro_id },
       })
       .select('id, dados_extras')

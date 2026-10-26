@@ -73,7 +73,7 @@ export function ContratoUpload({ escolaId, escolaNome, arquivosExistentes }: Pro
 
     // Buscar path do documento
     const { data: doc } = await supabase
-      .from('documentos_oficiais')
+      .from('contratos_arquivos')
       .select('path')
       .eq('id', arq.id)
       .single()
