@@ -5,7 +5,7 @@ export type PerfilPedagogico =
   | 'crista_classica' | 'convencional' | 'outro'
 
 export type OrigemLead =
-  | 'feira' | 'instagram' | 'network' | 'envio_material' | 'opening_company'
+  | 'feira' | 'instagram' | 'network' | 'envio_material' | 'opening_company' | 'banco_leads'
   | 'abeka' | 'acsi' | 'congresso_ecc' | 'indicacao_escola' | 'outros'
 
 export type MeioContato =

@@ -41,7 +41,7 @@ EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 
 DO $$ BEGIN
-  CREATE TYPE public.origem_lead AS ENUM ('feira', 'instagram', 'network', 'site', 'whatsapp', 'email', 'telefone', 'visita', 'evento', 'parceiro', 'outro', 'indicacao_escola', 'abeka', 'acsi', 'congresso_ecc', 'envio_material', 'opening_company');
+  CREATE TYPE public.origem_lead AS ENUM ('feira', 'instagram', 'network', 'site', 'whatsapp', 'email', 'telefone', 'visita', 'evento', 'parceiro', 'outro', 'indicacao_escola', 'abeka', 'acsi', 'congresso_ecc', 'envio_material', 'opening_company', 'banco_leads');
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 
@@ -2248,6 +2248,10 @@ JOIN public.registro_serie_livros l
   ON l.registro_id = u.registro_id AND l.serie = u.serie AND l.ano_letivo = u.ano_letivo
 JOIN public.registros r ON r.id = u.registro_id
 GROUP BY l.produto_id, l.ano_letivo;
+
+
+-- Valor de origem usado pelo botao Importar do Banco de Leads.
+ALTER TYPE public.origem_lead ADD VALUE IF NOT EXISTS 'banco_leads';
 
 
 -- ================================================================

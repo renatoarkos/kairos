@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sincronizarPerfil } from '@/lib/perfis'
 
 export const dynamic = 'force-dynamic'
 
@@ -44,6 +45,7 @@ export async function POST(req: Request) {
   }, { onConflict: 'id' })
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 400 })
+  await sincronizarPerfil(admin, { id: userId, email, nome: nome_completo, role, ativo: true })
 
   return NextResponse.json({ success: true, id: userId, nome_completo })
 }

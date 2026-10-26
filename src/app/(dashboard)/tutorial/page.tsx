@@ -281,7 +281,7 @@ function IlustrBancoLeads() {
       <rect x="18" y="70" width="12" height="12" rx="2" fill="rgba(255,255,255,.15)"/>
       <rect x="35" y="72" width="120" height="6" rx="2" fill="rgba(255,255,255,.15)"/>
       <rect x="200" y="62" width="190" height="28" rx="7" fill="rgba(255,255,255,.05)"/>
-      {['1ºCIECC','2ºCIECC','CRM','Oikos'].map((l,i) => (
+      {['1ºCIECC','2ºCIECC','CRM','Famílias'].map((l,i) => (
         <rect key={i} x={208+i*46} y="69" width="42" height="14" rx="7"
           fill={i===0?"#221d37":"rgba(255,255,255,.08)"}
           stroke={i===0?"rgba(255,255,255,.4)":"rgba(255,255,255,.1)"} strokeWidth="1"/>

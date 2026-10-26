@@ -10,7 +10,7 @@ EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 
 DO $$ BEGIN
-  CREATE TYPE public.origem_lead AS ENUM ('feira', 'instagram', 'network', 'site', 'whatsapp', 'email', 'telefone', 'visita', 'evento', 'parceiro', 'outro', 'indicacao_escola', 'abeka', 'acsi', 'congresso_ecc', 'envio_material', 'opening_company');
+  CREATE TYPE public.origem_lead AS ENUM ('feira', 'instagram', 'network', 'site', 'whatsapp', 'email', 'telefone', 'visita', 'evento', 'parceiro', 'outro', 'indicacao_escola', 'abeka', 'acsi', 'congresso_ecc', 'envio_material', 'opening_company', 'banco_leads');
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 

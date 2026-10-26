@@ -3,7 +3,7 @@
  * única: getFunilContratacao() (reunioes/propostas/minutas/contratos por
  * escola, já testado em metas/page.tsx e funil-contratacao/page.tsx) mais
  * duas buscas leves extras (registros com meio_contato para o canal de
- * contato, e form_precadastro_wemake cruzado contra propostas para a taxa de
+ * contato, e os pré-cadastros cruzados contra propostas para a taxa de
  * conversão de formulário). Nenhum número aqui é constante manual — tudo é
  * calculado a partir do estado atual do banco a cada requisição
  * (export const dynamic = 'force-dynamic' na página).

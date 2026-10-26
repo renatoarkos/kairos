@@ -8,6 +8,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { calcPotencial, calcProbabilidade, calcClassificacao } from '@/types/database'
 import type { StageNegociacao } from '@/types/database'
 import { SERIES, SEGMENTOS, type Segmento } from '@/lib/series'
+import { sincronizarPerfil } from '@/lib/perfis'
 
 // ─── Tipos de retorno das actions (para uso em Client Components) ─────────────
 
@@ -1123,7 +1124,7 @@ export async function atualizarChecklistContratoInline(formData: FormData): Prom
 
 /**
  * Envia formulário de pré-cadastro de escolas para Kairós
- * Salva na tabela form_precadastro_wemake
+ * Salva na tabela de pré-cadastros de escolas
  */
 export async function enviarFormularioPublico(formData: FormData): Promise<ActionResult> {
   try {
@@ -1406,6 +1407,7 @@ export async function criarUsuario(formData: FormData): Promise<ActionResult> {
   }, { onConflict: 'id' })
 
   if (profileErr) return { success: false, error: profileErr.message }
+  await sincronizarPerfil(admin, { id: userId, email, nome: fullName, role, ativo: isActive, telefone: phone })
 
   revalidatePath('/adminpanel')
   return { success: true, id: userId }
@@ -1448,6 +1450,7 @@ export async function upsertProfile(formData: FormData): Promise<ActionResult> {
     .eq('email', email)
 
   if (error) return { success: false, error: error.message }
+  await sincronizarPerfil(admin, { id: existing.id, email, nome: fullName, role, ativo: isActive, telefone: phone })
   revalidatePath('/adminpanel')
   return { success: true }
 }
@@ -1469,6 +1472,7 @@ export async function excluirUsuario(userId: string): Promise<ActionResult> {
 
   // Remove perfil primeiro pra evitar trigger ressuscitar
   await admin.from('usuarios').delete().eq('id', userId)
+  await admin.from('profiles').delete().eq('id', userId)
   const { error } = await admin.auth.admin.deleteUser(userId)
   if (error) return { success: false, error: error.message }
 

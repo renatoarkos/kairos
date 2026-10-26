@@ -7,7 +7,7 @@ const FONTE_LABEL: Record<string, string> = {
   ciecc_2026:        '2º CIECC 2026',
   crm:               'CRM Parceiros',
   formulario_precadastro: 'Formulário Kairós',
-  oikos:             'Famílias Educadoras',
+  familias_educadoras: 'Famílias Educadoras',
   outro:             'Outro',
 }
 

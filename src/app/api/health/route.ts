@@ -4,11 +4,12 @@ export async function GET() {
   const envStatus = {
     SUPABASE_URL: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
     SUPABASE_KEY: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    CRON_SECRET: !!process.env.CRON_SECRET,
-    APP_URL: !!process.env.NEXT_PUBLIC_APP_URL
+    SUPABASE_SERVICE_KEY: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+    EMAIL_RESEND: !!process.env.RESEND_API_KEY
   };
 
-  const isReady = Object.values(envStatus).every(v => v === true);
+  // Essenciais para o sistema funcionar; o e-mail (Resend) é informativo
+  const isReady = envStatus.SUPABASE_URL && envStatus.SUPABASE_KEY && envStatus.SUPABASE_SERVICE_KEY;
 
   return NextResponse.json({
     status: isReady ? 'UP' : 'DEGRADED',

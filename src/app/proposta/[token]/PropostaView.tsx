@@ -68,7 +68,7 @@ const getPropostaSegmentosList = (p: Proposta): string[] => {
   return list
 }
 
-// Capas reais dos livros Kairós (extraídas do plano de negócio em lp_wemake),
+// Capas reais dos livros Kairós (extraídas do plano de negócio),
 // uma por segmento — mostradas dinamicamente conforme os segmentos da proposta.
 const CAPA_POR_SEGMENTO: Record<string, string> = {
   'Infantil':      '/proposta/capas-livros/infantil-5.jpg',
@@ -1670,7 +1670,7 @@ export default function PropostaView({ proposta: p, isExpired, imprimir }: { pro
             <Reveal delay={120}>
               <div className="pv-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 28 }}>
                 {[
-                  { icon: I.insta(C.mint), label: 'Instagram', val: '@wemake.tec' },
+                  
                   { icon: I.mail(C.mint),  label: 'E-mail',    val: 'contato@editorakairos.com.br' },
                   { icon: I.phone(C.mint), label: 'WhatsApp',  val: '(83) 98230-1530' },
                   { icon: I.globe(C.mint), label: 'Site',      val: 'editorakairos.com.br' },

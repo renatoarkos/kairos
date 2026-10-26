@@ -11,9 +11,9 @@ export async function GET(_req: NextRequest) {
 
   const { data, error } = await supabase
     .from('leads_universal')
-    .select('id, escola_nome, cidade, estado, dados_extras, created_at')
+    .select('id, escola_nome, cidade, estado:uf, dados_extras, created_at:importado_em')
     .eq('fonte', 'formulario_precadastro')
-    .order('created_at', { ascending: false })
+    .order('importado_em', { ascending: false })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 

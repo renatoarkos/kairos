@@ -207,7 +207,7 @@ export default async function ComercialDashboard({ searchParams }: Props) {
           <div style={cardHead}>
             <div>
               <div style={cardTitle}>Formulários Recebidos × Conversão em Proposta</div>
-              <div style={cardSub}>Cruza form_precadastro_wemake (exclui descartados) com propostas geradas</div>
+              <div style={cardSub}>Cruza os pré-cadastros recebidos (exclui descartados) com as propostas geradas</div>
             </div>
             <Link href="/comercial/pre-cadastros" style={{ fontSize: '.72rem', color: '#36b6e8', fontWeight: 600, textDecoration: 'none', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Ver todos →</Link>
           </div>

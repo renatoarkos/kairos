@@ -18,7 +18,7 @@ const CAMPOS_DEFAULT_ESCOLA = new Set([
   'Alunos Infantil', 'Alunos Fund. I', 'Alunos Fund. II', 'Alunos Ens. Médio',
   'Data Inscrição', '📅 Data', 'Lote', 'Participou I Congresso?',
 
-  // ── CRM Education (Education_CRM_FINAL.xlsx) ──
+  // ── CRM (planilha de leads exportada do CRM) ──
   // Identificação da escola
   '🏫 Escola', 'Escola',
   // Localização
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
 
   // Detectar linha real de cabeçalho
   // CIECC: header na linha 0 direto
-  // Education_CRM_FINAL: tem 3 linhas de título (linha 3 = headers reais)
+  // Planilha do CRM: tem 3 linhas de título (linha 3 = headers reais)
   const rawArray = XLSX.utils.sheet_to_json<any[]>(sheet, { header: 1, defval: null })
 
   // Detectar linha de header: a que tem MAIS células com texto descritivo (letras)

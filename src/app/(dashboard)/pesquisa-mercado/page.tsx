@@ -314,7 +314,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
       supabase.from('leads_pessoa').select('*', { count: 'exact', head: true }),
       supabase.from('leads_escola').select('*', { count: 'exact', head: true }),
       supabase.from('leads_contato_escola').select('*', { count: 'exact', head: true }),
-      supabase.from('leads_oikos_live').select('*', { count: 'exact', head: true }),
+      supabase.from('leads_universal').select('*', { count: 'exact', head: true }).ilike('tipo_inscricao', '%fam%lia%'),
       supabase.from('leads_pessoa').select('*', { count: 'exact', head: true })
         .or('tipo_inscricao.ilike.%gestor%,tipo_inscricao.ilike.%diretor%,tipo_inscricao.ilike.%mantenedor%,tipo_inscricao.ilike.%coordenador%'),
       supabase.from('leads_pessoa').select('*', { count: 'exact', head: true }).not('email', 'is', null),
@@ -383,7 +383,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
                 Banco de Leads Consolidado
               </span>
               <span style={{ fontSize: '.68rem', color: '#475569', fontFamily: 'var(--font-inter,sans-serif)' }}>
-                — CIECC 2025 + 2026 + Oikos Live
+                — CIECC 2025 + 2026 + famílias educadoras
               </span>
             </div>
 
@@ -425,12 +425,12 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
               ))}
             </div>
 
-            {/* Linha 2 — Congressos + Oikos + Qualificação */}
+            {/* Linha 2 — Congressos + Famílias + Qualificação */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: '.85rem', marginBottom: '.85rem' }}>
               {[
                 { label: '1º CIECC 2025', val: kpiLeads.por2025.toLocaleString('pt-BR'), sub: 'participações', cor: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
                 { label: '2º CIECC 2026', val: kpiLeads.por2026.toLocaleString('pt-BR'), sub: 'participações', cor: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' },
-                { label: 'Oikos Live', val: kpiLeads.totalOikos.toLocaleString('pt-BR'), sub: 'leads captados', cor: '#0d9488', bg: '#f0fdfa', border: '#99f6e4' },
+                { label: 'Famílias educadoras', val: kpiLeads.totalOikos.toLocaleString('pt-BR'), sub: 'leads de famílias', cor: '#0d9488', bg: '#f0fdfa', border: '#99f6e4' },
                 { label: 'Promotores NPS', val: kpiLeads.npsPromotor.toLocaleString('pt-BR'), sub: 'NPS 9–10 (alto interesse)', cor: '#16a34a', bg: '#f0fdf4', border: '#86efac' },
                 { label: 'Interesse Alto Kairós', val: kpiLeads.interesseAlto.toLocaleString('pt-BR'), sub: 'declaram muito interesse', cor: '#36b6e8', bg: '#fffbeb', border: '#fde68a' },
               ].map(k => (
@@ -507,7 +507,7 @@ export default async function PesquisaMercadoPage({ searchParams }: Props) {
             <div>
               <div style={{ fontWeight: 700, fontSize: '.85rem', color: '#92400e', fontFamily: 'var(--font-montserrat,sans-serif)' }}>Banco de leads criado mas ainda vazio</div>
               <div style={{ fontSize: '.78rem', color: '#36b6e8', fontFamily: 'var(--font-inter,sans-serif)', marginTop: '.2rem' }}>
-                Execute o script <code style={{ background: '#fef3c7', padding: '.1rem .3rem', borderRadius: 4 }}>python importar_leads.py</code> para importar os dados das planilhas CIECC e Oikos Live.
+                Execute o script <code style={{ background: '#fef3c7', padding: '.1rem .3rem', borderRadius: 4 }}>python importar_leads.py</code> para importar os dados das planilhas dos congressos CIECC.
               </div>
             </div>
           </div>

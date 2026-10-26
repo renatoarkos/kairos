@@ -45,7 +45,7 @@ const FONTE_COR: Record<string, { label: string; cor: string; bg: string; border
   ciecc_2025: { label: '1º CIECC 2025', cor: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe' },
   ciecc_2026: { label: '2º CIECC 2026', cor: '#2563eb', bg: '#eff6ff', border: '#bfdbfe' },
   crm:        { label: 'CRM Parceiros',       cor: '#36b6e8', bg: '#fffbeb', border: '#fde68a' },
-  oikos:      { label: 'Famílias Educadoras', cor: '#0d9488', bg: '#f0fdfa', border: '#99f6e4' },
+  familias_educadoras: { label: 'Famílias Educadoras', cor: '#0d9488', bg: '#f0fdfa', border: '#99f6e4' },
   outro:      { label: 'Outro',         cor: '#64748b', bg: '#f8fafc', border: '#e2e8f0' },
 }
 

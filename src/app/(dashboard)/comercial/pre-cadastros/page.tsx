@@ -309,7 +309,7 @@ function RowDetails({ r }: { r: PreCadastro }) {
 export const dynamic = 'force-dynamic'
 
 export default async function PreCadastrosPage() {
-  // Usa service_role: a tabela form_precadastro_wemake tem RLS restritiva
+  // Usa service_role: a tabela de pré-cadastros tem RLS restritiva
   // (anon so pode INSERT). Esta pagina ja roda atras de auth no dashboard.
   const supabase = createAdminClient()
   const { data, error } = await supabase

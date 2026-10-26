@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   if (!file || !tipo) return NextResponse.json({ error: 'Arquivo e tipo são obrigatórios' }, { status: 400 })
 
   const ext       = file.name.split('.').pop()?.toLowerCase()
-  const fileName  = `${tipo}_cvE.${ext}`
+  const fileName  = `${tipo}.${ext}`
   const bucket    = 'documentos-oficiais'
 
   const sb = createAdminClient()

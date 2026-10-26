@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Usa domínio verificado ou fallback para testes via Resend
-const FROM = 'Kairós Agenda <agenda@gestaoeducation.arkosintelligence.com>'
+const FROM = process.env.EMAIL_FROM ?? 'Kairós Agenda <agenda@editorakairos.com.br>'
 
 interface ConviteParams {
   para: string

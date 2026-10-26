@@ -408,7 +408,7 @@ export default function PedidosLoginPage() {
                   { icon: <Mail size={14} />, label: 'contato@editorakairos.com.br', href: 'mailto:contato@editorakairos.com.br' },
                   { icon: <Phone size={14} />, label: '(83) 99654-1530', href: 'tel:+5583996541530' },
                   { icon: <MessageCircle size={14} />, label: 'WhatsApp', href: 'https://wa.me/5583996541530' },
-                  { icon: <span style={{fontSize:'14px'}}>📷</span>, label: '@wemake', href: 'https://instagram.com/wemake' },
+                  { icon: <span style={{fontSize:'14px'}}>🌐</span>, label: 'editorakairos.com.br', href: 'https://editorakairos.com.br' },
                 ].map(item => (
                   <a key={item.label} href={item.href} target="_blank" rel="noopener noreferrer" style={{
                     display: 'flex', alignItems: 'center', gap: '.5rem',

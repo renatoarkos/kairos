@@ -10,7 +10,7 @@ import './globals.css'
 // equivalentes livres mais próximos: Bodoni Moda (mesma família Bodoni,
 // com itálico) e Montserrat (substituto padrão de mercado pra Gotham,
 // inclusive é o que já roda no site institucional da Kairós).
-// Reaproveita a variável --font-inter (nome legado da base We Make) pra
+// Reaproveita a variável --font-inter (nome legado da base anterior) pra
 // não precisar tocar as centenas de usos já espalhados pelo código.
 const bodoni = Bodoni_Moda({
   subsets: ['latin'],
