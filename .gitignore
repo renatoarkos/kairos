@@ -81,3 +81,7 @@ cve_comercial/
 # Exportacoes de dados (contem dados pessoais) — nunca versionar
 exportação_leads/
 exports_*/
+
+# Saida dos testes de QA (capturas de tela)
+qa/saida/
+fail_*.png
