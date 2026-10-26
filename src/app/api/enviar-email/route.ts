@@ -5,10 +5,13 @@ import { createClient } from '@/lib/supabase/server'
 const FROM = process.env.EMAIL_FROM ?? 'Kairós <agenda@editorakairos.com.br>'
 
 export async function POST(request: NextRequest) {
-  const resend = new Resend(process.env.RESEND_API_KEY)
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+  if (!process.env.RESEND_API_KEY) {
+    return NextResponse.json({ error: 'Envio de e-mail não configurado (falta a chave RESEND_API_KEY).' }, { status: 503 })
+  }
+  const resend = new Resend(process.env.RESEND_API_KEY)
 
   const { destinatarios, assunto, corpo, isHtml = false } = await request.json()
 

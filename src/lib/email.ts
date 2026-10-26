@@ -1,6 +1,14 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// O cliente só é criado quando há chave: sem RESEND_API_KEY o sistema continua
+// funcionando (agenda, etc.) e apenas deixa de enviar e-mails.
+let clienteResend: Resend | null = null
+function getResend(): Resend | null {
+  const chave = process.env.RESEND_API_KEY
+  if (!chave) return null
+  clienteResend ??= new Resend(chave)
+  return clienteResend
+}
 
 // Usa domínio verificado ou fallback para testes via Resend
 const FROM = process.env.EMAIL_FROM ?? 'Kairós Agenda <agenda@editorakairos.com.br>'
@@ -131,6 +139,11 @@ function htmlConvite(p: ConviteParams) {
 }
 
 export async function enviarConviteReuniao(params: ConviteParams) {
+  const resend = getResend()
+  if (!resend) {
+    console.warn('[email] RESEND_API_KEY não configurada — convite não enviado')
+    return false
+  }
   try {
     const { error } = await resend.emails.send({
       from:    FROM,
